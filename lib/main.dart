@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Fly Music',
       theme: ThemeData(
-        primarySwatch: Colors.black,
+        primarySwatch: Colors.blue,
       ),
       home: StartScreen(),
     );

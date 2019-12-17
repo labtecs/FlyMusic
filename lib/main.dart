@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flymusic/screens/start_screen.dart';
+import 'package:flymusic/screens/main_screen.dart';
 
 void main() => runApp(MyApp());
 

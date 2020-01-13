@@ -1,15 +1,15 @@
 import 'package:floor/floor.dart';
 
-import '../model/folder.dart';
+import '../model/album.dart';
 
 @dao
 abstract class FolderDao {
   @Query('SELECT * FROM Folders')
-  Future<List<Folder>> findAllFolders();
+  Future<List<Album>> findAllFolders();
 
   @Query('SELECT * FROM Folders WHERE id = :id')
-  Future<Folder> findFolderById(int id);
+  Future<Album> findFolderById(int id);
 
   @insert
-  Future<void> insertFolder(Folder folder);
+  Future<void> insertFolder(Album folder);
 }

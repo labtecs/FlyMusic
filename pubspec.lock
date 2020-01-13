@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
+  audioplayers:
+    dependency: "direct main"
+    description:
+      name: audioplayers
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.7"
   boolean_selector:
     dependency: transitive
     description:
@@ -326,6 +333,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.6"
+  media_metadata_plugin:
+    dependency: "direct main"
+    description:
+      name: media_metadata_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   meta:
     dependency: transitive
     description:
@@ -562,6 +576,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.0+5"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.4"
   vector_math:
     dependency: transitive
     description:

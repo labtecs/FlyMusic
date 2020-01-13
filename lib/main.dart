@@ -4,8 +4,9 @@ import 'package:flymusic/screens/main_screen.dart';
 import 'database/app_database.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final database = await $FloorAppDatabase
-      .databaseBuilder('fapp_database.db')
+      .databaseBuilder('app_database.db')
       .build();
   runApp(MyApp());
 }

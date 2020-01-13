@@ -1,3 +1,5 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'app_database.dart';
 
 // **************************************************************************
@@ -80,9 +82,9 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Song` (`id` INTEGER, `artist` TEXT, `title` TEXT, `album` TEXT, `albumId` INTEGER, `duration` INTEGER, `uri` TEXT, `albumArt` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Song` (`id` INTEGER, `artist` TEXT, `title` TEXT, `album` TEXT, `albumId` INTEGER, `duration` INTEGER, `uri` TEXT, `albumArtUri` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Folder` (`id` INTEGER, `name` TEXT, `path` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Album` (`id` INTEGER, `name` TEXT, `albumArt` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -114,7 +116,7 @@ class _$SongDao extends SongDao {
                   'albumId': item.albumId,
                   'duration': item.duration,
                   'uri': item.uri,
-                  'albumArt': item.albumArt
+                  'albumArtUri': item.albumArtUri
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -130,8 +132,7 @@ class _$SongDao extends SongDao {
       row['album'] as String,
       row['albumId'] as int,
       row['duration'] as int,
-      row['uri'] as String,
-      row['albumArt'] as String);
+      row['uri'] as String);
 
   final InsertionAdapter<Song> _songInsertionAdapter;
 
@@ -155,13 +156,13 @@ class _$SongDao extends SongDao {
 class _$FolderDao extends FolderDao {
   _$FolderDao(this.database, this.changeListener)
       : _queryAdapter = QueryAdapter(database),
-        _folderInsertionAdapter = InsertionAdapter(
+        _albumInsertionAdapter = InsertionAdapter(
             database,
-            'Folder',
-            (Folder item) => <String, dynamic>{
+            'Album',
+            (Album item) => <String, dynamic>{
                   'id': item.id,
                   'name': item.name,
-                  'path': item.path
+                  'albumArt': item.albumArt
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -170,26 +171,26 @@ class _$FolderDao extends FolderDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _folderMapper = (Map<String, dynamic> row) =>
-      Folder(row['id'] as int, row['name'] as String, row['path'] as String);
+  static final _albumMapper = (Map<String, dynamic> row) =>
+      Album(row['id'] as int, row['name'] as String, row['albumArt'] as String);
 
-  final InsertionAdapter<Folder> _folderInsertionAdapter;
+  final InsertionAdapter<Album> _albumInsertionAdapter;
 
   @override
-  Future<List<Folder>> findAllFolders() async {
+  Future<List<Album>> findAllFolders() async {
     return _queryAdapter.queryList('SELECT * FROM Folders',
-        mapper: _folderMapper);
+        mapper: _albumMapper);
   }
 
   @override
-  Future<Folder> findFolderById(int id) async {
+  Future<Album> findFolderById(int id) async {
     return _queryAdapter.query('SELECT * FROM Folders WHERE id = ?',
-        arguments: <dynamic>[id], mapper: _folderMapper);
+        arguments: <dynamic>[id], mapper: _albumMapper);
   }
 
   @override
-  Future<void> insertFolder(Folder folder) async {
-    await _folderInsertionAdapter.insert(
+  Future<void> insertFolder(Album folder) async {
+    await _albumInsertionAdapter.insert(
         folder, sqflite.ConflictAlgorithm.abort);
   }
 }

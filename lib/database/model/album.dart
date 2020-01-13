@@ -1,11 +1,11 @@
 import 'package:floor/floor.dart';
 
 @entity
-class Folder {
+class Album {
   @primaryKey
   final int id;
   final String name;
-  final String path;
+  final String albumArt;
 
-  Folder(this.id, this.name, this.path);
+  Album(this.id, this.name, this.albumArt);
 }

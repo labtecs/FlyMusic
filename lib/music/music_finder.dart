@@ -52,6 +52,12 @@ class MusicFinder {
 
       //TODO read album art
       //TODO create album album if it doesn't exist
+
+      //TODO query album
+      //TODO nicht vorhanden -> erstellen
+      //TODO Song solange einlesen, bis anderes album (geschwindigkeit)
+      //TODO album bild auslesen (wie?)
+
       Song song = Song(0, title, artist, album, 0, duration, file.path);
     }
   }

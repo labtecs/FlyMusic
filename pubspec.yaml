@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
 
   floor: ^0.9.0
-  flute_music_player:
+  dart_tags: ^0.2.2
 
   permission_handler: ^4.0.0
   path_provider: ^1.5.1

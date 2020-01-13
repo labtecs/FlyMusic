@@ -6,6 +6,7 @@ import 'package:flymusic/screens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flute_music_player/flute_music_player.dart';
 
 class StartScreen extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _StartScreenState extends State<StartScreen> {
       body: TrackList(),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            chooseFolder();
+            MusicFinder.allSongs();
           },
           child: Icon(Icons.folder)),
     );

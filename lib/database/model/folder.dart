@@ -7,5 +7,5 @@ class Folder {
   final String name;
   final String path;
 
-  Folder({this.id, this.name, this.path});
+  Folder(this.id, this.name, this.path);
 }

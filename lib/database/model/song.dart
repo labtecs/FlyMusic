@@ -1,6 +1,6 @@
 import 'package:floor/floor.dart';
 
-@Entity(tableName: 'Songs')
+@Entity(tableName: 'Song')
 class Song {
   @PrimaryKey(autoGenerate: true)
   int id;

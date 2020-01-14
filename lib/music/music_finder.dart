@@ -46,13 +46,13 @@ class MusicFinder {
       AudioMetaData metaData =
           await MediaMetadataPlugin.getMediaMetaData(file.path);
       duration = metaData.trackDuration;
-      if (title.isEmpty) {
+      if (title == null || title.isEmpty) {
         title = metaData.trackName;
       }
-      if (artist.isEmpty) {
+      if (artist == null || artist.isEmpty) {
         artist = metaData.artistName;
       }
-      if (album.isEmpty) {
+      if (album == null || album.isEmpty) {
         album = metaData.album;
       }
       print(metaData);
@@ -61,8 +61,9 @@ class MusicFinder {
 
       if(currentAlbum == null || currentAlbum.name != album){
         //save songs that i have read until now
-        if(currentAlbum.name != album){
-          await database.songDao.insertAllSongs(songs);
+        if(currentAlbum != null && currentAlbum.name != album){
+          List<int> keys = await database.songDao.insertAllSongs(songs);
+          print(keys);
         }
 
         //search album for song
@@ -70,13 +71,13 @@ class MusicFinder {
 
         if(currentAlbum == null){
           //create new album
-          currentAlbum = Album(0, album, "");
+          currentAlbum = Album(null, album, "");
           //insert album
           await database.albumDao.insertAlbum(currentAlbum);
         }
       }
 
-      songs.add(Song(0, title, artist, currentAlbum.id, duration, file.path));
+      songs.add(Song(null, title, artist, currentAlbum.id, duration, file.path));
     }
   }
 //title, artist, album,

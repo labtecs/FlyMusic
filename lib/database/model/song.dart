@@ -1,17 +1,14 @@
 import 'package:floor/floor.dart';
 
-@entity
+@Entity(tableName: 'Songs')
 class Song {
-  @primaryKey
+  @PrimaryKey(autoGenerate: true)
   int id;
   String artist;
   String title;
-  String album;
   int albumId;
   int duration;
   String uri;
-  String albumArtUri;
 
-  Song(this.id, this.artist, this.title, this.album, this.albumId,
-      this.duration, this.uri);
+  Song(this.id, this.artist, this.title, this.albumId, this.duration, this.uri);
 }

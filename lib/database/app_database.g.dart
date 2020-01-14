@@ -59,7 +59,7 @@ class _$AppDatabase extends AppDatabase {
 
   SongDao _songDaoInstance;
 
-  FolderDao _folderDaoInstance;
+  AlbumDao _folderDaoInstance;
 
   Future<sqflite.Database> open(String name, List<Migration> migrations,
       [Callback callback]) async {
@@ -97,7 +97,7 @@ class _$AppDatabase extends AppDatabase {
   }
 
   @override
-  FolderDao get folderDao {
+  AlbumDao get folderDao {
     return _folderDaoInstance ??= _$FolderDao(database, changeListener);
   }
 }
@@ -153,7 +153,7 @@ class _$SongDao extends SongDao {
   }
 }
 
-class _$FolderDao extends FolderDao {
+class _$FolderDao extends AlbumDao {
   _$FolderDao(this.database, this.changeListener)
       : _queryAdapter = QueryAdapter(database),
         _albumInsertionAdapter = InsertionAdapter(

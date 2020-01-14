@@ -12,4 +12,7 @@ abstract class SongDao {
 
   @insert
   Future<void> insertSong(Song song);
+
+  @insert
+  Future<void> insertAllSongs(List<Song> song);
 }

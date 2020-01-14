@@ -4,15 +4,22 @@ import 'package:dart_tags/dart_tags.dart';
 import 'package:media_metadata_plugin/media_media_data.dart';
 import 'package:media_metadata_plugin/media_metadata_plugin.dart';
 
+import '../database/app_database.dart';
+import '../database/model/album.dart';
 import '../database/model/song.dart';
+import '../main.dart';
 
 class MusicFinder {
   static readFolderIntoDatabase(Directory folder) async {
     //list all fields
     List<FileSystemEntity> files = new List();
+    List<Song> songs = new List();
     files = folder.listSync(); //use your folder name instead of resume.
 
     TagProcessor tp = new TagProcessor();
+
+    Album currentAlbum = null;
+
     for (File file in files) {
       String title;
       String artist;
@@ -50,15 +57,26 @@ class MusicFinder {
       }
       print(metaData);
 
-      //TODO read album art
-      //TODO create album album if it doesn't exist
-
-      //TODO query album
-      //TODO nicht vorhanden -> erstellen
-      //TODO Song solange einlesen, bis anderes album (geschwindigkeit)
       //TODO album bild auslesen (wie?)
 
-      Song song = Song(0, title, artist, album, 0, duration, file.path);
+      if(currentAlbum == null || currentAlbum.name != album){
+        //save songs that i have read until now
+        if(currentAlbum.name != album){
+          await database.songDao.insertAllSongs(songs);
+        }
+
+        //search album for song
+        currentAlbum = await database.albumDao.findAlbumByName(album);
+
+        if(currentAlbum == null){
+          //create new album
+          currentAlbum = Album(0, album, "");
+          //insert album
+          await database.albumDao.insertAlbum(currentAlbum);
+        }
+      }
+
+      songs.add(Song(0, title, artist, currentAlbum.id, duration, file.path));
     }
   }
 //title, artist, album,

@@ -4,7 +4,6 @@ import 'package:dart_tags/dart_tags.dart';
 import 'package:media_metadata_plugin/media_media_data.dart';
 import 'package:media_metadata_plugin/media_metadata_plugin.dart';
 
-import '../database/app_database.dart';
 import '../database/model/album.dart';
 import '../database/model/song.dart';
 import '../main.dart';
@@ -42,43 +41,52 @@ class MusicFinder {
         });
       }); //title, artist, album
 
-      //doesn't always find title
-      AudioMetaData metaData =
-          await MediaMetadataPlugin.getMediaMetaData(file.path);
-      duration = metaData.trackDuration;
-      if (title == null || title.isEmpty) {
-        title = metaData.trackName;
-      }
-      if (artist == null || artist.isEmpty) {
-        artist = metaData.artistName;
-      }
-      if (album == null || album.isEmpty) {
-        album = metaData.album;
-      }
-      print(metaData);
-
-      //TODO album bild auslesen (wie?)
-
-      if(currentAlbum == null || currentAlbum.name != album){
-        //save songs that i have read until now
-        if(currentAlbum != null && currentAlbum.name != album){
-          List<int> keys = await database.songDao.insertAllSongs(songs);
-          print(keys);
+      if (file.uri.toString().endsWith(".mp3")) {
+        //doesn't always find title
+        AudioMetaData metaData =
+        await MediaMetadataPlugin.getMediaMetaData(file.path);
+        duration = metaData.trackDuration;
+        if (title == null || title.isEmpty) {
+          title = metaData.trackName;
         }
+        if (artist == null || artist.isEmpty) {
+          artist = metaData.artistName;
+        }
+        if (album == null || album.isEmpty) {
+          album = metaData.album;
+        }
+        print(metaData);
 
-        //search album for song
-        currentAlbum = await database.albumDao.findAlbumByName(album);
+        //TODO album bild auslesen (wie?)
 
-        if(currentAlbum == null){
-          //create new album
-          currentAlbum = Album(null, album, "");
-          //insert album
-          await database.albumDao.insertAlbum(currentAlbum);
+        if (album != null) {
+          if (currentAlbum == null || currentAlbum.name != album) {
+            //save songs that i have read until now
+            if (currentAlbum != null && currentAlbum.name != album) {
+              List<int> keys = await database.songDao.insertAllSongs(songs);
+              songs.clear();
+              print(keys);
+            }
+
+            //search album for song
+            currentAlbum = await database.albumDao.findAlbumByName(album);
+
+            if (currentAlbum == null) {
+              //create new album
+              currentAlbum = Album(null, album, "");
+              //insert album
+              await database.albumDao.insertAlbum(currentAlbum);
+            }
+          }
+
+          songs.add(
+              Song(null, title, artist, currentAlbum.id, duration, file.path));
         }
       }
-
-      songs.add(Song(null, title, artist, currentAlbum.id, duration, file.path));
     }
+    List<int> keys = await database.songDao.insertAllSongs(songs);
+    print(keys);
+    songs.clear();
   }
 //title, artist, album,
 }

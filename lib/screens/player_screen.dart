@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -19,8 +20,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
     // TODO: implement build
     return Scaffold(
         body: Image.memory(
-          Uint8List.fromList(
-              currentSong == null ? "".codeUnits : currentSong.songArt),
+          currentSong == null
+              ? Uint8List(0)
+              : Base64Decoder().convert(currentSong.songArt),
           width: 100,
           height: 100,
           fit: BoxFit.contain,

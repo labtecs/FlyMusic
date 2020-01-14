@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/main.dart';
 
 class TrackList extends StatefulWidget {
   @override
@@ -8,27 +10,39 @@ class TrackList extends StatefulWidget {
 
 class _TrackListState extends State<TrackList> {
   @override
-  final numItems = 20;
+  //final numItems = 20;
+  List<Song> songs = List();
 
-  Widget _buildRow(int idx) {
+
+
+
+  Widget _buildRow(Song song) {
+
+    @override
+    void initState() async{
+      super.initState();
+      List<Song> loadSongs = await database.songDao.findAllSongs();
+    }
+
     return ListTile(
       leading: CircleAvatar(
-        child: Text('$idx'),
+        child: Text(song.title),
       ),
-      title: Text('Track $idx'),
+      title: Text(song.artist),
       trailing: Icon(Icons.play_arrow),
     );
   }
 
+  @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: numItems,
-        padding: const EdgeInsets.all(16.0),
-        itemBuilder: (BuildContext context, int i) {
-          if(i.isOdd) return Divider();
-          final index = i ~/ 2 +1;
-          return _buildRow(index);
-        }
-    );
+    // TODO: implement build
+    return Scaffold(
+      body: ListView.builder(
+        itemCount: songs.length,
+        itemBuilder: (context, index) {
+          return _buildRow(songs[index]);
+        },
+      ));
   }
 }
+

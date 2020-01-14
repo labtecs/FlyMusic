@@ -11,4 +11,7 @@ class Song {
   String uri;
 
   Song(this.id, this.artist, this.title, this.albumId, this.duration, this.uri);
+
 }
+
+

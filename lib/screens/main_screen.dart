@@ -37,7 +37,7 @@ class _StartScreenState extends State<StartScreen> {
     var result =
         await PermissionHandler().requestPermissions([PermissionGroup.storage]);
     if (result[PermissionGroup.storage] == PermissionStatus.granted) {
-      await getStorage();
+    //  await getStorage();
       Navigator.of(context).push<FolderPickerPage>(
           MaterialPageRoute(builder: (BuildContext context) {
         return FolderPickerPage(

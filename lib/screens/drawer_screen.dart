@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'player_screen.dart';
+
 class DrawerScreen extends StatefulWidget {
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -18,7 +20,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           ),
           ListTile(
-            title: Text('Item 1'),
+            title: Text('Player Screen'),
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen()));
+            },
           ),
           ListTile(
             title: Text('Item 2'),

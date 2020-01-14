@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Song` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `artist` TEXT, `title` TEXT, `albumId` INTEGER, `duration` INTEGER, `uri` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Song` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `artist` TEXT, `title` TEXT, `songArt` TEXT, `albumId` INTEGER, `duration` INTEGER, `uri` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Album` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `album_art` TEXT)');
 
@@ -112,6 +112,7 @@ class _$SongDao extends SongDao {
                   'id': item.id,
                   'artist': item.artist,
                   'title': item.title,
+                  'songArt': item.songArt,
                   'albumId': item.albumId,
                   'duration': item.duration,
                   'uri': item.uri
@@ -127,6 +128,7 @@ class _$SongDao extends SongDao {
       row['id'] as int,
       row['artist'] as String,
       row['title'] as String,
+      row['songArt'] as String,
       row['albumId'] as int,
       row['duration'] as int,
       row['uri'] as String);

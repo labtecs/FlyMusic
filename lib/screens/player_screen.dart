@@ -19,6 +19,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      appBar: AppBar(
+        //title: Text(currentSong.title),
+        backgroundColor: Colors.transparent,
+        //elevation: 0.0, //Macht die Appbar komplett transparent.
+      ),
         body: Image.memory(
           currentSong == null
               ? Uint8List(0)

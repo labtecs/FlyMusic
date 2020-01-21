@@ -17,7 +17,7 @@ class _AlbumListState extends State<AlbumList> {
             decoration: BoxDecoration(
               border: Border.all(width: 4.0),
             ),
-            child: Image.asset('asset/images/Cover1.jpg'),
+            child: Image.asset('asset/images/placeholder.jpg'),
           ),
       );
     }),

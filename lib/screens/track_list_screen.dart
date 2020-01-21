@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
+import 'package:flymusic/screens/player_screen.dart';
 
 class TrackList extends StatefulWidget {
   @override
@@ -13,15 +14,16 @@ class _TrackListState extends State<TrackList> {
 
   Widget _buildRow(Song song) {
     return ListTile(
-      onTap: () {
-        print(song.songArt);
-      },
       leading: CircleAvatar(
         child: Image.asset(checkCover(song.songArt)),
         backgroundColor: Colors.transparent,
       ),
       title: Text(song.artist),
       trailing: Icon(Icons.play_arrow),
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen())
+        );
+      },
     );
   }
 
@@ -45,6 +47,10 @@ class _TrackListState extends State<TrackList> {
     ));
   }
 
+  /*
+  Überprüft ob ein Cover für das Lied vorhanden ist.
+  Gibt andernfalls einen platzhalter zurück
+   */
   String checkCover(String coverPath) {
     String testCover = "asset/images/placeholder.jpg";
     if(coverPath == null) {

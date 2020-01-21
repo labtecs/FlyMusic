@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flymusic/screens/album_list_screen.dart';
+import 'package:flymusic/screens/artist_screen.dart';
 import 'package:flymusic/screens/drawer_screen.dart';
 import 'package:flymusic/screens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
@@ -57,7 +58,7 @@ class _StartScreenState extends State<StartScreen>
         children: <Widget>[
           TrackList(),
           AlbumList(),
-          TrackList(),
+          ArtistScreen(),
         ],
         controller: _tabController,
       ),

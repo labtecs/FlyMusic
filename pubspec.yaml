@@ -24,7 +24,7 @@ dependencies:
   dart_tags: ^0.2.2
 
   audioplayers: ^0.13.7
-  media_metadata_plugin: ^0.0.5
+  id3: ^0.1.8
 
   permission_handler: ^4.0.0
   path_provider: ^1.5.1

@@ -8,21 +8,9 @@ class TrackList extends StatefulWidget {
 }
 
 class _TrackListState extends State<TrackList> {
-  @override
-  //final numItems = 20;
   List<Song> songs = List();
 
-
-
-
   Widget _buildRow(Song song) {
-
-    @override
-    void initState() async{
-      super.initState();
-      List<Song> loadSongs = await database.songDao.findAllSongs();
-    }
-
     return ListTile(
       leading: CircleAvatar(
         child: Text(song.title),
@@ -34,14 +22,21 @@ class _TrackListState extends State<TrackList> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-      body: ListView.builder(
-        itemCount: songs.length,
-        itemBuilder: (context, index) {
-          return _buildRow(songs[index]);
-        },
-      ));
+        body: FutureBuilder<List<Song>>(
+      future: database.songDao.findAllSongs(),
+      builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return _buildRow(snapshot.data[index]);
+            },
+          );
+        } else {
+          return Text("no data");
+        }
+      },
+    ));
   }
 }
-

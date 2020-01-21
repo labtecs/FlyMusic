@@ -35,7 +35,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
   }
 
   void testPlay() async {
-    List<Song> songs = await database.songDao.findAllSongs();
+   /* List<Song> songs = await database.songDao.findAllSongs();
     AudioPlayer audioPlayer = AudioPlayer();
     await audioPlayer.setReleaseMode(ReleaseMode.STOP);
     int result = await audioPlayer.play(songs[0].uri, isLocal: true);
@@ -44,6 +44,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
       setState(() {
         currentSong = songs[0];
       });
-    }
+    }*/
   }
 }

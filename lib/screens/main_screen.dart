@@ -44,7 +44,6 @@ class _StartScreenState extends State<StartScreen> {
             rootDirectory: Directory("/storage/emulated/0/"),
             /// a [Directory] object
             action: (BuildContext context, Directory folder) async {
-              print("Picked folder $folder");
               MusicFinder.readFolderIntoDatabase(folder);
               Navigator.of(context).pop();
             });

@@ -15,8 +15,32 @@ class StartScreen extends StatefulWidget {
   _StartScreenState createState() => _StartScreenState();
 }
 
-class _StartScreenState extends State<StartScreen> {
+class _StartScreenState extends State<StartScreen>
+    with SingleTickerProviderStateMixin{
   Directory externalDirectory;
+  TabController _tabController;
+
+
+  static const _ktabs = <Tab> [
+    Tab(icon: Icon(Icons.cloud), text: 'Tab1'),
+    Tab(icon: Icon(Icons.alarm), text: 'Tab2'),
+    Tab(icon: Icon(Icons.forum), text: 'Tab3'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: _ktabs.length,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +50,22 @@ class _StartScreenState extends State<StartScreen> {
         title: Text("FlyMusic - Tracks"),
       ),
       //body: TrackList(),
-      body: AlbumList(),
+      body: TabBarView(
+        children: <Widget>[
+          TrackList(),
+          AlbumList(),
+          TrackList(),
+        ],
+        controller: _tabController,
+      ),
+      bottomNavigationBar: Material(
+        color: Colors.blue,
+        child: TabBar(
+          tabs: _ktabs,
+          controller:  _tabController,
+
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             chooseFolder();

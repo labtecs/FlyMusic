@@ -10,11 +10,6 @@ abstract class SongDao {
   @Query('SELECT * FROM Song WHERE id = :id')
   Future<Song> findSongById(int id);
 
-  /*
-  @Query('SELECT * FROM Song albumID')
-  Future<Song> findAllAlbums();
-  */
-
   @insert
   Future<void> insertSong(Song song);
 

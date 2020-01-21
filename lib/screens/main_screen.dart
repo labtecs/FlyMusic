@@ -22,9 +22,9 @@ class _StartScreenState extends State<StartScreen>
 
 
   static const _ktabs = <Tab> [
-    Tab(icon: Icon(Icons.cloud), text: 'Tab1'),
-    Tab(icon: Icon(Icons.alarm), text: 'Tab2'),
-    Tab(icon: Icon(Icons.forum), text: 'Tab3'),
+    Tab(text: 'Lieder'),
+    Tab(text: 'Alben'),
+    Tab(text: 'Künstler'),
   ];
 
   @override
@@ -47,7 +47,7 @@ class _StartScreenState extends State<StartScreen>
     return Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
-        title: Text("FlyMusic - Tracks"),
+        title: Text("FlyMusic"),
       ),
       //body: TrackList(),
       body: TabBarView(

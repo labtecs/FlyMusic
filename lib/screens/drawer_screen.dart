@@ -26,8 +26,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
             },
           ),
           ListTile(
-            title: Text('Item 2'),
+            title: Text('Lieder'),
           ),
+          ListTile(
+            title: Text('Alben'),
+          ),
+          ListTile(
+            title: Text('Künstler'),
+          )
         ],
       ),
     );

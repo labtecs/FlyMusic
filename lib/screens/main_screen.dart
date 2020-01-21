@@ -21,6 +21,9 @@ class _StartScreenState extends State<StartScreen>
   TabController _tabController;
 
 
+  /*
+  Tab Liste
+   */
   static const _ktabs = <Tab> [
     Tab(text: 'Lieder'),
     Tab(text: 'Alben'),

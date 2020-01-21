@@ -8,12 +8,17 @@ class TrackList extends StatefulWidget {
 }
 
 class _TrackListState extends State<TrackList> {
+
   List<Song> songs = List();
 
   Widget _buildRow(Song song) {
     return ListTile(
+      onTap: () {
+        print(song.songArt);
+      },
       leading: CircleAvatar(
-        child: Text(song.title),
+        child: Image.asset(checkCover(song.songArt)),
+        backgroundColor: Colors.transparent,
       ),
       title: Text(song.artist),
       trailing: Icon(Icons.play_arrow),
@@ -39,6 +44,18 @@ class _TrackListState extends State<TrackList> {
       },
     ));
   }
+
+  String checkCover(String coverPath) {
+    String testCover = "asset/images/placeholder.jpg";
+    if(coverPath == null) {
+      return testCover;
+    }
+    else{
+      return coverPath;
+    }
+  }
 }
+
+
 
 

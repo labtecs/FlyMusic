@@ -53,6 +53,7 @@ flutter:
     - asset/images/Cover1.jpg
     - asset/images/Cover2.jpg
     - asset/images/Cover3.jpg
+    - asset/images/placeholder.jpg
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
 

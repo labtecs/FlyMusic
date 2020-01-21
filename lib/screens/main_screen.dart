@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flymusic/screens/album_list_screen.dart';
 import 'package:flymusic/screens/drawer_screen.dart';
 import 'package:flymusic/screens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
@@ -24,7 +25,8 @@ class _StartScreenState extends State<StartScreen> {
       appBar: AppBar(
         title: Text("FlyMusic - Tracks"),
       ),
-      body: TrackList(),
+      //body: TrackList(),
+      body: AlbumList(),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             chooseFolder();

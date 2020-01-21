@@ -24,3 +24,4 @@ class _AlbumListState extends State<AlbumList> {
     );
   }
 }
+

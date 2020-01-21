@@ -46,8 +46,8 @@ class _StartScreenState extends State<StartScreen> {
             rootDirectory: Directory("/storage/emulated/0/"),
             /// a [Directory] object
             action: (BuildContext context, Directory folder) async {
-              MusicFinder.readFolderIntoDatabase(folder);
               Navigator.of(context).pop();
+              MusicFinder.readFolderIntoDatabase(folder);
             });
       }));
     }

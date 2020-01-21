@@ -23,8 +23,8 @@ class _TrackListState extends State<TrackList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder<List<Song>>(
-      future: database.songDao.findAllSongs(),
+        body: StreamBuilder<List<Song>>(
+      stream: database.songDao.findAllSongs(),
       builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(

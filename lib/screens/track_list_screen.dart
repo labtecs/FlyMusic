@@ -12,9 +12,6 @@ class _TrackListState extends State<TrackList> {
   //final numItems = 20;
   List<Song> songs = List();
 
-
-
-
   Widget _buildRow(Song song) {
 
     @override

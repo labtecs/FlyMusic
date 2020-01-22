@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player_screen.dart';
@@ -21,7 +22,17 @@ class _TrackListState extends State<TrackList> {
       title: Text(song.artist),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen())
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PlayerScreen())
+        );
+      },
+      onLongPress: () {
+        Fluttertoast.showToast(
+          msg: "This is Toast messaget",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black26,
+          textColor: Colors.black,
         );
       },
     );
@@ -31,20 +42,20 @@ class _TrackListState extends State<TrackList> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamBuilder<List<Song>>(
-      stream: database.songDao.findAllSongs(),
-      builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return _buildRow(snapshot.data[index]);
-            },
-          );
-        } else {
-          return Text("no data");
-        }
-      },
-    ));
+          stream: database.songDao.findAllSongs(),
+          builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return _buildRow(snapshot.data[index]);
+                },
+              );
+            } else {
+              return Text("no data");
+            }
+          },
+        ));
   }
 
   /*
@@ -53,10 +64,10 @@ class _TrackListState extends State<TrackList> {
    */
   String checkCover(String coverPath) {
     String testCover = "asset/images/placeholder.jpg";
-    if(coverPath == null) {
+    if (coverPath == null) {
       return testCover;
     }
-    else{
+    else {
       return coverPath;
     }
   }

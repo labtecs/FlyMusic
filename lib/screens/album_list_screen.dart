@@ -15,11 +15,10 @@ class _AlbumListState extends State<AlbumList> {
   Widget _buildRow(Album album) {
     return ListTile(
       leading: CircleAvatar(
-        child: null,
+        child: Image.asset("asset/images/placeholder.jpg"),
         backgroundColor: Colors.transparent,
       ),
       title: Text(album.name),
-      trailing: Icon(Icons.play_arrow),
       onTap: () {
       },
     );

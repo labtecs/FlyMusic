@@ -19,12 +19,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
               color: Colors.blue,
             ),
           ),
+
+          /*Jetzt über einen Klick auf einen Track erreichbar
           ListTile(
             title: Text('Player Screen'),
             onTap: (){
               Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen()));
             },
-          ),
+          ),*/
           ListTile(
             title: Text('Lieder'),
           ),

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flymusic/screens/album_list_screen.dart';
+import 'package:flymusic/screens/artist_screen.dart';
+import 'package:flymusic/screens/main_screen.dart';
+import 'package:flymusic/screens/track_list_screen.dart';
 
 import 'player_screen.dart';
 
@@ -29,18 +33,33 @@ class _DrawerScreenState extends State<DrawerScreen> {
           ),*/
           ListTile(
             title: Text('Lieder'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackList()));
+            },
           ),
           ListTile(
             title: Text('Alben'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumList()));
+            },
           ),
           ListTile(
             title: Text('Künstler'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ArtistScreen()));
+            },
           ),
           ListTile(
             title: Text('Einstellungen'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackList()));
+            },
           ),
           ListTile(
             title: Text("Impressum"),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackList()));
+            },
           ),
         ],
       ),

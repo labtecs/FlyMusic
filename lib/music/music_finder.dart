@@ -1,12 +1,11 @@
 import 'dart:collection';
 import 'dart:io';
 
+import 'package:flymusic/database/model/album.dart';
+import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/main.dart';
 import 'package:id3/id3.dart';
 import 'package:path/path.dart';
-
-import '../database/model/album.dart';
-import '../database/model/song.dart';
-import '../main.dart';
 
 class MusicFinder {
   static readFolderIntoDatabase(Directory folder) async {
@@ -19,7 +18,6 @@ class MusicFinder {
     Album currentAlbum;
 
     for (FileSystemEntity file in files) {
-
       if (file is File) {
         if (file.uri.toString().endsWith(".mp3")) {
           MP3Instance mp3instance = new MP3Instance(file.path);
@@ -28,11 +26,9 @@ class MusicFinder {
           String artist = mp3instance.metaTags['Artist'];
           String art;
 
-          if (mp3instance.metaTags['APIC'] is HashMap<String, dynamic>) {
-            if ((mp3instance.metaTags['APIC'] as HashMap<String, dynamic>)
-                .containsKey('base64')) {
-              art = (mp3instance.metaTags['APIC']
-                  as HashMap<String, dynamic>)['base64'];
+          if (mp3instance.metaTags['APIC'] is LinkedHashMap<String, dynamic>) {
+            if ((mp3instance.metaTags['APIC'] as LinkedHashMap<String, dynamic>).containsKey('base64')) {
+              art = (mp3instance.metaTags['APIC'] as LinkedHashMap<String, dynamic>)['base64'];
             }
           }
 
@@ -60,8 +56,8 @@ class MusicFinder {
                 await database.albumDao.insertAlbum(currentAlbum);
               }
             }
-            songs.add(Song(null, title, artist, art, currentAlbum.id, 0,
-                file.path));
+            songs.add(
+                Song(null, title, artist, art, currentAlbum.id, 0, file.path));
           }
         }
       }

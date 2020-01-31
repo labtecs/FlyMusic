@@ -11,7 +11,7 @@ Future<void> main() async {
   database = await $FloorAppDatabase
       .databaseBuilder('app_database.db')
       .build();
-  AudioPlayer.logEnabled = true;
+  //AudioPlayer.logEnabled = true;
   runApp(MyApp());
 }
 

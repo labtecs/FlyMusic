@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
@@ -16,14 +18,14 @@ class _TrackListState extends State<TrackList> {
   Widget _buildRow(Song song) {
     return ListTile(
       leading: CircleAvatar(
-        child: Image.asset(checkCover(song.songArt)),
+        child: getImage(song),
         backgroundColor: Colors.transparent,
       ),
       title: Text(song.artist),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlayerScreen())
+            context, MaterialPageRoute(builder: (context) => PlayerScreen(song))
         );
       },
       onLongPress: () {
@@ -62,13 +64,11 @@ class _TrackListState extends State<TrackList> {
   Überprüft ob ein Cover für das Lied vorhanden ist.
   Gibt andernfalls einen platzhalter zurück
    */
-  String checkCover(String coverPath) {
-    String testCover = "asset/images/placeholder.jpg";
-    if (coverPath == null) {
-      return testCover;
-    }
-    else {
-      return coverPath;
+  Image getImage(Song song) {
+    if (song != null && song.songArt != null) {
+      return Image.memory(Base64Decoder().convert(song.songArt));
+    } else {
+      return Image.asset( "asset/images/placeholder.jpg");
     }
   }
 }

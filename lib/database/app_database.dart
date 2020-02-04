@@ -13,7 +13,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 part 'app_database.g.dart';
-//flutter packages pub run build_runner build
+//Datenbank geneieren Befehl - flutter packages pub run build_runner build
 @Database(version: 1, entities: [Song, Album, Artist])
 abstract class AppDatabase extends FloorDatabase {
   SongDao get songDao;

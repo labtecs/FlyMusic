@@ -21,29 +21,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           ),
 
-          /*Jetzt über einen Klick auf einen Track erreichbar
+          //Jetzt über einen Klick auf einen Track erreichbar
           ListTile(
             title: Text('Player Screen'),
             onTap: (){
               Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen()));
-            },
-          ),*/
-          ListTile(
-            title: Text('Lieder'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackList()));
-            },
-          ),
-          ListTile(
-            title: Text('Alben'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumList()));
-            },
-          ),
-          ListTile(
-            title: Text('Künstler'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ArtistScreen()));
             },
           ),
           ListTile(

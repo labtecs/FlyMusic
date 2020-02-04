@@ -1,6 +1,6 @@
 import 'package:floor/floor.dart';
 
-import '../model/queue_item.dart';
+import 'package:flymusic/database/model/queue_item.dart';
 
 @dao
 abstract class QueueDao {

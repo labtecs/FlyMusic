@@ -4,6 +4,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/song.dart';
 
+import '../music/music_queue.dart';
+
 //TODO next song?
 class PlayerScreen extends StatefulWidget {
   Song _song;
@@ -17,7 +19,6 @@ class PlayerScreen extends StatefulWidget {
 // TODO logic (warteliste)
 class _PlayerScreenState extends State<PlayerScreen> {
   Song _currentSong;
-  AudioPlayer audioPlayer = AudioPlayer();
 
   _PlayerScreenState(this._currentSong);
 
@@ -35,12 +36,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
             Row(
               children: <Widget>[
                 MaterialButton(
-                    onPressed: null, child: Icon(Icons.chevron_left)),
-                MaterialButton(onPressed: () {
-                  play();
-                }, child: Icon(getPlayIcon())),
+                    onPressed: () {
+                      previous();
+                    },
+                    child: Icon(Icons.chevron_left)),
                 MaterialButton(
-                    onPressed: null, child: Icon(Icons.chevron_right))
+                    onPressed: () {
+                      play();
+                    },
+                    child: Icon(getPlayIcon())),
+                MaterialButton(
+                    onPressed: () {
+                      next();
+                    },
+                    child: Icon(Icons.chevron_right))
               ],
             )
           ],
@@ -48,7 +57,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
   }
 
   IconData getPlayIcon() {
-    if (audioPlayer.state == AudioPlayerState.PLAYING) {
+    if (MusicQueue.instance.audioPlayer.state == AudioPlayerState.PLAYING) {
       return Icons.pause_circle_outline;
     } else {
       return Icons.play_circle_outline;
@@ -65,15 +74,26 @@ class _PlayerScreenState extends State<PlayerScreen> {
   }
 
   void play() async {
-    await audioPlayer.setReleaseMode(ReleaseMode.STOP);
-    if (audioPlayer.state == AudioPlayerState.PLAYING){
-      await audioPlayer.pause();
-    }else{
-      int result = await audioPlayer.play(_currentSong.uri, isLocal: true);
-      //TODO result problem -> go to next song
-    }
+    await MusicQueue.instance.playPause();
     setState(() {
-      audioPlayer.state = audioPlayer.state;
+      MusicQueue.instance.audioPlayer.state =
+          MusicQueue.instance.audioPlayer.state;
+    });
+  }
+
+  void next() async {
+    await MusicQueue.instance.playNext();
+    setState(() {
+      MusicQueue.instance.audioPlayer.state =
+          MusicQueue.instance.audioPlayer.state;
+    });
+  }
+
+  void previous() async {
+    await MusicQueue.instance.playPrevious();
+    setState(() {
+      MusicQueue.instance.audioPlayer.state =
+          MusicQueue.instance.audioPlayer.state;
     });
   }
 }

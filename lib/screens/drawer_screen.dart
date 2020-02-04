@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flymusic/screens/impressum_screen.dart';
 import 'package:flymusic/screens/player_screen.dart';
+import 'package:flymusic/screens/settings_screen.dart';
 import 'package:flymusic/screens/track_list_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -14,15 +16,19 @@ class _DrawerScreenState extends State<DrawerScreen> {
       child: ListView(
         children: <Widget>[
           DrawerHeader(
-            child: Text('Drawer Header'),
+            child: Text('Aktueller Songtitel'),
             decoration: BoxDecoration(
+              image: DecorationImage(
+                image: ExactAssetImage('asset/images/placeholder.jpg'),
+                fit: BoxFit.cover,
+              ),
               color: Colors.blue,
             ),
           ),
 
           //Jetzt über einen Klick auf einen Track erreichbar
           ListTile(
-            title: Text('Player'),
+            title: Text('Aktuelle Wiedergabe'),
             onTap: (){
               Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen(null)));
             },
@@ -30,13 +36,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
           ListTile(
             title: Text('Einstellungen'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackList()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
             },
           ),
           ListTile(
             title: Text("Impressum"),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackList()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ImpressumScreen()));
             },
           ),
         ],

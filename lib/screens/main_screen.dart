@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flymusic/screens/album_list_screen.dart';
 import 'package:flymusic/screens/artist_screen.dart';
 import 'package:flymusic/screens/drawer_screen.dart';
+import 'package:flymusic/screens/queue_screen.dart';
 import 'package:flymusic/screens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,6 +30,7 @@ class _StartScreenState extends State<StartScreen>
     Tab(text: 'Lieder'),
     Tab(text: 'Alben'),
     Tab(text: 'Künstler'),
+    Tab(icon: Icon(Icons.queue_music)),
   ];
 
   @override
@@ -59,6 +61,7 @@ class _StartScreenState extends State<StartScreen>
           TrackList(),
           AlbumList(),
           ArtistScreen(),
+          QueueScreen(),
         ],
         controller: _tabController,
       ),

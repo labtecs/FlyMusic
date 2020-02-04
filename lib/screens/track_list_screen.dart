@@ -66,7 +66,7 @@ class _TrackListState extends State<TrackList> {
    */
   Image getImage(Song song) {
     if (song != null && song.songArt != null) {
-      return Image.memory(Base64Decoder().convert(song.songArt));
+      return Image.memory(base64.decode(song.songArt));
     } else {
       return Image.asset( "asset/images/placeholder.jpg");
     }

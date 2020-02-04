@@ -4,7 +4,30 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'const.dart';
+/*
+id3v2
 
+while (end) {
+      final len = _frameSizeOf(sBytes.sublist(offset + 4, offset + 8));
+      final fr = sBytes.sublist(offset);
+
+      final m = ff.getFrame(fr).decode(sBytes.sublist(offset));
+
+      tags[m?.key] = m?.value;
+
+      offset = offset + _headerLength + len;
+
+      if(m == null){
+        //when the first tag is null we go to false - we don't expect any more tags
+        end = false;
+      }else {
+        end = offset < size;
+      }
+    }
+
+    return tags;
+  }
+ */
 class MP3Instance {
   List<int> mp3Bytes;
   Map<String, dynamic> metaTags;
@@ -56,6 +79,8 @@ class MP3Instance {
         }
 
         frameSize = parseSize(frameHeader.sublist(4, 8));
+        //erst offset 10 (von gesamten daten)
+        //dann offset headerlength (10) + 1
         frameContent = mp3Bytes.sublist(cb + 10, cb + 10 + frameSize);
 
         if (FRAMESv2_3[latin1.decode(frameName)] == FRAMESv2_3['APIC']) {
@@ -87,7 +112,10 @@ class MP3Instance {
             }
           }
 
-          apic['base64'] = base64.encode(frameContent.sublist(offset));
+
+          var imgData = getData(frameContent.sublist(1));
+
+          apic['base64'] = base64.encode(imgData);
           metaTags['APIC'] = apic;
         } else {
           var tag =
@@ -127,6 +155,34 @@ class MP3Instance {
     return false;
   }
 
+  List<int> getData(List<int> data){
+
+    final iterator = data.iterator;
+    var buff = <int>[];
+
+
+    var cont = 0;
+
+    while (iterator.moveNext() && cont < 4) {
+      final crnt = iterator.current;
+      if (crnt == 0x00 && cont < 3) {
+        if (cont == 1 && buff.isNotEmpty) {
+         // attachedPicture.imageTypeCode = buff[0];
+          cont++;
+        //  attachedPicture.description = enc.decode(buff.sublist(1));
+        } else {
+        //  attachedPicture.mime = enc.decode(buff);
+        }
+        buff = [];
+        cont++;
+        continue;
+      }
+      buff.add(crnt);
+    }
+
+    return buff;
+  }
+
   Map<String, dynamic> getMetaTags() {
     return metaTags;
   }
@@ -135,9 +191,9 @@ class MP3Instance {
 int parseSize(List<int> block) {
   assert(block.length == 4);
 
-  var len = block[0] << 21;
-  len += block[1] << 14;
-  len += block[2] << 7;
+  var len = block[0] << 24;//21
+  len += block[1] << 16;//14
+  len += block[2] << 8;//7
   len += block[3];
 
   return len;

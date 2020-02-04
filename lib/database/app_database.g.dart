@@ -63,6 +63,8 @@ class _$AppDatabase extends AppDatabase {
 
   ArtistDao _artistDaoInstance;
 
+  QueueDao _queueDaoInstance;
+
   Future<sqflite.Database> open(String name, List<Migration> migrations,
       [Callback callback]) async {
     final path = join(await sqflite.getDatabasesPath(), name);
@@ -89,6 +91,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `Album` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `album_art` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Artist` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Queue` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `songId` INTEGER, `position` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -108,6 +112,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   ArtistDao get artistDao {
     return _artistDaoInstance ??= _$ArtistDao(database, changeListener);
+  }
+
+  @override
+  QueueDao get queueDao {
+    return _queueDaoInstance ??= _$QueueDao(database, changeListener);
   }
 }
 
@@ -267,5 +276,72 @@ class _$ArtistDao extends ArtistDao {
   Future<void> insertArtist(Artist artist) async {
     await _artistInsertionAdapter.insert(
         artist, sqflite.ConflictAlgorithm.abort);
+  }
+}
+
+class _$QueueDao extends QueueDao {
+  _$QueueDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _queueItemInsertionAdapter = InsertionAdapter(
+            database,
+            'Queue',
+            (QueueItem item) => <String, dynamic>{
+                  'id': item.id,
+                  'songId': item.songId,
+                  'position': item.position
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _queueMapper = (Map<String, dynamic> row) =>
+      QueueItem(row['id'] as int, row['songId'] as int, row['position'] as int);
+
+  final InsertionAdapter<QueueItem> _queueItemInsertionAdapter;
+
+  @override
+  Stream<List<QueueItem>> findAllItems() {
+    return _queryAdapter.queryListStream(
+        'SELECT * FROM Queue ORDER BY position DESC',
+        tableName: 'Queue',
+        mapper: _queueMapper);
+  }
+
+  @override
+  Future<QueueItem> getNextItem(int currentPosition) async {
+    return _queryAdapter.query(
+        'SELECT * FROM Queue WHERE position > ? ORDER BY position DESC',
+        arguments: <dynamic>[currentPosition],
+        mapper: _queueMapper);
+  }
+
+  @override
+  Future<QueueItem> getPreviousItem(int currentPosition) async {
+    return _queryAdapter.query(
+        'SELECT * FROM Queue WHERE position < ? ORDER BY position ASC',
+        arguments: <dynamic>[currentPosition],
+        mapper: _queueMapper);
+  }
+
+  @override
+  Future<QueueItem> getLastItem() async {
+    return _queryAdapter.query('SELECT * FROM Queue ORDER BY position ASC',
+        mapper: _queueMapper);
+  }
+
+  @override
+  Future<void> addItem(QueueItem item) async {
+    await _queueItemInsertionAdapter.insert(
+        item, sqflite.ConflictAlgorithm.abort);
+  }
+
+  @override
+  Future<void> addItems(List<QueueItem> items) async {
+    await _queueItemInsertionAdapter.insertList(
+        items, sqflite.ConflictAlgorithm.abort);
   }
 }

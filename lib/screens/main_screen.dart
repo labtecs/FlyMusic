@@ -22,14 +22,15 @@ class _StartScreenState extends State<StartScreen>
   Directory externalDirectory;
   TabController _tabController;
 
+  var tabNameList =['Track List','Alben','Künstler','Warteschlange'];
 
   /*
   Tab Liste
    */
   static const _ktabs = <Tab> [
-    Tab(text: 'Lieder'),
-    Tab(text: 'Alben'),
-    Tab(text: 'Künstler'),
+    Tab(icon: Icon(Icons.audiotrack),),
+    Tab(icon: Icon(Icons.album)),
+    Tab(icon: Icon(Icons.person)),
     Tab(icon: Icon(Icons.queue_music)),
   ];
 
@@ -53,7 +54,8 @@ class _StartScreenState extends State<StartScreen>
     return Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
-        title: Text("FlyMusic"),
+        title: Text(getAppbarText()),
+
       ),
       //body: TrackList(),
       body: TabBarView(
@@ -70,6 +72,7 @@ class _StartScreenState extends State<StartScreen>
         child: TabBar(
           tabs: _ktabs,
           controller:  _tabController,
+
 
         ),
       ),
@@ -104,4 +107,14 @@ class _StartScreenState extends State<StartScreen>
         await getExternalStorageDirectories(type: StorageDirectory.music);
     setState(() => externalDirectory = directory[1]);
   }
+
+  String getAppbarText() {
+    String text = tabNameList[_tabController.index];
+    setState(() {
+
+    });
+    return text;
+  }
 }
+
+

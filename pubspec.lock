@@ -165,9 +165,11 @@ packages:
   dart_tags:
     dependency: "direct main"
     description:
-      name: dart_tags
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: aa1f7777246b72c5e1d401354eee3cee2b6e34d6
+      url: "git://github.com/Nailik/dart-tags.git"
+    source: git
     version: "0.2.2"
   filesize:
     dependency: transitive

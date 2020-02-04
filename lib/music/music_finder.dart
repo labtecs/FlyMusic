@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
+
+import 'package:dart_tags/dart_tags.dart';
 import 'package:flymusic/database/model/album.dart';
+import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:path/path.dart';
-import 'package:dart_tags/dart_tags.dart';
 
 class MusicFinder {
   static readFolderIntoDatabase(Directory folder) async {
@@ -14,14 +17,13 @@ class MusicFinder {
         recursive: true); //use your folder name instead of resume.
 
     Album currentAlbum;
+    Artist currentArtist;
 
     TagProcessor tp = new TagProcessor();
-
 
     for (FileSystemEntity file in files) {
       if (file is File) {
         if (file.uri.toString().endsWith(".mp3")) {
-
           String title;
           String artist;
           String art;
@@ -41,47 +43,81 @@ class MusicFinder {
                 }
               }
               if (f.tags.containsKey('picture')) {
-                art = (f.tags['picture'] as AttachedPicture).imageData64;
+                try {
+                  String image =
+                      (f.tags['picture'] as AttachedPicture).imageData64;
+                  base64Decode(image);
+                  art = image;
+                } on Exception catch (_) {
+                  art = null;
+                }
               }
             });
           }); //title, artist, album
-
-
 
           if (title == null || title.isEmpty) {
             title = basename(file.path);
           }
 
-          if (album != null) {
-            if (currentAlbum == null || currentAlbum.name != album) {
-              //save songs that i have read until now
-              if (currentAlbum != null && currentAlbum.name != album) {
-                List<int> keys = await database.songDao.insertAllSongs(songs);
-                songs.clear();
-              }
-              //search album for song
-              currentAlbum = await database.albumDao.findAlbumByName(album);
-
-              if (currentAlbum == null) {
-                //create new album
-                currentAlbum = Album(null, album, art);
-                //insert album
-                await database.albumDao.insertAlbum(currentAlbum);
-              }
-            }
-            songs.add(
-                Song(null, title, artist, art, currentAlbum.id, 0, file.path));
+          if (album == null || album.isEmpty) {
+            album = "Unkown";
           }
+
+          if (artist == null || artist.isEmpty) {
+            artist = "Unkown";
+          }
+
+          Album newAlbum = await findAlbum(currentAlbum, album, art);
+          if (newAlbum != currentAlbum) {
+            await database.songDao.insertAllSongs(songs);
+            songs.clear();
+            currentAlbum = newAlbum;
+          }
+
+          currentArtist = await findArtist(currentArtist, artist);
+
+          songs.add(Song(null, title, artist, art, currentAlbum.id, 0,
+              file.path, currentArtist.id));
         }
       }
     }
     await database.songDao.insertAllSongs(songs);
     songs.clear();
   }
+
+  static Future<Album> findAlbum(
+      Album currentAlbum, String album, String art) async {
+    //save songs that i have read until now
+    if (currentAlbum?.name != album) {
+      //search album for song
+      currentAlbum = await database.albumDao.findAlbumByName(album);
+
+      if (currentAlbum == null) {
+        //create new album
+        currentAlbum = Album(null, album, art);
+        //insert album
+        await database.albumDao.insertAlbum(currentAlbum);
+      }
+    }
+    return currentAlbum;
+  }
+
+  static Future<Artist> findArtist(Artist currentArtist, String artist) async {
+    //save songs that i have read until now
+    if (currentArtist?.name != artist) {
+      //search album for song
+      currentArtist = await database.artistDao.findArtistByName(artist);
+
+      if (currentArtist == null) {
+        //create new album
+        currentArtist = Artist(null, artist);
+        //insert album
+        await database.artistDao.insertArtist(currentArtist);
+      }
+    }
+    return currentArtist;
+  }
 }
-
-
-
 
 /*
  for (FileSystemEntity file in files) {

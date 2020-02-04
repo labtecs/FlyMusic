@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
 
 import '../main.dart';
@@ -11,15 +12,13 @@ class ArtistScreen extends StatefulWidget {
 class _ArtistScreenState extends State<ArtistScreen> {
   @override
 
-  List<Song> Artists = List();
-
-  Widget _buildRow(Song song) {
+  Widget _buildRow(Artist artist) {
     return ListTile(
       leading: CircleAvatar(
-        child: Image.asset(checkCover(song.songArt)),
+        child: Image.asset("asset/images/artist_placeholder.jpg"),
         backgroundColor: Colors.transparent,
       ),
-      title: Text(song.title),
+      title: Text(artist.name),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
         print("Noch keine Funktion");
@@ -30,9 +29,9 @@ class _ArtistScreenState extends State<ArtistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder<List<Song>>(
-          stream: database.songDao.findAllSongs(),
-          builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+        body: StreamBuilder<List<Artist>>(
+          stream: database.artistDao.findAllArtists(),
+          builder: (BuildContext context, AsyncSnapshot<List<Artist>> snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data.length,

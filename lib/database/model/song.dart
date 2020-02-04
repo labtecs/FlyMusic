@@ -10,9 +10,8 @@ class Song {
   int albumId;
   int duration;
   String uri;
+  int artistId;
 
   Song(this.id, this.title, this.artist, this.songArt, this.albumId,
-      this.duration, this.uri);
+      this.duration, this.uri, this.artistId);
 }
-
-

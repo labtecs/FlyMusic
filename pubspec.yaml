@@ -22,7 +22,8 @@ dependencies:
 
   floor: ^0.9.0
   audioplayers: ^0.13.7
-  dart_tags: git: git://github.com/Nailik/dart-tags.git
+  dart_tags:
+    git: git://github.com/Nailik/dart-tags.git
 
   permission_handler: ^4.0.0
   path_provider: ^1.5.1

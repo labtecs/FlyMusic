@@ -7,11 +7,11 @@ abstract class AlbumDao {
   @Query('SELECT * FROM Album')
   Future<List<Album>> findAllAlbums();
 
-  @Query('SELECT * FROM Album WHERE id = :id')
+  @Query('SELECT * FROM Album WHERE id = :id LIMIT 1')
   Future<Album> findAlbumById(int id);
 
 
-  @Query('SELECT * FROM Album WHERE name = :name')
+  @Query('SELECT * FROM Album WHERE name = :name LIMIT 1')
   Future<Album> findAlbumByName(String name);
 
   @insert

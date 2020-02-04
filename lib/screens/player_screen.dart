@@ -8,25 +8,23 @@ import '../music/music_queue.dart';
 
 //TODO next song?
 class PlayerScreen extends StatefulWidget {
-  Song _song;
 
-  PlayerScreen(this._song);
+  PlayerScreen();
 
   @override
-  _PlayerScreenState createState() => _PlayerScreenState(_song);
+  _PlayerScreenState createState() => _PlayerScreenState();
 }
 
 // TODO logic (warteliste)
 class _PlayerScreenState extends State<PlayerScreen> {
-  Song _currentSong;
 
-  _PlayerScreenState(this._currentSong);
+  _PlayerScreenState();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(_currentSong == null ? "no song" : _currentSong.title),
+          title: Text(MusicQueue.instance.currentSong?.title ?? "no song"),
           backgroundColor: Colors.transparent,
           //elevation: 0.0, //Macht die Appbar komplett transparent.
         ),
@@ -65,8 +63,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
   }
 
   Image getImage() {
-    if (_currentSong != null && _currentSong.songArt != null) {
-      return Image.memory(Base64Decoder().convert(_currentSong.songArt),
+    if (MusicQueue.instance.currentSong?.songArt != null) {
+      return Image.memory(Base64Decoder().convert(MusicQueue.instance.currentSong.songArt),
           width: 100, height: 100, fit: BoxFit.contain);
     } else {
       return Image.asset("asset/images/placeholder.jpg");

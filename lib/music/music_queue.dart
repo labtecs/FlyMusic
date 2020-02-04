@@ -10,46 +10,69 @@ class MusicQueue {
 
   factory MusicQueue() => instance;
   final AudioPlayer audioPlayer = AudioPlayer();
-  Song _currentSong;
+  Song currentSong;
 
   MusicQueue._internal() {
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
   }
 
-  playAlbum(Album album) {
+  clickSong(Song song) async {
+    await _addSong(song);
+    if (audioPlayer.state != AudioPlayerState.PLAYING) {
+      await playPause();
+    }
+  }
+
+  clickArtist(Artist artist) async {
+    await _addArtist(artist);
+    if (audioPlayer.state != AudioPlayerState.PLAYING) {
+      await playPause();
+    }
+  }
+
+  clickAlbum(Album album) async {
+    await _addAlbum(album);
+    if (audioPlayer.state != AudioPlayerState.PLAYING) {
+      await playPause();
+    }
+  }
+
+  _playAlbum(Album album) {
     //alle lieder in die warteschlange (oben)
   }
 
-  playArtist(Artist artist) {
+  _playArtist(Artist artist) {
     //alle lieder in die warteschlange (oben)
   }
 
-  playSong(Song song) {
+  _playSong(Song song) {
     //kommt oben in die warteschlange die anderen lieder werden nach unten verschoben
   }
 
-  addAlbum(Album album) async {
+  _addAlbum(Album album) async {
     //alle lieder in die warteschlange (unten)
-    addItems(await database.songDao.findSongIdsByAlbumId(album.id));
+    _addItems((await database.songDao.findSongIdsByAlbumId(album.id))
+        .map((item) => item.id).toList());
   }
 
-  addArtist(Artist artist) async {
+  _addArtist(Artist artist) async {
     //alle lieder in die warteschlange (unten)
-    addItems(await database.songDao.findSongIdsByArtistId(artist.id));
+    _addItems((await database.songDao.findSongIdsByArtistId(artist.id))
+        .map((item) => item.id).toList());
   }
 
-  addItems(List<int> items) async {
+  _addItems(List<int> items) async {
     var lastItem = await database.queueDao.getLastItem();
     var insertItems =
-        items.map((id) => new QueueItem(null, id, lastItem.position++));
+        items.map((id) => new QueueItem(null, id, lastItem?.position++ ?? 0));
     database.queueDao.addItems(insertItems);
   }
 
-  addSong(Song song) async {
+  _addSong(Song song) async {
     //kommt unten in die Warteliste
     QueueItem lastItem = await database.queueDao.getLastItem();
     database.queueDao
-        .addItem(new QueueItem(null, song.id, lastItem.position++));
+        .addItem(new QueueItem(null, song.id, lastItem?.position++ ?? 0));
   }
 
   playPause() async {
@@ -68,15 +91,15 @@ class MusicQueue {
 
   //20 lieder vor dem aktuellen - davor löschen TODO
   playNext() async {
-    var queueItem = await database.queueDao.getNextItem(_currentSong?.id ?? 0);
+    var queueItem = await database.queueDao.getNextItem(currentSong?.id ?? -1);
     if (queueItem == null) {
       return;
     }
-    _currentSong = await database.songDao.findSongById(queueItem.songId);
-    if (_currentSong == null) {
+    currentSong = await database.songDao.findSongById(queueItem.songId);
+    if (currentSong == null) {
       return;
     }
-    int result = await audioPlayer.play(_currentSong.uri, isLocal: true);
+    int result = await audioPlayer.play(currentSong.uri, isLocal: true);
     if (result != 1) {
       await playNext();
     }
@@ -85,15 +108,15 @@ class MusicQueue {
   //warteschlange leer -> nächstes lied in "alle lieder"
   playPrevious() async {
     var queueItem =
-        await database.queueDao.getPreviousItem(_currentSong?.id ?? 0);
+        await database.queueDao.getPreviousItem(currentSong?.id ?? 1);
     if (queueItem == null) {
       return;
     }
-    _currentSong = await database.songDao.findSongById(queueItem.songId);
-    if (_currentSong == null) {
+    currentSong = await database.songDao.findSongById(queueItem.songId);
+    if (currentSong == null) {
       return;
     }
-    int result = await audioPlayer.play(_currentSong.uri, isLocal: true);
+    int result = await audioPlayer.play(currentSong.uri, isLocal: true);
     if (result != 1) {
       await playPrevious();
     }

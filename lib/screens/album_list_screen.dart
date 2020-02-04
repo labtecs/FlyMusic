@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/main.dart';
 
+import 'package:flymusic/music/music_queue.dart';
+
 class AlbumList extends StatefulWidget {
   @override
   _AlbumListState createState() => _AlbumListState();
@@ -22,6 +24,7 @@ class _AlbumListState extends State<AlbumList> {
       ),
       title: Text(album.name),
       onTap: () {
+        MusicQueue.instance.clickAlbum(album);
       },
     );
   }

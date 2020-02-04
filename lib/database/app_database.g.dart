@@ -164,7 +164,7 @@ class _$SongDao extends SongDao {
 
   @override
   Future<Song> findSongById(int id) async {
-    return _queryAdapter.query('SELECT * FROM Song WHERE id = ?',
+    return _queryAdapter.query('SELECT * FROM Song WHERE id = ? LIMIT 1',
         arguments: <dynamic>[id], mapper: _songMapper);
   }
 
@@ -175,9 +175,21 @@ class _$SongDao extends SongDao {
   }
 
   @override
-  Future<List<Song>> findSongsByAlbumId(int albumId) async {
+  Future<List<Song>> findSongIdsByArtistId(int id) async {
+    return _queryAdapter.queryList('SELECT id FROM Song WHERE artistId = ?',
+        arguments: <dynamic>[id], mapper: _songMapper);
+  }
+
+  @override
+  Future<List<Song>> findSongsByAlbumId(int id) async {
     return _queryAdapter.queryList('SELECT * FROM Song WHERE albumId = ?',
-        arguments: <dynamic>[albumId], mapper: _songMapper);
+        arguments: <dynamic>[id], mapper: _songMapper);
+  }
+
+  @override
+  Future<List<Song>> findSongIdsByAlbumId(int id) async {
+    return _queryAdapter.queryList('SELECT id FROM Song WHERE albumId = ?',
+        arguments: <dynamic>[id], mapper: _songMapper);
   }
 
   @override
@@ -222,13 +234,13 @@ class _$AlbumDao extends AlbumDao {
 
   @override
   Future<Album> findAlbumById(int id) async {
-    return _queryAdapter.query('SELECT * FROM Album WHERE id = ?',
+    return _queryAdapter.query('SELECT * FROM Album WHERE id = ? LIMIT 1',
         arguments: <dynamic>[id], mapper: _albumMapper);
   }
 
   @override
   Future<Album> findAlbumByName(String name) async {
-    return _queryAdapter.query('SELECT * FROM Album WHERE name = ?',
+    return _queryAdapter.query('SELECT * FROM Album WHERE name = ? LIMIT 1',
         arguments: <dynamic>[name], mapper: _albumMapper);
   }
 
@@ -268,7 +280,7 @@ class _$ArtistDao extends ArtistDao {
 
   @override
   Future<Artist> findArtistByName(String name) async {
-    return _queryAdapter.query('SELECT * FROM Artist WHERE name = ?',
+    return _queryAdapter.query('SELECT * FROM Artist WHERE name = ? LIMIT 1',
         arguments: <dynamic>[name], mapper: _artistMapper);
   }
 
@@ -314,7 +326,7 @@ class _$QueueDao extends QueueDao {
   @override
   Future<QueueItem> getNextItem(int currentPosition) async {
     return _queryAdapter.query(
-        'SELECT * FROM Queue WHERE position > ? ORDER BY position DESC',
+        'SELECT * FROM Queue WHERE position > ? ORDER BY position DESC LIMIT 1',
         arguments: <dynamic>[currentPosition],
         mapper: _queueMapper);
   }
@@ -322,14 +334,15 @@ class _$QueueDao extends QueueDao {
   @override
   Future<QueueItem> getPreviousItem(int currentPosition) async {
     return _queryAdapter.query(
-        'SELECT * FROM Queue WHERE position < ? ORDER BY position ASC',
+        'SELECT * FROM Queue WHERE position < ? ORDER BY position ASC LIMIT 1',
         arguments: <dynamic>[currentPosition],
         mapper: _queueMapper);
   }
 
   @override
   Future<QueueItem> getLastItem() async {
-    return _queryAdapter.query('SELECT * FROM Queue ORDER BY position ASC',
+    return _queryAdapter.query(
+        'SELECT * FROM Queue ORDER BY position ASC LIMIT 1',
         mapper: _queueMapper);
   }
 

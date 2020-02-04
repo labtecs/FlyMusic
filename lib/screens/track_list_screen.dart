@@ -6,6 +6,8 @@ import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player_screen.dart';
 
+import '../music/music_queue.dart';
+
 class TrackList extends StatefulWidget {
   @override
   _TrackListState createState() => _TrackListState();
@@ -21,11 +23,12 @@ class _TrackListState extends State<TrackList> {
         child: getImage(song),
         backgroundColor: Colors.transparent,
       ),
-      title: Text(song.artist),
+      title: Text(song.title),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
+        MusicQueue.instance.clickSong(song);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlayerScreen(song))
+            context, MaterialPageRoute(builder: (context) => PlayerScreen())
         );
       },
       onLongPress: () {

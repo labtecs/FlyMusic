@@ -1,9 +1,6 @@
 
 import 'dart:io';
 
-import 'package:dart_tags/dart_tags.dart';
-import 'package:media_metadata_plugin/media_media_data.dart';
-import 'package:media_metadata_plugin/media_metadata_plugin.dart';
 
 import '../database/model/album.dart';
 import '../database/model/song.dart';
@@ -16,7 +13,7 @@ class MusicFinder {
     List<Song> songs = new List();
     files = folder.listSync(recursive: true); //use your folder name instead of resume.
 
-    TagProcessor tp = new TagProcessor();
+//    TagProcessor tp = new TagProcessor();
 
     Album currentAlbum = null;
 

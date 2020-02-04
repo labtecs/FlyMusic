@@ -5,7 +5,7 @@ import '../model/song.dart';
 @dao
 abstract class SongDao {
   @Query('SELECT * FROM Song')
-  Future<List<Song>> findAllSongs();
+  Stream<List<Song>> findAllSongs();
 
   @Query('SELECT * FROM Song WHERE id = :id')
   Future<Song> findSongById(int id);

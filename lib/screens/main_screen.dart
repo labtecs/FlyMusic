@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flymusic/screens/album_list_screen.dart';
+import 'package:flymusic/screens/artist_screen.dart';
 import 'package:flymusic/screens/drawer_screen.dart';
 import 'package:flymusic/screens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
@@ -15,18 +16,60 @@ class StartScreen extends StatefulWidget {
   _StartScreenState createState() => _StartScreenState();
 }
 
-class _StartScreenState extends State<StartScreen> {
+class _StartScreenState extends State<StartScreen>
+    with SingleTickerProviderStateMixin{
   Directory externalDirectory;
+  TabController _tabController;
+
+
+  /*
+  Tab Liste
+   */
+  static const _ktabs = <Tab> [
+    Tab(text: 'Lieder'),
+    Tab(text: 'Alben'),
+    Tab(text: 'Künstler'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: _ktabs.length,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
-        title: Text("FlyMusic - Tracks"),
+        title: Text("FlyMusic"),
       ),
       //body: TrackList(),
-      body: AlbumList(),
+      body: TabBarView(
+        children: <Widget>[
+          TrackList(),
+          AlbumList(),
+          ArtistScreen(),
+        ],
+        controller: _tabController,
+      ),
+      bottomNavigationBar: Material(
+        color: Colors.blue,
+        child: TabBar(
+          tabs: _ktabs,
+          controller:  _tabController,
+
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             chooseFolder();
@@ -46,9 +89,8 @@ class _StartScreenState extends State<StartScreen> {
             rootDirectory: Directory("/storage/emulated/0/"),
             /// a [Directory] object
             action: (BuildContext context, Directory folder) async {
-              print("Picked folder $folder");
-              MusicFinder.readFolderIntoDatabase(folder);
               Navigator.of(context).pop();
+              MusicFinder.readFolderIntoDatabase(folder);
             });
       }));
     }

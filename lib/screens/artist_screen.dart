@@ -1,41 +1,28 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/main.dart';
-import 'package:flymusic/screens/player_screen.dart';
 
-class TrackList extends StatefulWidget {
+import '../main.dart';
+
+class ArtistScreen extends StatefulWidget {
   @override
-  _TrackListState createState() => _TrackListState();
+  _ArtistScreenState createState() => _ArtistScreenState();
 }
 
-class _TrackListState extends State<TrackList> {
+class _ArtistScreenState extends State<ArtistScreen> {
+  @override
 
-  List<Song> songs = List();
+  List<Song> Artists = List();
 
   Widget _buildRow(Song song) {
     return ListTile(
       leading: CircleAvatar(
-        child: getImage(song),
+        child: Image.asset(checkCover(song.songArt)),
         backgroundColor: Colors.transparent,
       ),
-      title: Text(song.artist),
+      title: Text(song.title),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlayerScreen(song))
-        );
-      },
-      onLongPress: () {
-        Fluttertoast.showToast(
-          msg: "This is Toast messaget",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.black26,
-          textColor: Colors.black,
-        );
+        print("Noch keine Funktion");
       },
     );
   }
@@ -64,15 +51,13 @@ class _TrackListState extends State<TrackList> {
   Überprüft ob ein Cover für das Lied vorhanden ist.
   Gibt andernfalls einen platzhalter zurück
    */
-  Image getImage(Song song) {
-    if (song != null && song.songArt != null) {
-      return Image.memory(Base64Decoder().convert(song.songArt));
-    } else {
-      return Image.asset( "asset/images/placeholder.jpg");
+  String checkCover(String coverPath) {
+    String testCover = "asset/images/artist_placeholder.jpg";
+    if(coverPath == null) {
+      return testCover;
+    }
+    else{
+      return coverPath;
     }
   }
 }
-
-
-
-

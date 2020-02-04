@@ -104,7 +104,7 @@ class _$AppDatabase extends AppDatabase {
 
 class _$SongDao extends SongDao {
   _$SongDao(this.database, this.changeListener)
-      : _queryAdapter = QueryAdapter(database),
+      : _queryAdapter = QueryAdapter(database, changeListener),
         _songInsertionAdapter = InsertionAdapter(
             database,
             'Song',
@@ -116,7 +116,8 @@ class _$SongDao extends SongDao {
                   'albumId': item.albumId,
                   'duration': item.duration,
                   'uri': item.uri
-                });
+                },
+            changeListener);
 
   final sqflite.DatabaseExecutor database;
 
@@ -136,8 +137,9 @@ class _$SongDao extends SongDao {
   final InsertionAdapter<Song> _songInsertionAdapter;
 
   @override
-  Future<List<Song>> findAllSongs() async {
-    return _queryAdapter.queryList('SELECT * FROM Song', mapper: _songMapper);
+  Stream<List<Song>> findAllSongs() {
+    return _queryAdapter.queryListStream('SELECT * FROM Song',
+        tableName: 'Song', mapper: _songMapper);
   }
 
   @override

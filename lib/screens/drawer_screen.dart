@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/screens/album_list_screen.dart';
 import 'package:flymusic/screens/artist_screen.dart';
+import 'package:flymusic/screens/player_screen.dart';
 import 'package:flymusic/screens/track_list_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -23,9 +24,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
           //Jetzt über einen Klick auf einen Track erreichbar
           ListTile(
-            title: Text('Player Screen'),
+            title: Text('Player'),
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen(null)));
             },
           ),
           ListTile(

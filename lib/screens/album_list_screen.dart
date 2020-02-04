@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/main.dart';
+import 'package:flymusic/screens/album_track_list_screen.dart';
 
 class AlbumList extends StatefulWidget {
   @override
@@ -22,6 +23,9 @@ class _AlbumListState extends State<AlbumList> {
       ),
       title: Text(album.name),
       onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AlbumTrackListScreen()),
+        );
       },
     );
   }

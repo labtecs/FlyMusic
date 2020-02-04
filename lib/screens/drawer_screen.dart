@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flymusic/screens/album_list_screen.dart';
-import 'package:flymusic/screens/artist_screen.dart';
 import 'package:flymusic/screens/player_screen.dart';
 import 'package:flymusic/screens/track_list_screen.dart';
 

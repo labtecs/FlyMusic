@@ -13,6 +13,16 @@ import 'package:permission_handler/permission_handler.dart';
 import '../music/music_finder.dart';
 
 class StartScreen extends StatefulWidget {
+
+  int tabNumber = 0;
+
+  void setTabNumber(int value) {
+    tabNumber = value;
+  }
+  int getTabNumber() {
+    return tabNumber;
+  }
+
   @override
   _StartScreenState createState() => _StartScreenState();
 }
@@ -21,8 +31,7 @@ class _StartScreenState extends State<StartScreen>
     with SingleTickerProviderStateMixin{
   Directory externalDirectory;
   TabController _tabController;
-
-  var tabNameList =['Track List','Alben','Künstler','Warteschlange'];
+  String _title;
 
   /*
   Tab Liste
@@ -37,6 +46,7 @@ class _StartScreenState extends State<StartScreen>
   @override
   void initState() {
     super.initState();
+    _title = "FlyMusic";
     _tabController = TabController(
       length: _ktabs.length,
       vsync: this,
@@ -54,7 +64,7 @@ class _StartScreenState extends State<StartScreen>
     return Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
-        title: Text(getAppbarText()),
+        title: Text(_title),
 
       ),
       //body: TrackList(),
@@ -70,6 +80,7 @@ class _StartScreenState extends State<StartScreen>
       bottomNavigationBar: Material(
         color: Colors.blue,
         child: TabBar(
+          onTap: onTapped,
           tabs: _ktabs,
           controller:  _tabController,
 
@@ -108,12 +119,20 @@ class _StartScreenState extends State<StartScreen>
     setState(() => externalDirectory = directory[1]);
   }
 
-  String getAppbarText() {
-    String text = tabNameList[_tabController.index];
-    setState(() {
+  void onTapped(index) {
 
+    setState(() {
+      switch(index) {
+        case 0: { _title = 'Lied Liste';}
+        break;
+        case 1: { _title = 'Alben'; }
+        break;
+        case 2: { _title = 'Künstler'; }
+        break;
+        case 3: { _title = 'Warteschlange'; }
+        break;
+      }
     });
-    return text;
   }
 }
 

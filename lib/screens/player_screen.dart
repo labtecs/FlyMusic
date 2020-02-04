@@ -65,7 +65,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
     if (_currentSong != null && _currentSong.songArt != null) {
       return Image.memory(Base64Decoder().convert(_currentSong.songArt),
-          width: srceenWidth-20, fit: BoxFit.contain);
+          width: srceenWidth-30, height: srceenWidth-30, fit: BoxFit.contain);
     } else {
       return Image.asset("asset/images/placeholder.jpg");
     }

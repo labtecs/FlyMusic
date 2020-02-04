@@ -31,10 +31,6 @@ class _TrackListState extends State<TrackList> {
       onLongPress: () {
         Fluttertoast.showToast(
           msg: "${song.title}",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.black26,
-          textColor: Colors.black,
         );
       },
     );

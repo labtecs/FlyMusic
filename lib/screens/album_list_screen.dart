@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/album_track_list_screen.dart';
@@ -22,6 +23,9 @@ class _AlbumListState extends State<AlbumList> {
         backgroundColor: Colors.transparent,
       ),
       title: Text(album.name),
+      onLongPress: () {
+        Fluttertoast.showToast(msg: "${album.name}");
+      },
       onTap: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => AlbumTrackListScreen(key: null,albumTitle: album.name)),

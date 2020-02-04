@@ -4,14 +4,14 @@ import 'package:floor/floor.dart';
 class Song {
   @PrimaryKey(autoGenerate: true)
   int id;
-  String artist;
   String title;
+  String artist;
   String songArt;
   int albumId;
   int duration;
   String uri;
 
-  Song(this.id, this.artist, this.title, this.songArt, this.albumId,
+  Song(this.id, this.title, this.artist, this.songArt, this.albumId,
       this.duration, this.uri);
 }
 

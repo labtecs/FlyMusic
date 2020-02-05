@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/screens/main_screen.dart';
-
 import 'database/app_database.dart';
-import 'package:audioplayers/audioplayers.dart';
 
 AppDatabase database;
 

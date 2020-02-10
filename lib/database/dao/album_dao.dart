@@ -15,5 +15,5 @@ abstract class AlbumDao {
   Future<Album> findAlbumByName(String name);
 
   @insert
-  Future<void> insertAlbum(Album folder);
+  Future<int> insertAlbum(Album folder);
 }

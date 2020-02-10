@@ -10,5 +10,5 @@ abstract class ArtistDao {
   Future<Artist> findArtistByName(String name);
 
   @insert
-  Future<void> insertArtist(Artist artist);
+  Future<int> insertArtist(Artist artist);
 }

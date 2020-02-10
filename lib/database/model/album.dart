@@ -3,7 +3,7 @@ import 'package:floor/floor.dart';
 @Entity(tableName: 'Album')
 class Album {
   @PrimaryKey(autoGenerate: true)
-  final int id;
+  int id;
   final String name;
   @ColumnInfo(name: 'album_art')
   final String albumArt;

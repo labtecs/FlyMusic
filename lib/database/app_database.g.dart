@@ -224,8 +224,8 @@ class _$AlbumDao extends AlbumDao {
   }
 
   @override
-  Future<void> insertAlbum(Album folder) async {
-    await _albumInsertionAdapter.insert(
+  Future<int> insertAlbum(Album folder) {
+    return _albumInsertionAdapter.insertAndReturnId(
         folder, sqflite.ConflictAlgorithm.abort);
   }
 }
@@ -264,8 +264,8 @@ class _$ArtistDao extends ArtistDao {
   }
 
   @override
-  Future<void> insertArtist(Artist artist) async {
-    await _artistInsertionAdapter.insert(
+  Future<int> insertArtist(Artist artist) {
+    return _artistInsertionAdapter.insertAndReturnId(
         artist, sqflite.ConflictAlgorithm.abort);
   }
 }

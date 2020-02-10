@@ -25,8 +25,8 @@ dependencies:
   dart_tags:
     git: git://github.com/Nailik/dart-tags.git
 
-  permission_handler: ^4.0.0
-  path_provider: ^1.5.1
+  permission_handler: ^4.2.0+hotfix.3
+  path_provider: ^1.6.0
   folder_picker: ^0.3.0
 
   fluttertoast: ^3.1.3

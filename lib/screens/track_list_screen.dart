@@ -21,7 +21,7 @@ class _TrackListState extends State<TrackList> {
         child: getImage(song),
         backgroundColor: Colors.transparent,
       ),
-      title: Text(song.artist),
+      title: Text(song.title),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
         Navigator.push(

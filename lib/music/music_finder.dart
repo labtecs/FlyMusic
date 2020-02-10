@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_tags/dart_tags.dart';
@@ -7,6 +6,7 @@ import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:path/path.dart';
+import 'package:string_validator/string_validator.dart';
 
 class MusicFinder {
   static readFolderIntoDatabase(Directory folder) async {
@@ -43,13 +43,10 @@ class MusicFinder {
                 }
               }
               if (f.tags.containsKey('picture')) {
-                try {
-                  String image =
-                      (f.tags['picture'] as AttachedPicture).imageData64;
-                  base64Decode(image);
+                String image =
+                    (f.tags['picture'] as AttachedPicture).imageData64;
+                if (isBase64(image)) {
                   art = image;
-                } on Exception catch (_) {
-                  art = null;
                 }
               }
             });

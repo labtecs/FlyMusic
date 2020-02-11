@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/music/music_queue.dart';
@@ -70,7 +68,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   ImageProvider getImage(Song song) {
     if (song != null && song.songArt != null) {
-      print(MemoryImage(base64.decode(song.songArt)));
       return MemoryImage(base64.decode(song.songArt));
     } else {
         return ExactAssetImage("asset/images/placeholder.jpg");

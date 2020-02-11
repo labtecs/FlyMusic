@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:folder_picker/folder_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../music/music_finder.dart';
 import 'dart:io';
@@ -12,6 +11,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+
+  String ordner = "noch nichts importiert";
 
   Directory externalDirectory;
   bool _queueFirst = true;
@@ -36,7 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             title: Text("Musik importieren"),
-            subtitle: Text("noch nichts importiert"),
+            subtitle: Text(ordner),
             trailing: Icon(Icons.more_vert),
             onTap: () {
               chooseFolder();
@@ -64,7 +65,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 /// a [Directory] object
                 action: (BuildContext context, Directory folder) async {
                   Navigator.of(context).pop();
-                  print(folder);
+                  setState(() {
+                    ordner = folder.toString();
+                  });
                   MusicFinder.readFolderIntoDatabase(folder);
                 });
           }));

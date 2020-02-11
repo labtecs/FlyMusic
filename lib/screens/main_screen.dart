@@ -8,7 +8,7 @@ import 'package:flymusic/screens/tabScreens/queue_screen.dart';
 import 'package:flymusic/screens/tabScreens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../music/music_finder.dart';
 
 class StartScreen extends StatefulWidget {
@@ -79,11 +79,27 @@ class _StartScreenState extends State<StartScreen>
           controller: _tabController,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            chooseFolder();
-          },
-          child: Icon(Icons.folder)),
+      floatingActionButton: SpeedDial(
+        child: Icon(Icons.add),
+        onOpen: () => print('OPENING DIAL'),
+        onClose: () => print('DIAL CLOSED'),
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.play_arrow),
+              backgroundColor: Colors.blue,
+              label: 'Abspielen',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () => print('FIRST CHILD')
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.playlist_add),
+            backgroundColor: Colors.blue,
+            label: 'Warteschlange',
+            labelStyle: TextStyle(fontSize: 18.0),
+            onTap: () => print('SECOND CHILD'),
+          ),
+        ],
+      ),
     );
   }
 

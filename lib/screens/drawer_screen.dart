@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/impressum_screen.dart';
 import 'package:flymusic/screens/player_screen.dart';
 import 'package:flymusic/screens/settings_screen.dart';
@@ -18,9 +23,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
             child: Text('Aktueller Songtitel'),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: ExactAssetImage('asset/images/placeholder.jpg'),
-                fit: BoxFit.cover,
-              ),
+                image: getImage(MusicQueue.instance.currentSong),
+              fit: BoxFit.fitWidth),
               color: Colors.blue,
             ),
           ),
@@ -47,5 +51,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
         ],
       ),
     );
+  }
+
+  ImageProvider getImage(Song song) {
+    if (song != null && song.songArt != null) {
+      return MemoryImage(base64.decode(song.songArt));
+    } else {
+      return FileImage(File("asset/images/placeholder.jpg"));
+    }
   }
 }

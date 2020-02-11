@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/screens/artist_track_list_screen.dart';
 
 import '../main.dart';
 import 'package:flymusic/music/music_queue.dart';
@@ -22,7 +23,8 @@ class _ArtistScreenState extends State<ArtistScreen> {
       title: Text(artist.name),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
-        MusicQueue.instance.clickArtist(artist);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ArtistTrackListScreen(key: null, artistName: artist.name, artistID: artist.id,)));
       },
     );
   }

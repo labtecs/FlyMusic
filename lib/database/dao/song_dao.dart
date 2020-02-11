@@ -4,8 +4,7 @@ import 'package:flymusic/database/model/song.dart';
 
 @dao
 abstract class SongDao {
-
-  @Query('SELECT * FROM Song')
+  @Query('SELECT * FROM Song ORDER BY title ASC')
   Stream<List<Song>> findAllSongs();
 
   @Query('SELECT * FROM Song WHERE id = :id LIMIT 1')

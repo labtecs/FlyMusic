@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/song.dart';
@@ -43,13 +44,29 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.albumTitle),
+        title: //Icon(Icons.play_arrow),
+        Text(widget.albumTitle),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("${widget.albumID}");
-        },
-        child: Icon(Icons.title),
+      floatingActionButton: SpeedDial(
+        child: Icon(Icons.add),
+        onOpen: () => print('OPENING DIAL'),
+        onClose: () => print('DIAL CLOSED'),
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.play_arrow),
+              backgroundColor: Colors.blue,
+              label: 'Abspielen',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () => print('FIRST CHILD')
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.playlist_add),
+            backgroundColor: Colors.blue,
+            label: 'Warteschlange',
+            labelStyle: TextStyle(fontSize: 18.0),
+            onTap: () => print('SECOND CHILD'),
+          ),
+        ],
       ),
       body: FutureBuilder<List<Song>>(
         future: database.songDao.findSongsByAlbumId(widget.albumID),

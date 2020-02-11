@@ -21,9 +21,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
       ),
       title: Text(artist.name),
       trailing: Icon(Icons.play_arrow),
-      onTap: () {
-        MusicQueue.instance.clickArtist(artist);
-      },
+      onTap: () {   },
     );
   }
 

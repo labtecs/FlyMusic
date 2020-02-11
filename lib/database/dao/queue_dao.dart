@@ -21,4 +21,7 @@ abstract class QueueDao {
 
   @insert
   Future<void> addItems(List<QueueItem> items);
+
+  @Query('UPDATE Queue SET position = position+ :i')
+  void moveItemsDownBy(int i);
 }

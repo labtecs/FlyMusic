@@ -16,37 +16,54 @@ class MusicQueue {
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
   }
 
-  clickSong(Song song) async {
-    await _addSong(song);
-    if (audioPlayer.state != AudioPlayerState.PLAYING) {
-      await playPause();
-    }
-  }
-
-  clickArtist(Artist artist) async {
-    await _addArtist(artist);
-    if (audioPlayer.state != AudioPlayerState.PLAYING) {
-      await playPause();
-    }
-  }
-
-  clickAlbum(Album album) async {
-    await _addAlbum(album);
-    if (audioPlayer.state != AudioPlayerState.PLAYING) {
-      await playPause();
-    }
-  }
-
-  _playAlbum(Album album) {
-    //alle lieder in die warteschlange (oben)
-  }
-
-  _playArtist(Artist artist) {
-    //alle lieder in die warteschlange (oben)
-  }
-
-  _playSong(Song song) {
+  playSong(Song song) async {
     //kommt oben in die warteschlange die anderen lieder werden nach unten verschoben
+    await addSong(song);
+    database.queueDao.moveItemsDownBy(0);
+    database.queueDao.addItem(new QueueItem(null, song.id, 0));
+    await playIfNotPlaying();
+  }
+
+  playAlbum(Album album) async{
+    await clear();
+    await _addAlbum(album);
+    await playIfNotPlaying();
+  }
+
+  playArtist(Artist artist) async{
+    await clear();
+    await _addArtist(artist);
+    await playIfNotPlaying();
+  }
+
+  addSong(Song song) async {
+    //kommt unten in die Warteliste
+    QueueItem lastItem = await database.queueDao.getLastItem();
+    database.queueDao
+        .addItem(new QueueItem(null, song.id, lastItem?.position++ ?? 0));
+    await playIfNotPlaying();
+  }
+
+  addArtist(Artist artist) async {
+    await _addArtist(artist);
+    await playIfNotPlaying();
+  }
+
+  addAlbum(Album album) async {
+    await _addAlbum(album);
+    await playIfNotPlaying();
+  }
+
+  playIfNotPlaying() async{
+    if (audioPlayer.state != AudioPlayerState.PLAYING) {
+      await playPause();
+    }
+  }
+
+
+
+  clear(){
+
   }
 
   _addAlbum(Album album) async {
@@ -66,13 +83,6 @@ class MusicQueue {
     var insertItems =
         items.map((id) => new QueueItem(null, id, lastItem?.position++ ?? 0));
     database.queueDao.addItems(insertItems);
-  }
-
-  _addSong(Song song) async {
-    //kommt unten in die Warteliste
-    QueueItem lastItem = await database.queueDao.getLastItem();
-    database.queueDao
-        .addItem(new QueueItem(null, song.id, lastItem?.position++ ?? 0));
   }
 
   playPause() async {

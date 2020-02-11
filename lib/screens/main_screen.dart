@@ -13,31 +13,24 @@ import 'package:permission_handler/permission_handler.dart';
 import '../music/music_finder.dart';
 
 class StartScreen extends StatefulWidget {
-
-  int tabNumber = 0;
-
-  void setTabNumber(int value) {
-    tabNumber = value;
-  }
-  int getTabNumber() {
-    return tabNumber;
-  }
-
   @override
   _StartScreenState createState() => _StartScreenState();
 }
 
 class _StartScreenState extends State<StartScreen>
-    with SingleTickerProviderStateMixin{
+    with SingleTickerProviderStateMixin {
   Directory externalDirectory;
   TabController _tabController;
   String _title;
+  int _page;
 
   /*
   Tab Liste
    */
-  static const _ktabs = <Tab> [
-    Tab(icon: Icon(Icons.audiotrack),),
+  static const _ktabs = <Tab>[
+    Tab(
+      icon: Icon(Icons.audiotrack),
+    ),
     Tab(icon: Icon(Icons.album)),
     Tab(icon: Icon(Icons.person)),
     Tab(icon: Icon(Icons.queue_music)),
@@ -51,6 +44,11 @@ class _StartScreenState extends State<StartScreen>
       length: _ktabs.length,
       vsync: this,
     );
+    _tabController.addListener(() {
+      setState(() {
+        _page = _tabController.index;
+      });
+    });
   }
 
   @override
@@ -64,8 +62,7 @@ class _StartScreenState extends State<StartScreen>
     return Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
-        title: Text(_title),
-
+        title: Text(getTitle()),
       ),
       //body: TrackList(),
       body: TabBarView(
@@ -82,9 +79,7 @@ class _StartScreenState extends State<StartScreen>
         child: TabBar(
           onTap: onTapped,
           tabs: _ktabs,
-          controller:  _tabController,
-
-
+          controller: _tabController,
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -99,11 +94,12 @@ class _StartScreenState extends State<StartScreen>
     var result =
         await PermissionHandler().requestPermissions([PermissionGroup.storage]);
     if (result[PermissionGroup.storage] == PermissionStatus.granted) {
-    //  await getStorage();
+      //  await getStorage();
       Navigator.of(context).push<FolderPickerPage>(
           MaterialPageRoute(builder: (BuildContext context) {
         return FolderPickerPage(
             rootDirectory: Directory("/storage/emulated/0/"),
+
             /// a [Directory] object
             action: (BuildContext context, Directory folder) async {
               Navigator.of(context).pop();
@@ -119,21 +115,24 @@ class _StartScreenState extends State<StartScreen>
     setState(() => externalDirectory = directory[1]);
   }
 
-  void onTapped(index) {
+  String getTitle() {
+    switch (_page) {
+      case 0:
+        return 'Lied Liste';
+      case 1:
+        return 'Alben';
+      case 2:
+        return 'Künstler';
+      case 3:
+        return 'Warteschlange';
+      default:
+        return '';
+    }
+  }
 
+  void onTapped(index) {
     setState(() {
-      switch(index) {
-        case 0: { _title = 'Lied Liste';}
-        break;
-        case 1: { _title = 'Alben'; }
-        break;
-        case 2: { _title = 'Künstler'; }
-        break;
-        case 3: { _title = 'Warteschlange'; }
-        break;
-      }
+      _page = index;
     });
   }
 }
-
-

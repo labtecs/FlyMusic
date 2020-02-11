@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:floor/floor.dart';
 import 'package:flymusic/database/dao/album_dao.dart';
 import 'package:flymusic/database/dao/artist_dao.dart';
+import 'package:flymusic/database/dao/art_dao.dart';
 import 'package:flymusic/database/dao/song_dao.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/art.dart';
@@ -10,6 +11,9 @@ import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
+
+import 'dao/queue_dao.dart';
+import 'model/queue_item.dart';
 
 part 'app_database.g.dart';
 

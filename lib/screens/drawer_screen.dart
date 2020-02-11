@@ -29,7 +29,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
           ListTile(
             title: Text('Aktuelle Wiedergabe'),
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen(null)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen()));
             },
           ),
           ListTile(

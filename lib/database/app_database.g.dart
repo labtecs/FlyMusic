@@ -42,9 +42,12 @@ class _$AppDatabaseBuilder {
 
   /// Creates the database and initializes it.
   Future<AppDatabase> build() async {
+    final path = name != null
+        ? join(await sqflite.getDatabasesPath(), name)
+        : ':memory:';
     final database = _$AppDatabase();
     database.database = await database.open(
-      name ?? ':memory:',
+      path,
       _migrations,
       _callback,
     );
@@ -63,12 +66,12 @@ class _$AppDatabase extends AppDatabase {
 
   ArtistDao _artistDaoInstance;
 
+  ArtDao _artDaoInstance;
+
   QueueDao _queueDaoInstance;
 
-  Future<sqflite.Database> open(String name, List<Migration> migrations,
+  Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback callback]) async {
-    final path = join(await sqflite.getDatabasesPath(), name);
-
     return sqflite.openDatabase(
       path,
       version: 1,
@@ -93,6 +96,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `Artist` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Queue` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `songId` INTEGER, `position` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Art` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `base64` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -112,6 +117,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   ArtistDao get artistDao {
     return _artistDaoInstance ??= _$ArtistDao(database, changeListener);
+  }
+
+  @override
+  ArtDao get artDao {
+    return _artDaoInstance ??= _$ArtDao(database, changeListener);
   }
 
   @override
@@ -240,7 +250,7 @@ class _$AlbumDao extends AlbumDao {
 
   @override
   Future<Album> findAlbumByName(String name) async {
-    return _queryAdapter.query('SELECT * FROM Album WHERE name = ? LIMIT 1',
+    return _queryAdapter.query('SELECT * FROM Album WHERE id = ?',
         arguments: <dynamic>[name], mapper: _albumMapper);
   }
 
@@ -289,6 +299,14 @@ class _$ArtistDao extends ArtistDao {
     return _artistInsertionAdapter.insertAndReturnId(
         artist, sqflite.ConflictAlgorithm.abort);
   }
+}
+
+class _$ArtDao extends ArtDao {
+  _$ArtDao(this.database, this.changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
 }
 
 class _$QueueDao extends QueueDao {

@@ -29,7 +29,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
       trailing: Icon(Icons.play_arrow),
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlayerScreen(song))
+            context, MaterialPageRoute(builder: (context) => PlayerScreen())
         );
       },
       onLongPress: () {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
+import 'package:flymusic/screens/drawerScreens/drawer_screen.dart';
 import 'package:flymusic/screens/drawerScreens/player_screen.dart';
 
 import '../../music/music_queue.dart';
@@ -26,6 +27,7 @@ class _TrackListState extends State<TrackList> {
       title: Text(song.title),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
+        DrawerScreen().showWiedergabe();
         MusicQueue.instance.clickSong(song);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => PlayerScreen())

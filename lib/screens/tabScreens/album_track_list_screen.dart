@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/drawerScreens/player_screen.dart';
@@ -49,8 +48,8 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
       ),
       floatingActionButton: SpeedDial(
         child: Icon(Icons.add),
-        onOpen: () => print('OPENING DIAL'),
-        onClose: () => print('DIAL CLOSED'),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
         children: [
           SpeedDialChild(
               child: Icon(Icons.play_arrow),

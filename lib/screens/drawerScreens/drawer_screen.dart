@@ -7,11 +7,21 @@ import 'package:flymusic/screens/drawerScreens/player_screen.dart';
 import 'package:flymusic/screens/drawerScreens/settings_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
+
+  bool akutelleWeidergabe = true;
+
+  void showWiedergabe() {
+    akutelleWeidergabe = true;
+  }
+
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -28,13 +38,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           ),
 
-          //Jetzt über einen Klick auf einen Track erreichbar
-          ListTile(
-            title: Text('Aktuelle Wiedergabe'),
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => PlayerScreen()));
-            },
+          Visibility(
+            visible: widget.akutelleWeidergabe,
+            child: ListTile(
+              title: Text('Aktuelle Wiedergabe'),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => PlayerScreen()));
+              },
+            ),
           ),
           ListTile(
             title: Text('Einstellungen'),

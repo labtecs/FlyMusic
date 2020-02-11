@@ -30,23 +30,46 @@ class _PlayerScreenState extends State<PlayerScreen> {
           //elevation: 0.0, //Macht die Appbar komplett transparent.
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             getImage(),
-            Row(
+            new Row(
               mainAxisAlignment: MainAxisAlignment.center,
+
               children: <Widget>[
-                MaterialButton(
-                    onPressed: () {
-                      previous();
-                    }, child: Icon(Icons.chevron_left, size: 80, color: Colors.white,)),
-                MaterialButton(onPressed: () {
-                  play();
-                }, child: Icon(getPlayIcon(), size: 80, color: Colors.white,)),
-                MaterialButton(
-                    onPressed:  () {
-                      next();
-                    }, child: Icon(Icons.chevron_right, size: 80, color: Colors.white,))
+                InkWell(
+                  child: Container(
+                    child: Icon(Icons.shuffle, size: 40,color: Colors.white),
+                  ),
+                  onTap: (){
+                    print("test");
+                  },
+                ),
+                InkWell(
+                  onTap: previous,
+                  child: Container(
+                    child: Icon(Icons.skip_previous,size: 60,  color: Colors.white,)
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    play();
+                  },
+                  child: Icon(getPlayIcon(), size: 70,color: Colors.white,),
+                ),
+                InkWell(
+                  onTap: () {
+                    next();
+                  },
+                  child: Icon(Icons.skip_next, size: 60,color: Colors.white),
+                ),
+
+                InkWell(
+                  onTap: () {
+
+                  },
+                  child: Icon(Icons.repeat, size: 40,color: Colors.white),
+                )
               ],
             )
           ],

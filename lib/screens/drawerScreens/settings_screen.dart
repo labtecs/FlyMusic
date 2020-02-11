@@ -12,7 +12,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
 
-  String ordner = "noch nichts importiert";
+  String folderLocation = "noch nichts importiert";
 
   Directory externalDirectory;
   bool _queueFirst = true;
@@ -37,17 +37,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             title: Text("Musik importieren"),
-            subtitle: Text(ordner),
+            subtitle: Text(folderLocation),
             trailing: Icon(Icons.more_vert),
             onTap: () {
               chooseFolder();
             },
           )
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-        },
       ),
     );
   }
@@ -66,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 action: (BuildContext context, Directory folder) async {
                   Navigator.of(context).pop();
                   setState(() {
-                    ordner = folder.toString();
+                    folderLocation = folder.toString();
                   });
                   MusicFinder.readFolderIntoDatabase(folder);
                 });

@@ -23,31 +23,30 @@ class _PlayerScreenState extends State<PlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white10,
         appBar: AppBar(
           title: Text(MusicQueue.instance.currentSong?.title ?? "no song"),
           backgroundColor: Colors.transparent,
           //elevation: 0.0, //Macht die Appbar komplett transparent.
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             getImage(),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 MaterialButton(
                     onPressed: () {
                       previous();
-                    },
-                    child: Icon(Icons.chevron_left)),
+                    }, child: Icon(Icons.chevron_left, size: 80, color: Colors.white,)),
+                MaterialButton(onPressed: () {
+                  play();
+                }, child: Icon(getPlayIcon(), size: 80, color: Colors.white,)),
                 MaterialButton(
-                    onPressed: () {
-                      play();
-                    },
-                    child: Icon(getPlayIcon())),
-                MaterialButton(
-                    onPressed: () {
+                    onPressed:  () {
                       next();
-                    },
-                    child: Icon(Icons.chevron_right))
+                    }, child: Icon(Icons.chevron_right, size: 80, color: Colors.white,))
               ],
             )
           ],
@@ -63,9 +62,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
   }
 
   Image getImage() {
+    //Get Screen With
+    double srceenWidth = MediaQuery.of(context).size.width;
+
+
     if (MusicQueue.instance.currentSong?.songArt != null) {
       return Image.memory(Base64Decoder().convert(MusicQueue.instance.currentSong.songArt),
-          width: 100, height: 100, fit: BoxFit.contain);
+          width: srceenWidth-30, height: srceenWidth-30, fit: BoxFit.contain);
     } else {
       return Image.asset("asset/images/placeholder.jpg");
     }

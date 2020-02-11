@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flymusic/screens/album_list_screen.dart';
 import 'package:flymusic/screens/artist_screen.dart';
 import 'package:flymusic/screens/drawer_screen.dart';
+import 'package:flymusic/screens/queue_screen.dart';
 import 'package:flymusic/screens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -12,6 +13,16 @@ import 'package:permission_handler/permission_handler.dart';
 import '../music/music_finder.dart';
 
 class StartScreen extends StatefulWidget {
+
+  int tabNumber = 0;
+
+  void setTabNumber(int value) {
+    tabNumber = value;
+  }
+  int getTabNumber() {
+    return tabNumber;
+  }
+
   @override
   _StartScreenState createState() => _StartScreenState();
 }
@@ -20,20 +31,22 @@ class _StartScreenState extends State<StartScreen>
     with SingleTickerProviderStateMixin{
   Directory externalDirectory;
   TabController _tabController;
-
+  String _title;
 
   /*
   Tab Liste
    */
   static const _ktabs = <Tab> [
-    Tab(text: 'Lieder'),
-    Tab(text: 'Alben'),
-    Tab(text: 'Künstler'),
+    Tab(icon: Icon(Icons.audiotrack),),
+    Tab(icon: Icon(Icons.album)),
+    Tab(icon: Icon(Icons.person)),
+    Tab(icon: Icon(Icons.queue_music)),
   ];
 
   @override
   void initState() {
     super.initState();
+    _title = "FlyMusic";
     _tabController = TabController(
       length: _ktabs.length,
       vsync: this,
@@ -51,7 +64,8 @@ class _StartScreenState extends State<StartScreen>
     return Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
-        title: Text("FlyMusic"),
+        title: Text(_title),
+
       ),
       //body: TrackList(),
       body: TabBarView(
@@ -59,14 +73,17 @@ class _StartScreenState extends State<StartScreen>
           TrackList(),
           AlbumList(),
           ArtistScreen(),
+          QueueScreen(),
         ],
         controller: _tabController,
       ),
       bottomNavigationBar: Material(
         color: Colors.blue,
         child: TabBar(
+          onTap: onTapped,
           tabs: _ktabs,
           controller:  _tabController,
+
 
         ),
       ),
@@ -101,4 +118,22 @@ class _StartScreenState extends State<StartScreen>
         await getExternalStorageDirectories(type: StorageDirectory.music);
     setState(() => externalDirectory = directory[1]);
   }
+
+  void onTapped(index) {
+
+    setState(() {
+      switch(index) {
+        case 0: { _title = 'Lied Liste';}
+        break;
+        case 1: { _title = 'Alben'; }
+        break;
+        case 2: { _title = 'Künstler'; }
+        break;
+        case 3: { _title = 'Warteschlange'; }
+        break;
+      }
+    });
+  }
 }
+
+

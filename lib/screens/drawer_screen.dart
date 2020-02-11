@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flymusic/screens/album_list_screen.dart';
-import 'package:flymusic/screens/artist_screen.dart';
-import 'package:flymusic/screens/track_list_screen.dart';
+import 'package:flymusic/screens/impressum_screen.dart';
+import 'package:flymusic/screens/player_screen.dart';
+import 'package:flymusic/screens/settings_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
   @override
@@ -15,47 +15,33 @@ class _DrawerScreenState extends State<DrawerScreen> {
       child: ListView(
         children: <Widget>[
           DrawerHeader(
-            child: Text('Drawer Header'),
+            child: Text('Aktueller Songtitel'),
             decoration: BoxDecoration(
+              image: DecorationImage(
+                image: ExactAssetImage('asset/images/placeholder.jpg'),
+                fit: BoxFit.cover,
+              ),
               color: Colors.blue,
             ),
           ),
 
-          /*Jetzt über einen Klick auf einen Track erreichbar
+          //Jetzt über einen Klick auf einen Track erreichbar
           ListTile(
-            title: Text('Player Screen'),
+            title: Text('Aktuelle Wiedergabe'),
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen()));
-            },
-          ),*/
-          ListTile(
-            title: Text('Lieder'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackList()));
-            },
-          ),
-          ListTile(
-            title: Text('Alben'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => AlbumList()));
-            },
-          ),
-          ListTile(
-            title: Text('Künstler'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ArtistScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen(null)));
             },
           ),
           ListTile(
             title: Text('Einstellungen'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackList()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
             },
           ),
           ListTile(
             title: Text("Impressum"),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TrackList()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ImpressumScreen()));
             },
           ),
         ],

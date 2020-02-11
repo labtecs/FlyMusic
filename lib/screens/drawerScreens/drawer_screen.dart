@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/impressum_screen.dart';
-import 'package:flymusic/screens/player_screen.dart';
-import 'package:flymusic/screens/settings_screen.dart';
+import 'package:flymusic/screens/drawerScreens/impressum_screen.dart';
+import 'package:flymusic/screens/drawerScreens/player_screen.dart';
+import 'package:flymusic/screens/drawerScreens/settings_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
   @override

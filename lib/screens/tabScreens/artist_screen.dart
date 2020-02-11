@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/screens/artist_track_list_screen.dart';
+import 'package:flymusic/screens/tabScreens/artist_track_list_screen.dart';
 
-import '../main.dart';
+import '../../main.dart';
 import 'package:flymusic/music/music_queue.dart';
 
 class ArtistScreen extends StatefulWidget {

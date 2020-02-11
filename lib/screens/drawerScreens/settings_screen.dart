@@ -16,7 +16,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: Text("Einstellungen"),
       ),
-      body: SwitchListTile(
+      body: ListView(
+        children: <Widget>[
+          SwitchListTile(
+            title: Text('Lied in der Warteschlange nach oben setzen'),
+            value: _queueFirst,
+            onChanged: (value) {
+              setState(() {
+                _queueFirst = value;
+              });
+              Fluttertoast.showToast(msg: 'not implemented yet');
+            },
+          ),
+          ListTile(
+            title: Text("Musik importieren"),
+            subtitle: Text("noch nichts importiert"),
+            trailing: Icon(Icons.more_vert),
+            onTap: () {
+
+            },
+          )
+        ],
+
+      ),
+      /*SwitchListTile(
         title: Text('Lied in der Warteschlange nach oben setzen'),
         value: _queueFirst,
         onChanged: (value) {
@@ -25,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           });
           Fluttertoast.showToast(msg: 'not implemented yet');
         },
-      ),
+      ),*/
     );
   }
 }

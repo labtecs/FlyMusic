@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flymusic/screens/album_list_screen.dart';
-import 'package:flymusic/screens/artist_screen.dart';
-import 'package:flymusic/screens/drawer_screen.dart';
-import 'package:flymusic/screens/queue_screen.dart';
-import 'package:flymusic/screens/track_list_screen.dart';
+import 'package:flymusic/screens/tabScreens/album_list_screen.dart';
+import 'package:flymusic/screens/tabScreens/artist_screen.dart';
+import 'package:flymusic/screens/drawerScreens/drawer_screen.dart';
+import 'package:flymusic/screens/tabScreens/queue_screen.dart';
+import 'package:flymusic/screens/tabScreens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';

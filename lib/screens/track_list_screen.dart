@@ -26,14 +26,12 @@ class _TrackListState extends State<TrackList> {
       title: Text(song.title),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlayerScreen())
-        );
+        MusicQueue.instance.playSong(song);
       },
       onLongPress: () {
-        MusicQueue.instance.playSong(song);
+        MusicQueue.instance.addSong(song);
         Fluttertoast.showToast(
-          msg: "${song.title}",
+          msg: "${song.title} zur Warteliste hinzugefügt",
         );
       },
     );

@@ -13,7 +13,7 @@ abstract class QueueDao {
   @Query('SELECT * FROM Queue WHERE position < :currentPosition ORDER BY position ASC LIMIT 1')
   Future<QueueItem> getPreviousItem(int currentPosition);
 
-  @Query('SELECT * FROM Queue ORDER BY position ASC LIMIT 1')
+  @Query('SELECT * FROM Queue ORDER BY position DESC LIMIT 1')
   Future<QueueItem> getLastItem();
 
   @insert

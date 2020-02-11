@@ -360,7 +360,7 @@ class _$QueueDao extends QueueDao {
   @override
   Future<QueueItem> getLastItem() async {
     return _queryAdapter.query(
-        'SELECT * FROM Queue ORDER BY position ASC LIMIT 1',
+        'SELECT * FROM Queue ORDER BY position DESC LIMIT 1',
         mapper: _queueMapper);
   }
 

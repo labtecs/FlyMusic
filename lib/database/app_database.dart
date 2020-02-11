@@ -14,7 +14,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 part 'app_database.g.dart';
 
 //flutter packages pub run build_runner build
-@Database(version: 1, entities: [Song, Album, Artist, Art])
+@Database(version: 1, entities: [Song, Album, Artist, QueueItem])
 abstract class AppDatabase extends FloorDatabase {
   SongDao get songDao;
 
@@ -23,4 +23,5 @@ abstract class AppDatabase extends FloorDatabase {
   ArtistDao get artistDao;
 
   ArtDao get artDao;
+  QueueDao get queueDao;
 }

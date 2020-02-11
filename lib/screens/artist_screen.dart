@@ -3,6 +3,7 @@ import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
 
 import '../main.dart';
+import 'package:flymusic/music/music_queue.dart';
 
 class ArtistScreen extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
       title: Text(artist.name),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
-        print("Noch keine Funktion");
+        MusicQueue.instance.clickArtist(artist);
       },
     );
   }

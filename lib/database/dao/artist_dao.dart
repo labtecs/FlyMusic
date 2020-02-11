@@ -6,7 +6,7 @@ abstract class ArtistDao {
   @Query('SELECT * FROM Artist')
   Stream<List<Artist>> findAllArtists();
 
-  @Query('SELECT * FROM Artist WHERE name = :name')
+  @Query('SELECT * FROM Artist WHERE name = :name LIMIT 1')
   Future<Artist> findArtistByName(String name);
 
   @insert

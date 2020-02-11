@@ -21,8 +21,7 @@ class _StartScreenState extends State<StartScreen>
     with SingleTickerProviderStateMixin {
   Directory externalDirectory;
   TabController _tabController;
-  String _title;
-  int _page;
+  int _page = 0;
 
   /*
   Tab Liste
@@ -39,7 +38,6 @@ class _StartScreenState extends State<StartScreen>
   @override
   void initState() {
     super.initState();
-    _title = "FlyMusic";
     _tabController = TabController(
       length: _ktabs.length,
       vsync: this,

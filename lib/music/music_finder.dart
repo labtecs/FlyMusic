@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/artist.dart';

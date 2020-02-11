@@ -7,7 +7,6 @@ import 'package:flymusic/screens/drawerScreens/drawer_screen.dart';
 import 'package:flymusic/screens/tabScreens/queue_screen.dart';
 import 'package:flymusic/screens/tabScreens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../music/music_finder.dart';
@@ -105,12 +104,6 @@ class _StartScreenState extends State<StartScreen>
             });
       }));
     }
-  }
-
-  Future<void> getStorage() async {
-    final directory =
-        await getExternalStorageDirectories(type: StorageDirectory.music);
-    setState(() => externalDirectory = directory[1]);
   }
 
   String getTitle() {

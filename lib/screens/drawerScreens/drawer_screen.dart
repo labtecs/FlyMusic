@@ -20,7 +20,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
       child: ListView(
         children: <Widget>[
           DrawerHeader(
-            child: Text('Aktueller Songtitel'),
+            child: Text(getCurrentSongTitle(), 
+              style: TextStyle(color: Colors.white),),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: getImage(MusicQueue.instance.currentSong),
@@ -33,19 +34,22 @@ class _DrawerScreenState extends State<DrawerScreen> {
           ListTile(
             title: Text('Aktuelle Wiedergabe'),
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen()));
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => PlayerScreen()));
             },
           ),
           ListTile(
             title: Text('Einstellungen'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => SettingsScreen()));
             },
           ),
           ListTile(
             title: Text("Impressum"),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ImpressumScreen()));
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => ImpressumScreen()));
             },
           ),
         ],
@@ -53,11 +57,23 @@ class _DrawerScreenState extends State<DrawerScreen> {
     );
   }
 
-  ImageProvider getImage(Song song) {
-    if (song != null && song.songArt != null) {
-      return MemoryImage(base64.decode(song.songArt));
-    } else {
-      return FileImage(File("asset/images/placeholder.jpg"));
+  String getCurrentSongTitle() {
+    String songTitle;
+    try{
+      songTitle = MusicQueue.instance.currentSong.title;
+      return songTitle;
+    }
+    catch (_){
+      return " ";
     }
   }
+
+  ImageProvider getImage(Song song) {
+    if (song != null && song.songArt != null) {
+      print(MemoryImage(base64.decode(song.songArt)));
+      return MemoryImage(base64.decode(song.songArt));
+    } else {
+        return ExactAssetImage("asset/images/placeholder.jpg");
+      }
+    }
 }

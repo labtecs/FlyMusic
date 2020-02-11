@@ -1,15 +1,25 @@
 import 'dart:io';
 
+import 'package:crclib/crclib.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flymusic/database/model/album.dart';
+import 'package:flymusic/database/model/art.dart';
 import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
+import 'package:image/image.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:string_validator/string_validator.dart';
 
+//TODO song no image -> album image
 class MusicFinder {
   static readFolderIntoDatabase(Directory folder) async {
+    Directory docs = await getApplicationDocumentsDirectory();
+    Directory thumbs = Directory(docs.path + "/thumbs");
+    thumbs.createSync();
+
+    var crc = new Crc32Zlib();
     //list all fields
     List<FileSystemEntity> files = new List();
     List<Song> songs = new List();
@@ -26,11 +36,11 @@ class MusicFinder {
         if (file.uri.toString().endsWith(".mp3")) {
           String title;
           String artist;
-          String art;
+          Art art;
           String album;
 
           await tp.getTagsFromByteArray(file.readAsBytes()).then((l) {
-            l.forEach((f) {
+            l.forEach((f) async {
               if (f.version == '1.1') {
                 if (f.tags.containsKey('title')) {
                   title = f.tags['title'];
@@ -43,10 +53,18 @@ class MusicFinder {
                 }
               }
               if (f.tags.containsKey('picture')) {
-                String image =
-                    (f.tags['picture'] as AttachedPicture).imageData64;
-                if (isBase64(image)) {
-                  art = image;
+                AttachedPicture image = (f.tags['picture'] as AttachedPicture);
+                if (isBase64(image.imageData64)) {
+                  int crcText = crc.convert(image.imageData);
+
+                  art = await database.artDao.findArtByCrc(crcText);
+
+                  if (art == null) {
+                    File file = File('${thumbs.path}/$crcText.png');
+                    file.writeAsBytesSync(decodePng(image.imageData).data);
+                    art = new Art(null, file.path, crcText);
+                    art.id = await database.artDao.insertArt(art);
+                  }
                 }
               }
             });
@@ -73,7 +91,7 @@ class MusicFinder {
 
           currentArtist = await findArtist(currentArtist, artist);
 
-          songs.add(Song(null, title, artist, art, currentAlbum.id, 0,
+          songs.add(Song(null, title, artist, art.id, currentAlbum.id, 0,
               file.path, currentArtist.id));
         }
       }
@@ -83,7 +101,7 @@ class MusicFinder {
   }
 
   static Future<Album> findAlbum(
-      Album currentAlbum, String album, String art) async {
+      Album currentAlbum, String album, Art art) async {
     //save songs that i have read until now
     if (currentAlbum?.name != album) {
       //search album for song
@@ -91,7 +109,7 @@ class MusicFinder {
 
       if (currentAlbum == null) {
         //create new album
-        currentAlbum = Album(null, album, art);
+        currentAlbum = Album(null, album, art.id);
         //insert album
         currentAlbum.id = await database.albumDao.insertAlbum(currentAlbum);
       }

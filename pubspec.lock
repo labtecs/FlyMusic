@@ -141,6 +141,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  crclib:
+    dependency: "direct main"
+    description:
+      name: crclib
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   crypto:
     dependency: transitive
     description:
@@ -564,6 +571,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   typed_data:
     dependency: transitive
     description:

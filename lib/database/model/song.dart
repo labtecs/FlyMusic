@@ -6,12 +6,12 @@ class Song {
   int id;
   String title;
   String artist;
-  String songArt;
+  int artId;
   int albumId;
   int duration;
   String uri;
   int artistId;
 
-  Song(this.id, this.title, this.artist, this.songArt, this.albumId,
+  Song(this.id, this.title, this.artist, this.artId, this.albumId,
       this.duration, this.uri, this.artistId);
 }

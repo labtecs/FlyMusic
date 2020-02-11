@@ -18,10 +18,12 @@ class MusicQueue {
 
   playSong(Song song) async {
     //kommt oben in die warteschlange die anderen lieder werden nach unten verschoben
-    await addSong(song);
-    database.queueDao.moveItemsDownBy(0);
+    database.queueDao.moveItemsDownBy(1);
     database.queueDao.addItem(new QueueItem(null, song.id, 0));
-    await playIfNotPlaying();
+    if (audioPlayer.state == AudioPlayerState.PLAYING) {
+      await audioPlayer.stop();
+    }
+    await playPause();
   }
 
   playAlbum(Album album) async{

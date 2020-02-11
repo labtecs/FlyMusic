@@ -15,9 +15,9 @@ class QueueScreen extends StatefulWidget {
 class _QueueScreenState extends State<QueueScreen> {
   List<Song> songs = List();
 
-  Widget _buildRow(QueueItem song) {
+  Widget _buildRow(QueueItem queueItem) {
     return FutureBuilder<Song>(
-        future: database.songDao.findSongById(song.id),
+        future: database.songDao.findSongById(queueItem.songId),
         // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Song> snapshot) {
           if (snapshot.hasData) {

@@ -336,7 +336,7 @@ class _$QueueDao extends QueueDao {
   @override
   Stream<List<QueueItem>> findAllItems() {
     return _queryAdapter.queryListStream(
-        'SELECT * FROM Queue ORDER BY position DESC',
+        'SELECT * FROM Queue ORDER BY position ASC',
         tableName: 'Queue',
         mapper: _queueMapper);
   }
@@ -362,6 +362,13 @@ class _$QueueDao extends QueueDao {
     return _queryAdapter.query(
         'SELECT * FROM Queue ORDER BY position ASC LIMIT 1',
         mapper: _queueMapper);
+  }
+
+  @override
+  Future<void> moveItemsDownBy(int move) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE Queue SET position = position + ?',
+        arguments: <dynamic>[move]);
   }
 
   @override

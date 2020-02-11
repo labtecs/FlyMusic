@@ -6,6 +6,8 @@ import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player_screen.dart';
 
+import '../music/music_queue.dart';
+
 class TrackList extends StatefulWidget {
   @override
   _TrackListState createState() => _TrackListState();
@@ -29,6 +31,7 @@ class _TrackListState extends State<TrackList> {
         );
       },
       onLongPress: () {
+        MusicQueue.instance.playSong(song);
         Fluttertoast.showToast(
           msg: "${song.title}",
         );

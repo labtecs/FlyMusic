@@ -4,7 +4,7 @@ import 'package:flymusic/database/model/queue_item.dart';
 
 @dao
 abstract class QueueDao {
-  @Query('SELECT * FROM Queue ORDER BY position DESC')
+  @Query('SELECT * FROM Queue ORDER BY position ASC')
   Stream<List<QueueItem>> findAllItems();
 
   @Query('SELECT * FROM Queue WHERE position > :currentPosition ORDER BY position DESC LIMIT 1')
@@ -22,6 +22,6 @@ abstract class QueueDao {
   @insert
   Future<void> addItems(List<QueueItem> items);
 
-  @Query('UPDATE Queue SET position = position+ :i')
-  void moveItemsDownBy(int i);
+  @Query('UPDATE Queue SET position = position + :move')
+  Future<void> moveItemsDownBy(int move);
 }

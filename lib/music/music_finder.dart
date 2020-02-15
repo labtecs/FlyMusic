@@ -56,14 +56,17 @@ class MusicFinder {
                 AttachedPicture image = (f.tags['picture'] as AttachedPicture);
                 if (isBase64(image.imageData64)) {
                   int crcText = crc.convert(image.imageData);
-
-                  art = await database.artDao.findArtByCrc(crcText);
-
-                  if (art == null) {
-                    File file = File('${thumbs.path}/$crcText.png');
-                    file.writeAsBytesSync(decodePng(image.imageData).data);
-                    art = new Art(null, file.path, crcText);
-                    art.id = await database.artDao.insertArt(art);
+                  if (crcText != null) {//TODO
+                  art = await database.artDao.findArtByCrc(crcText.toString());
+                    if (art == null) {
+                      File file = File('${thumbs.path}/$crcText.png');
+                      var jpg = decodeJpg(image.imageData);
+                      if (jpg != null) {
+                        file.writeAsBytesSync(jpg.data);
+                        art = new Art(null, file.path, crcText.toString());
+                        art.id = await database.artDao.insertArt(art);
+                      }
+                    }
                   }
                 }
               }
@@ -91,7 +94,7 @@ class MusicFinder {
 
           currentArtist = await findArtist(currentArtist, artist);
 
-          songs.add(Song(null, title, artist, art.id, currentAlbum.id, 0,
+          songs.add(Song(null, title, artist, art?.id ?? -1, currentAlbum.id, 0,
               file.path, currentArtist.id));
         }
       }
@@ -109,7 +112,7 @@ class MusicFinder {
 
       if (currentAlbum == null) {
         //create new album
-        currentAlbum = Album(null, album, art.id);
+        currentAlbum = Album(null, album, art?.id ?? -1);
         //insert album
         currentAlbum.id = await database.albumDao.insertAlbum(currentAlbum);
       }

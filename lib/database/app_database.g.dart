@@ -97,7 +97,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Queue` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `songId` INTEGER, `position` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Art` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `path` TEXT, `crc` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `Art` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `path` TEXT, `check` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -310,7 +310,7 @@ class _$ArtDao extends ArtDao {
             (Art item) => <String, dynamic>{
                   'id': item.id,
                   'path': item.path,
-                  'crc': item.crc
+                  'check': item.check
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -320,7 +320,7 @@ class _$ArtDao extends ArtDao {
   final QueryAdapter _queryAdapter;
 
   static final _artMapper = (Map<String, dynamic> row) =>
-      Art(row['id'] as int, row['path'] as String, row['crc'] as int);
+      Art(row['id'] as int, row['path'] as String, row['check'] as String);
 
   final InsertionAdapter<Art> _artInsertionAdapter;
 
@@ -331,9 +331,9 @@ class _$ArtDao extends ArtDao {
   }
 
   @override
-  Future<Art> findArtByCrc(int crc) async {
-    return _queryAdapter.query('SELECT * FROM Art WHERE crc = ? LIMIT 1',
-        arguments: <dynamic>[crc], mapper: _artMapper);
+  Future<Art> findArtByCrc(String v) async {
+    return _queryAdapter.query('SELECT * FROM Art WHERE check = ? LIMIT 1',
+        arguments: <dynamic>[v], mapper: _artMapper);
   }
 
   @override

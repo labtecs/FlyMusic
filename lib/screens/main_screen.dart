@@ -33,12 +33,12 @@ class StartScreen extends StatefulWidget {
 
   static FutureBuilder getArt2(Song song) {
     return FutureBuilder<Art>(
-        future: database.artDao.findArtById(song.artId),
+        future: database.artDao.findArtById(song?.artId ?? -1),
         builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             return DrawerHeader(
               child: Text(
-                song.title,
+                song?.title ?? "",
                 style: TextStyle(color: Colors.white),
               ),
               decoration: BoxDecoration(
@@ -51,7 +51,7 @@ class StartScreen extends StatefulWidget {
           } else {
             return DrawerHeader(
               child: Text(
-                song.title,
+                song?.title ?? "",
                 style: TextStyle(color: Colors.white),
               ),
               decoration: BoxDecoration(

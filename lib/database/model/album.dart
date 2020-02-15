@@ -5,7 +5,7 @@ class Album {
   @PrimaryKey(autoGenerate: true)
   int id;
   final String name;
-  final int artId;
+  int artId;
 
   Album(this.id, this.name, this.artId);
 }

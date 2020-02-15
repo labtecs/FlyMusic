@@ -151,6 +151,10 @@ class MusicFinder {
         //insert album
         currentAlbum.id = await database.albumDao.insertAlbum(currentAlbum);
       }
+      if (currentAlbum.artId == -1 && art.id != -1) {
+        currentAlbum.artId = art.id;
+        await database.albumDao.updateAlbum(currentAlbum);
+      }
     }
     return currentAlbum;
   }

@@ -10,7 +10,6 @@ import 'package:flymusic/main.dart';
 import 'package:image/image.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:string_validator/string_validator.dart';
 
 //TODO song no image -> album image
 class MusicFinder {
@@ -19,7 +18,6 @@ class MusicFinder {
     Directory thumbs = Directory(docs.path + "/thumbs");
     thumbs.createSync();
 
-    var crc = new Crc32Zlib();
     //list all fields
     List<FileSystemEntity> files = new List();
     List<Song> songs = new List();
@@ -39,39 +37,29 @@ class MusicFinder {
           Art art;
           String album;
 
-          await tp.getTagsFromByteArray(file.readAsBytes()).then((l) {
-            l.forEach((f) async {
-              if (f.version == '1.1') {
-                if (f.tags.containsKey('title')) {
-                  title = f.tags['title'];
-                }
-                if (f.tags.containsKey('artist')) {
-                  artist = f.tags['artist'];
-                }
-                if (f.tags.containsKey('album')) {
-                  album = f.tags['album'];
-                }
+          var tags = await tp.getTagsFromByteArray(file.readAsBytes());
+
+          await Future.forEach(tags, (f) async {
+            if (f.version == '1.1') {
+              if (f.tags.containsKey('title')) {
+                title = f.tags['title'];
               }
-              if (f.tags.containsKey('picture')) {
-                AttachedPicture image = (f.tags['picture'] as AttachedPicture);
-                if (isBase64(image.imageData64)) {
-                  int crcText = crc.convert(image.imageData);
-                  if (crcText != null) {//TODO
-                  art = await database.artDao.findArtByCrc(crcText.toString());
-                    if (art == null) {
-                      File file = File('${thumbs.path}/$crcText.png');
-                      var jpg = decodeJpg(image.imageData);
-                      if (jpg != null) {
-                        file.writeAsBytesSync(jpg.data);
-                        art = new Art(null, file.path, crcText.toString());
-                        art.id = await database.artDao.insertArt(art);
-                      }
-                    }
-                  }
-                }
+              if (f.tags.containsKey('artist')) {
+                artist = f.tags['artist'];
               }
-            });
-          }); //title, artist, album
+              if (f.tags.containsKey('album')) {
+                album = f.tags['album'];
+              }
+            }
+            if (f.tags.containsKey('picture')) {
+              AttachedPicture image = (f.tags['picture'] as AttachedPicture);
+              // if (isBase64(image.imageData64)) {
+              int crcText = new Crc32Zlib().convert(image.imageData);
+              if (crcText != null) {
+                art = await findArt(image, thumbs, crcText);
+              }
+            }
+          });
 
           if (title == null || title.isEmpty) {
             title = basename(file.path);
@@ -134,5 +122,20 @@ class MusicFinder {
       }
     }
     return currentArtist;
+  }
+
+  static Future<Art> findArt(
+      AttachedPicture image, Directory thumbs, int crcText) async {
+    Art art = await database.artDao.findArtByCrc(crcText.toString());
+    if (art == null) {
+      File file = File('${thumbs.path}/$crcText.jpg');
+     // var jpg = decodeJpg(image.imageData);
+   //   if (jpg != null) {
+        await file.writeAsBytes(image.imageData);
+        art = new Art(null, file.path, crcText.toString());
+        art.id = await database.artDao.insertArt(art);
+    //  }
+    }
+    return art;
   }
 }

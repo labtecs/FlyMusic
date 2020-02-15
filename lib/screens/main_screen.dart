@@ -25,7 +25,7 @@ class StartScreen extends StatefulWidget {
           if (snapshot.hasData && snapshot.data != null) {
             return Image.file(File(snapshot.data.path));
           } else {
-            return Image.file(File("asset/images/placeholder.jpg"));
+            return Image(image: AssetImage("asset/images/placeholder.jpg"));
           }
         });
   }
@@ -115,7 +115,7 @@ class _StartScreenState extends State<StartScreen>
             /// a [Directory] object
             action: (BuildContext context, Directory folder) async {
               Navigator.of(context).pop();
-              MusicFinder.readFolderIntoDatabase(folder);
+              MusicFinder.instance.readFolderIntoDatabase(folder);
             });
       }));
     }

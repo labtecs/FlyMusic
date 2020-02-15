@@ -89,15 +89,15 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Song` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `artist` TEXT, `songArt` TEXT, `albumId` INTEGER, `duration` INTEGER, `uri` TEXT, `artistId` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `Song` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `artist` TEXT, `artId` INTEGER, `albumId` INTEGER, `duration` INTEGER, `uri` TEXT, `artistId` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Album` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `album_art` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Album` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `artId` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Artist` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Queue` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `songId` INTEGER, `position` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Art` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `base64` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Art` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `path` TEXT, `crc` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -140,7 +140,7 @@ class _$SongDao extends SongDao {
                   'id': item.id,
                   'title': item.title,
                   'artist': item.artist,
-                  'songArt': item.songArt,
+                  'artId': item.artId,
                   'albumId': item.albumId,
                   'duration': item.duration,
                   'uri': item.uri,
@@ -158,7 +158,7 @@ class _$SongDao extends SongDao {
       row['id'] as int,
       row['title'] as String,
       row['artist'] as String,
-      row['songArt'] as String,
+      row['artId'] as int,
       row['albumId'] as int,
       row['duration'] as int,
       row['uri'] as String,
@@ -223,7 +223,16 @@ class _$AlbumDao extends AlbumDao {
             (Album item) => <String, dynamic>{
                   'id': item.id,
                   'name': item.name,
-                  'album_art': item.albumArt
+                  'artId': item.artId
+                }),
+        _albumUpdateAdapter = UpdateAdapter(
+            database,
+            'Album',
+            ['id'],
+            (Album item) => <String, dynamic>{
+                  'id': item.id,
+                  'name': item.name,
+                  'artId': item.artId
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -232,10 +241,12 @@ class _$AlbumDao extends AlbumDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _albumMapper = (Map<String, dynamic> row) => Album(
-      row['id'] as int, row['name'] as String, row['album_art'] as String);
+  static final _albumMapper = (Map<String, dynamic> row) =>
+      Album(row['id'] as int, row['name'] as String, row['artId'] as int);
 
   final InsertionAdapter<Album> _albumInsertionAdapter;
+
+  final UpdateAdapter<Album> _albumUpdateAdapter;
 
   @override
   Future<List<Album>> findAllAlbums() async {
@@ -250,7 +261,7 @@ class _$AlbumDao extends AlbumDao {
 
   @override
   Future<Album> findAlbumByName(String name) async {
-    return _queryAdapter.query('SELECT * FROM Album WHERE id = ?',
+    return _queryAdapter.query('SELECT * FROM Album WHERE name = ? LIMIT 1',
         arguments: <dynamic>[name], mapper: _albumMapper);
   }
 
@@ -258,6 +269,11 @@ class _$AlbumDao extends AlbumDao {
   Future<int> insertAlbum(Album folder) {
     return _albumInsertionAdapter.insertAndReturnId(
         folder, sqflite.ConflictAlgorithm.abort);
+  }
+
+  @override
+  Future<void> updateAlbum(Album folder) async {
+    await _albumUpdateAdapter.update(folder, sqflite.ConflictAlgorithm.abort);
   }
 }
 
@@ -302,11 +318,45 @@ class _$ArtistDao extends ArtistDao {
 }
 
 class _$ArtDao extends ArtDao {
-  _$ArtDao(this.database, this.changeListener);
+  _$ArtDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _artInsertionAdapter = InsertionAdapter(
+            database,
+            'Art',
+            (Art item) => <String, dynamic>{
+                  'id': item.id,
+                  'path': item.path,
+                  'crc': item.crc
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _artMapper = (Map<String, dynamic> row) =>
+      Art(row['id'] as int, row['path'] as String, row['crc'] as String);
+
+  final InsertionAdapter<Art> _artInsertionAdapter;
+
+  @override
+  Future<Art> findArtById(int id) async {
+    return _queryAdapter.query('SELECT * FROM Art WHERE id = ? LIMIT 1',
+        arguments: <dynamic>[id], mapper: _artMapper);
+  }
+
+  @override
+  Future<Art> findArtByCrc(String crc) async {
+    return _queryAdapter.query('SELECT * FROM Art WHERE crc = ? LIMIT 1',
+        arguments: <dynamic>[crc], mapper: _artMapper);
+  }
+
+  @override
+  Future<int> insertArt(Art art) {
+    return _artInsertionAdapter.insertAndReturnId(
+        art, sqflite.ConflictAlgorithm.abort);
+  }
 }
 
 class _$QueueDao extends QueueDao {

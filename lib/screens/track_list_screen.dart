@@ -7,6 +7,7 @@ import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player_screen.dart';
 
 import '../music/music_queue.dart';
+import 'main_screen.dart';
 
 class TrackList extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _TrackListState extends State<TrackList> {
   Widget _buildRow(Song song) {
     return ListTile(
       leading: CircleAvatar(
-        child: getImage(song),
+        child: StartScreen.getArt(song.artId),
         backgroundColor: Colors.transparent,
       ),
       title: Text(song.title),
@@ -55,18 +56,6 @@ class _TrackListState extends State<TrackList> {
             }
           },
         ));
-  }
-
-  /*
-  Überprüft ob ein Cover für das Lied vorhanden ist.
-  Gibt andernfalls einen platzhalter zurück
-   */
-  Image getImage(Song song) {
-    if (song != null && song.songArt != null) {
-      return Image.memory(base64.decode(song.songArt));
-    } else {
-      return Image.asset( "asset/images/placeholder.jpg");
-    }
   }
 }
 

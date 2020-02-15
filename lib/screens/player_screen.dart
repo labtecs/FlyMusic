@@ -1,14 +1,11 @@
-import 'dart:convert';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flymusic/database/model/song.dart';
 
 import '../music/music_queue.dart';
+import 'main_screen.dart';
 
 //TODO next song?
 class PlayerScreen extends StatefulWidget {
-
   PlayerScreen();
 
   @override
@@ -17,13 +14,12 @@ class PlayerScreen extends StatefulWidget {
 
 // TODO logic (warteliste)
 class _PlayerScreenState extends State<PlayerScreen> {
-
   _PlayerScreenState();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white10,
+        backgroundColor: Colors.white10,
         appBar: AppBar(
           title: Text(MusicQueue.instance.currentSong?.title ?? "no song"),
           backgroundColor: Colors.transparent,
@@ -32,21 +28,37 @@ class _PlayerScreenState extends State<PlayerScreen> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            getImage(),
+            StartScreen.getArt(MusicQueue.instance.currentSong?.artId),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 MaterialButton(
                     onPressed: () {
                       previous();
-                    }, child: Icon(Icons.chevron_left, size: 80, color: Colors.white,)),
-                MaterialButton(onPressed: () {
-                  play();
-                }, child: Icon(getPlayIcon(), size: 80, color: Colors.white,)),
+                    },
+                    child: Icon(
+                      Icons.chevron_left,
+                      size: 80,
+                      color: Colors.white,
+                    )),
                 MaterialButton(
-                    onPressed:  () {
+                    onPressed: () {
+                      play();
+                    },
+                    child: Icon(
+                      getPlayIcon(),
+                      size: 80,
+                      color: Colors.white,
+                    )),
+                MaterialButton(
+                    onPressed: () {
                       next();
-                    }, child: Icon(Icons.chevron_right, size: 80, color: Colors.white,))
+                    },
+                    child: Icon(
+                      Icons.chevron_right,
+                      size: 80,
+                      color: Colors.white,
+                    ))
               ],
             )
           ],
@@ -58,19 +70,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
       return Icons.pause_circle_outline;
     } else {
       return Icons.play_circle_outline;
-    }
-  }
-
-  Image getImage() {
-    //Get Screen With
-    double srceenWidth = MediaQuery.of(context).size.width;
-
-
-    if (MusicQueue.instance.currentSong?.songArt != null) {
-      return Image.memory(Base64Decoder().convert(MusicQueue.instance.currentSong.songArt),
-          width: srceenWidth-30, height: srceenWidth-30, fit: BoxFit.contain);
-    } else {
-      return Image.asset("asset/images/placeholder.jpg");
     }
   }
 

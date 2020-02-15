@@ -4,7 +4,8 @@ import 'package:floor/floor.dart';
 class Art {
   @PrimaryKey(autoGenerate: true)
   int id;
-  String base64;
+  String path;
+  String crc;
 
-  Art(this.id, this.base64);
+  Art(this.id, this.path, this.crc);
 }

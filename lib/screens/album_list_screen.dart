@@ -8,6 +8,8 @@ import 'package:flymusic/screens/album_track_list_screen.dart';
 
 import 'package:flymusic/music/music_queue.dart';
 
+import 'main_screen.dart';
+
 class AlbumList extends StatefulWidget {
   @override
   _AlbumListState createState() => _AlbumListState();
@@ -21,7 +23,7 @@ class _AlbumListState extends State<AlbumList> {
   Widget _buildRow(Album album) {
     return ListTile(
       leading: CircleAvatar(
-        child: getImage(album),
+        child: StartScreen.getArt(album.artId),
         backgroundColor: Colors.transparent,
       ),
       title: Text(album.name),
@@ -55,16 +57,6 @@ class _AlbumListState extends State<AlbumList> {
         },
       ),
     );
-
-
-  }
-
-  Image getImage(Album album) {
-    if (album != null && album.albumArt != null) {
-      return Image.memory(base64.decode(album.albumArt));
-    } else {
-      return Image.asset( "asset/images/placeholder.jpg");
-    }
   }
 }
 

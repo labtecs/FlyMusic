@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flymusic/database/model/art.dart';
+import 'package:flymusic/music/music_finder.dart';
 import 'package:flymusic/screens/album_list_screen.dart';
 import 'package:flymusic/screens/artist_screen.dart';
 import 'package:flymusic/screens/drawer_screen.dart';
@@ -10,11 +12,23 @@ import 'package:folder_picker/folder_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../music/music_finder.dart';
+import '../main.dart';
 
 class StartScreen extends StatefulWidget {
   @override
   _StartScreenState createState() => _StartScreenState();
+
+  static FutureBuilder getArt(int artId) {
+    return FutureBuilder<Art>(
+        future: database.artDao.findArtById(artId),
+        builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            return Image.file(File(snapshot.data.path));
+          } else {
+            return Image(image: AssetImage("asset/images/placeholder.jpg"));
+          }
+        });
+  }
 }
 
 class _StartScreenState extends State<StartScreen>
@@ -101,7 +115,7 @@ class _StartScreenState extends State<StartScreen>
             /// a [Directory] object
             action: (BuildContext context, Directory folder) async {
               Navigator.of(context).pop();
-              MusicFinder.readFolderIntoDatabase(folder);
+              MusicFinder.instance.readFolderIntoDatabase(folder);
             });
       }));
     }

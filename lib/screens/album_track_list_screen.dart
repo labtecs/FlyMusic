@@ -6,6 +6,8 @@ import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player_screen.dart';
 
+import 'main_screen.dart';
+
 class AlbumTrackListScreen extends StatefulWidget {
 
   String albumTitle;
@@ -22,7 +24,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
   Widget _buildRow(Song song) {
     return ListTile(
       leading: CircleAvatar(
-        child: getImage(song),
+        child: StartScreen.getArt(song.artId),
         backgroundColor: Colors.transparent,
       ),
       title: Text(song.title),
@@ -68,24 +70,5 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
         },
       ),
     );
-
-
-  }
-
-  /*
-  Überprüft ob ein Cover für das Lied vorhanden ist.
-  Gibt andernfalls einen platzhalter zurück
-   */
-  Image getImage(Song song) {
-    if (song != null && song.songArt != null) {
-      return Image.memory(base64.decode(song.songArt));
-    } else {
-      return Image.asset("asset/images/placeholder.jpg");
-    }
-  }
-
-  String getAlbumname() {
-    String name;
-    name = database.albumDao.findAlbumById(widget.albumID).toString();
   }
 }

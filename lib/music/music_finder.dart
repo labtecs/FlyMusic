@@ -1,89 +1,145 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:crclib/crclib.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flymusic/database/model/album.dart';
+import 'package:flymusic/database/model/art.dart';
 import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:path/path.dart';
-import 'package:string_validator/string_validator.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MusicFinder {
-  static readFolderIntoDatabase(Directory folder) async {
-    //list all fields
-    List<FileSystemEntity> files = new List();
-    List<Song> songs = new List();
-    files = folder.listSync(
-        recursive: true); //use your folder name instead of resume.
+  static final MusicFinder instance = MusicFinder._internal();
 
-    Album currentAlbum;
-    Artist currentArtist;
+  factory MusicFinder() => instance;
 
-    TagProcessor tp = new TagProcessor();
+  MusicFinder._internal();
 
-    for (FileSystemEntity file in files) {
-      if (file is File) {
-        if (file.uri.toString().endsWith(".mp3")) {
-          String title;
-          String artist;
-          String art;
-          String album;
+  TagProcessor tp = new TagProcessor();
+  List<Song> songs = new List();
+  Album currentAlbum;
+  Artist currentArtist;
+  Directory thumbs;
 
-          await tp.getTagsFromByteArray(file.readAsBytes()).then((l) {
-            l.forEach((f) {
-              if (f.version == '1.1') {
-                if (f.tags.containsKey('title')) {
-                  title = f.tags['title'];
-                }
-                if (f.tags.containsKey('artist')) {
-                  artist = f.tags['artist'];
-                }
-                if (f.tags.containsKey('album')) {
-                  album = f.tags['album'];
-                }
-              }
-              if (f.tags.containsKey('picture')) {
-                String image =
-                    (f.tags['picture'] as AttachedPicture).imageData64;
-                if (isBase64(image)) {
-                  art = image;
-                }
-              }
-            });
-          }); //title, artist, album
-
-          if (title == null || title.isEmpty) {
-            title = basename(file.path);
-          }
-
-          if (album == null || album.isEmpty) {
-            album = "Unkown";
-          }
-
-          if (artist == null || artist.isEmpty) {
-            artist = "Unkown";
-          }
-
-          Album newAlbum = await findAlbum(currentAlbum, album, art);
-          if (newAlbum != currentAlbum) {
-            await database.songDao.insertAllSongs(songs);
-            songs.clear();
-            currentAlbum = newAlbum;
-          }
-
-          currentArtist = await findArtist(currentArtist, artist);
-
-          songs.add(Song(null, title, artist, art, currentAlbum.id, 0,
-              file.path, currentArtist.id));
-        }
-      }
-    }
-    await database.songDao.insertAllSongs(songs);
-    songs.clear();
+  readFolderIntoDatabase(Directory folder) async {
+    Directory docs = await getApplicationDocumentsDirectory();
+    thumbs = Directory(docs.path + "/thumbs");
+    thumbs.createSync();
+    await _readFolder(folder);
   }
 
-  static Future<Album> findAlbum(
-      Album currentAlbum, String album, String art) async {
+  Future<void> _readFolder(FileSystemEntity folder) async {
+    List<FileSystemEntity> files =
+        (folder as Directory).listSync(recursive: false);
+
+    List<Directory> directories = new List();
+    List<File> songFiles = new List();
+    List<Song> songs = new List();
+    Art defaultArt;
+
+    await Future.forEach(files, (f) async {
+      if (f is File) {
+        String ending = "." + f.uri.toString().split(".").last;
+        switch (ending) {
+          case ".mp3":
+            songFiles.add(f);
+            break;
+          case ".jpg":
+          case ".jpeg":
+          case ".png":
+            if (defaultArt == null) {
+              Uint8List bytes = f.readAsBytesSync();
+              int crcText = new Crc32Zlib().convert(bytes);
+              if (crcText != null) {
+                defaultArt = await _findArt(bytes, thumbs, crcText);
+              }
+              if (defaultArt == null) {
+                File file = File('${thumbs.path}/$crcText$ending');
+                await file.writeAsBytes(bytes);
+                defaultArt = new Art(null, file.path, crcText.toString());
+                defaultArt.id = await database.artDao.insertArt(defaultArt);
+              }
+            }
+            break;
+        }
+      } else if (f is Directory) {
+        directories.add(f);
+      }
+    });
+
+    await Future.forEach(songFiles, (f) async {
+      songs.add(await _readFile(defaultArt, folder, f));
+      if (songs.length >= 100) {
+        await database.songDao.insertAllSongs(songs);
+        songs.clear();
+      }
+    });
+
+    await database.songDao.insertAllSongs(songs);
+    songs.clear();
+
+    await Future.forEach(directories, (d) async {
+      await _readFolder(d);
+    });
+  }
+
+  Future<Song> _readFile(Art defaultArt, Directory folder, File file) async {
+    String title;
+    String artist;
+    Art art;
+    String album;
+
+    var tags = await tp.getTagsFromByteArray(file.readAsBytes());
+
+    await Future.forEach(tags, (f) async {
+      if (f.version == '1.1') {
+        if (f.tags.containsKey('title')) {
+          title = f.tags['title'];
+        }
+        if (f.tags.containsKey('artist')) {
+          artist = f.tags['artist'];
+        }
+        if (f.tags.containsKey('album')) {
+          album = f.tags['album'];
+        }
+      }
+      if (f.tags.containsKey('picture')) {
+        AttachedPicture image = (f.tags['picture'] as AttachedPicture);
+        // if (isBase64(image.imageData64)) {
+        int crcText = new Crc32Zlib().convert(image.imageData);
+        if (crcText != null) {
+          art = await _findArt(image.imageData, thumbs, crcText);
+        }
+      }
+    });
+
+    if (title == null || title.isEmpty) {
+      title = basename(file.path);
+    }
+
+    if (album == null || album.isEmpty) {
+      album = folder.path.split("/").last;
+    }
+
+    if (artist == null || artist.isEmpty) {
+      artist = "Unkown";
+    }
+
+    if (art == null) {
+      art = defaultArt;
+    }
+
+    Album songAlbum = await _findAlbum(album, art);
+    Artist songArtist = await _findArtist(currentArtist, artist);
+
+    return Song(null, title, artist, art?.id ?? -1, songAlbum.id, 0, file.path,
+        songArtist.id);
+  }
+
+  Future<Album> _findAlbum(String album, Art art) async {
     //save songs that i have read until now
     if (currentAlbum?.name != album) {
       //search album for song
@@ -91,15 +147,19 @@ class MusicFinder {
 
       if (currentAlbum == null) {
         //create new album
-        currentAlbum = Album(null, album, art);
+        currentAlbum = Album(null, album, art?.id ?? -1);
         //insert album
         currentAlbum.id = await database.albumDao.insertAlbum(currentAlbum);
+      }
+      if (currentAlbum.artId == -1 && art.id != -1) {
+        currentAlbum.artId = art.id;
+        await database.albumDao.updateAlbum(currentAlbum);
       }
     }
     return currentAlbum;
   }
 
-  static Future<Artist> findArtist(Artist currentArtist, String artist) async {
+  static Future<Artist> _findArtist(Artist currentArtist, String artist) async {
     //save songs that i have read until now
     if (currentArtist?.name != artist) {
       //search album for song
@@ -113,5 +173,17 @@ class MusicFinder {
       }
     }
     return currentArtist;
+  }
+
+  Future<Art> _findArt(
+      List<int> imageData, Directory thumbs, int crcText) async {
+    Art art = await database.artDao.findArtByCrc(crcText.toString());
+    if (art == null) {
+      File file = File('${thumbs.path}/$crcText.jpg');
+      await file.writeAsBytes(imageData);
+      art = new Art(null, file.path, crcText.toString());
+      art.id = await database.artDao.insertArt(art);
+    }
+    return art;
   }
 }

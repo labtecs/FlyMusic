@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/queue_item.dart';
 import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/main.dart';
+import 'package:flymusic/screens/drawerScreens/player_screen.dart';
 
-import '../main.dart';
-import 'player_screen.dart';
+import '../main_screen.dart';
 
 class QueueScreen extends StatefulWidget {
   @override
@@ -23,7 +22,7 @@ class _QueueScreenState extends State<QueueScreen> {
           if (snapshot.hasData) {
             return ListTile(
               leading: CircleAvatar(
-                child: getImage(snapshot.data),
+                child: StartScreen.getArt(snapshot.data.artId),
                 backgroundColor: Colors.transparent,
               ),
               title: Text(snapshot.data.title),
@@ -57,17 +56,5 @@ class _QueueScreenState extends State<QueueScreen> {
         }
       },
     ));
-  }
-
-  /*
-  Überprüft ob ein Cover für das Lied vorhanden ist.
-  Gibt andernfalls einen platzhalter zurück
-   */
-  Image getImage(Song song) {
-    if (song != null && song.songArt != null) {
-      return Image.memory(base64.decode(song.songArt));
-    } else {
-      return Image.asset("asset/images/placeholder.jpg");
-    }
   }
 }

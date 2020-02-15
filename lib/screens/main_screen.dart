@@ -1,18 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flymusic/database/model/art.dart';
+import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_finder.dart';
-import 'package:flymusic/screens/album_list_screen.dart';
-import 'package:flymusic/screens/artist_screen.dart';
-import 'package:flymusic/screens/drawer_screen.dart';
-import 'package:flymusic/screens/queue_screen.dart';
-import 'package:flymusic/screens/track_list_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../main.dart';
+import 'drawerScreens/drawer_screen.dart';
+import 'tabScreens/album_list_screen.dart';
+import 'tabScreens/artist_screen.dart';
+import 'tabScreens/queue_screen.dart';
+import 'tabScreens/track_list_screen.dart';
 
 class StartScreen extends StatefulWidget {
   @override
@@ -26,6 +27,39 @@ class StartScreen extends StatefulWidget {
             return Image.file(File(snapshot.data.path));
           } else {
             return Image(image: AssetImage("asset/images/placeholder.jpg"));
+          }
+        });
+  }
+
+  static FutureBuilder getArt2(Song song) {
+    return FutureBuilder<Art>(
+        future: database.artDao.findArtById(song.artId),
+        builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            return DrawerHeader(
+              child: Text(
+                song.title,
+                style: TextStyle(color: Colors.white),
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  image: DecorationImage(
+                      fit: BoxFit.fitWidth,
+                      image: Image.file(File(snapshot.data.path)).image)),
+            );
+            //  return MemoryImage(File(snapshot.data.path));
+          } else {
+            return DrawerHeader(
+              child: Text(
+                song.title,
+                style: TextStyle(color: Colors.white),
+              ),
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  image: DecorationImage(
+                      fit: BoxFit.fitWidth,
+                      image: ExactAssetImage("asset/images/placeholder.jpg"))),
+            );
           }
         });
   }
@@ -94,11 +128,26 @@ class _StartScreenState extends State<StartScreen>
           controller: _tabController,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            chooseFolder();
-          },
-          child: Icon(Icons.folder)),
+      floatingActionButton: SpeedDial(
+        child: Icon(Icons.add),
+        onOpen: () => print('OPENING DIAL'),
+        onClose: () => print('DIAL CLOSED'),
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.play_arrow),
+              backgroundColor: Colors.blue,
+              label: 'Abspielen',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () => print('FIRST CHILD')),
+          SpeedDialChild(
+            child: Icon(Icons.playlist_add),
+            backgroundColor: Colors.blue,
+            label: 'Warteschlange',
+            labelStyle: TextStyle(fontSize: 18.0),
+            onTap: () => print('SECOND CHILD'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -119,12 +168,6 @@ class _StartScreenState extends State<StartScreen>
             });
       }));
     }
-  }
-
-  Future<void> getStorage() async {
-    final directory =
-        await getExternalStorageDirectories(type: StorageDirectory.music);
-    setState(() => externalDirectory = directory[1]);
   }
 
   String getTitle() {

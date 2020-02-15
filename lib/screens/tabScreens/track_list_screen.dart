@@ -1,13 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
-import 'package:flymusic/screens/player_screen.dart';
-
-import '../music/music_queue.dart';
-import 'main_screen.dart';
+import 'package:flymusic/music/music_queue.dart';
+import 'package:flymusic/screens/drawerScreens/drawer_screen.dart';
+import 'package:flymusic/screens/drawerScreens/player_screen.dart';
+import 'package:flymusic/screens/main_screen.dart';
 
 class TrackList extends StatefulWidget {
   @override
@@ -15,7 +13,6 @@ class TrackList extends StatefulWidget {
 }
 
 class _TrackListState extends State<TrackList> {
-
   List<Song> songs = List();
 
   Widget _buildRow(Song song) {
@@ -27,7 +24,10 @@ class _TrackListState extends State<TrackList> {
       title: Text(song.title),
       trailing: Icon(Icons.play_arrow),
       onTap: () {
+        DrawerScreen().showWiedergabe();
         MusicQueue.instance.playSong(song);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PlayerScreen()));
       },
       onLongPress: () {
         MusicQueue.instance.addSong(song);
@@ -42,23 +42,19 @@ class _TrackListState extends State<TrackList> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamBuilder<List<Song>>(
-          stream: database.songDao.findAllSongs(),
-          builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return _buildRow(snapshot.data[index]);
-                },
-              );
-            } else {
-              return Text("no data");
-            }
-          },
-        ));
+      stream: database.songDao.findAllSongs(),
+      builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return _buildRow(snapshot.data[index]);
+            },
+          );
+        } else {
+          return Text("no data");
+        }
+      },
+    ));
   }
 }
-
-
-
-

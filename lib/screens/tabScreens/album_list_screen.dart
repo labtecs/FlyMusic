@@ -1,14 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/main.dart';
-import 'package:flymusic/screens/album_track_list_screen.dart';
-
-import 'package:flymusic/music/music_queue.dart';
-
-import 'main_screen.dart';
+import 'package:flymusic/screens/tabScreens/album_track_list_screen.dart';
+import 'package:flymusic/screens/main_screen.dart';
 
 class AlbumList extends StatefulWidget {
   @override

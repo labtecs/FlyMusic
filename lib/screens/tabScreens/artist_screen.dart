@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/artist.dart';
-import 'package:flymusic/database/model/song.dart';
-
-import '../main.dart';
+import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_queue.dart';
 
 class ArtistScreen extends StatefulWidget {
@@ -12,7 +10,6 @@ class ArtistScreen extends StatefulWidget {
 
 class _ArtistScreenState extends State<ArtistScreen> {
   @override
-
   Widget _buildRow(Artist artist) {
     return ListTile(
       leading: CircleAvatar(
@@ -21,7 +18,9 @@ class _ArtistScreenState extends State<ArtistScreen> {
       ),
       title: Text(artist.name),
       trailing: Icon(Icons.play_arrow),
-      onTap: () {   },
+      onTap: () {
+        MusicQueue.instance.playArtist(artist);
+      },
     );
   }
 
@@ -29,20 +28,20 @@ class _ArtistScreenState extends State<ArtistScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamBuilder<List<Artist>>(
-          stream: database.artistDao.findAllArtists(),
-          builder: (BuildContext context, AsyncSnapshot<List<Artist>> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return _buildRow(snapshot.data[index]);
-                },
-              );
-            } else {
-              return Text("no data");
-            }
-          },
-        ));
+      stream: database.artistDao.findAllArtists(),
+      builder: (BuildContext context, AsyncSnapshot<List<Artist>> snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return _buildRow(snapshot.data[index]);
+            },
+          );
+        } else {
+          return Text("no data");
+        }
+      },
+    ));
   }
 
   /*
@@ -51,10 +50,9 @@ class _ArtistScreenState extends State<ArtistScreen> {
    */
   String checkCover(String coverPath) {
     String testCover = "asset/images/artist_placeholder.jpg";
-    if(coverPath == null) {
+    if (coverPath == null) {
       return testCover;
-    }
-    else{
+    } else {
       return coverPath;
     }
   }

@@ -168,8 +168,10 @@ class _$SongDao extends SongDao {
 
   @override
   Stream<List<Song>> findAllSongs() {
-    return _queryAdapter.queryListStream('SELECT * FROM Song',
-        tableName: 'Song', mapper: _songMapper);
+    return _queryAdapter.queryListStream(
+        'SELECT * FROM Song ORDER BY title ASC',
+        tableName: 'Song',
+        mapper: _songMapper);
   }
 
   @override

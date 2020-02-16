@@ -28,6 +28,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             StartScreen.getArt(MusicQueue.instance.currentSong?.artId),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: LinearProgressIndicator(
+                value: 0.5,
+                backgroundColor: Colors.white,
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/main.dart';
-import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/popupScreens/songPopup_screen.dart';
+import 'package:flymusic/screens/tabScreens/artist_track_list_screen.dart';
 
 class ArtistScreen extends StatefulWidget {
   @override
@@ -20,7 +20,13 @@ class _ArtistScreenState extends State<ArtistScreen> {
       title: Text(artist.name),
       trailing: SongPopup(),
       onTap: () {
-        MusicQueue.instance.playArtist(artist);
+        Navigator.push
+          (context, MaterialPageRoute(builder: (context) =>
+            ArtistTrackListScreen(
+              key: null, artistName: artist.name, artistID: artist.id,
+            ),
+        ),
+        );
       },
     );
   }

@@ -28,12 +28,28 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
         child: Text("$idx"),
     ),
       title: Text(song.title),
-      subtitle: Text("03:21"),
-      trailing: InkWell(
-        child: Icon(Icons.more_vert),
-        onTap: () {
-          Fluttertoast.showToast(msg: "test");
-        },
+      subtitle: Text("00:00"),
+      //Todo korrekte Zeit
+      trailing: PopupMenuButton(
+        icon: Icon(Icons.more_vert),
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: 1,
+            child: Text("Abspielen"),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: Text("Als nächstes Speilen"),
+          ),
+          PopupMenuItem(
+            value: 3,
+            child: Text("Zur Wiedergabeliste hinzufügen"),
+          ),
+          PopupMenuItem(
+            value: 4,
+            child: Text("Zur Warteschlange hinzufügen"),
+          ),
+        ],
       ),
       onTap: () {
         Navigator.push(

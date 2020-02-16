@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/popupScreens/songPopup_screen.dart';
-import 'package:flymusic/screens/tabScreens/album_track_list_screen.dart';
+import 'package:flymusic/screens/tabScreens/album/album_track_list_screen.dart';
 import 'package:flymusic/screens/main_screen.dart';
 
 class AlbumList extends StatefulWidget {

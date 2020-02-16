@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/popupScreens/songPopup_screen.dart';
-import 'package:flymusic/screens/tabScreens/artist_track_list_screen.dart';
+import 'package:flymusic/screens/tabScreens/artist/artist_track_list_screen.dart';
 
 class ArtistScreen extends StatefulWidget {
   @override

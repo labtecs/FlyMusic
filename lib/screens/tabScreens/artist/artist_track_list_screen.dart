@@ -6,11 +6,11 @@ import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/drawerScreens/player_screen.dart';
 import 'package:flymusic/screens/popupScreens/songPopup_screen.dart';
 
-import '../main_screen.dart';
+import '../../main_screen.dart';
 
 class ArtistTrackListScreen extends StatefulWidget {
-  String artistName;
-  int artistID;
+  final String artistName;
+  final int artistID;
 
   ArtistTrackListScreen({Key key, this.artistName, this.artistID})
       : super(key: key);

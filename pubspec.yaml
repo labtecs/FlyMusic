@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
 
   floor: ^0.11.0
-  audioplayers: ^0.13.7
+  audioplayers: ^0.14.0
   dart_tags:
     git: git://github.com/Nailik/dart-tags.git
 

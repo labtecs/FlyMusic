@@ -6,13 +6,13 @@ import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/drawerScreens/player_screen.dart';
 import 'package:flymusic/screens/popupScreens/songPopup_screen.dart';
 
-import '../main_screen.dart';
+import '../../main_screen.dart';
 
 class AlbumTrackListScreen extends StatefulWidget {
 
-  String albumTitle;
-  int albumID;
-  int artID;
+  final String albumTitle;
+  final int albumID;
+  final int artID;
 
   AlbumTrackListScreen({Key key, this.albumTitle, this.albumID, this.artID}) : super (key: key);
   @override

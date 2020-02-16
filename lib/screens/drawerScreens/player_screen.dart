@@ -31,33 +31,39 @@ class _PlayerScreenState extends State<PlayerScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                MaterialButton(
-                    onPressed: () {
-                      previous();
-                    },
-                    child: Icon(
-                      Icons.chevron_left,
-                      size: 80,
-                      color: Colors.white,
-                    )),
-                MaterialButton(
-                    onPressed: () {
-                      play();
-                    },
-                    child: Icon(
-                      getPlayIcon(),
-                      size: 80,
-                      color: Colors.white,
-                    )),
-                MaterialButton(
-                    onPressed: () {
-                      next();
-                    },
-                    child: Icon(
-                      Icons.chevron_right,
-                      size: 80,
-                      color: Colors.white,
-                    ))
+                InkWell(
+                  child: Container(
+                    child: Icon(Icons.shuffle, size: 40,color: Colors.white),
+                  ),
+                  onTap: (){
+                    shuffle();
+                  },
+                ),
+                InkWell(
+                  onTap: previous,
+                  child: Container(
+                      child: Icon(Icons.skip_previous,size: 60,  color: Colors.white,)
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    play();
+                  },
+                  child: Icon(getPlayIcon(), size: 70,color: Colors.white,),
+                ),
+                InkWell(
+                  onTap: () {
+                    next();
+                  },
+                  child: Icon(Icons.skip_next, size: 60,color: Colors.white),
+                ),
+
+                InkWell(
+                  onTap: () {
+                    repeat();
+                  },
+                  child: Icon(Icons.repeat, size: 40,color: Colors.white),
+                )
               ],
             )
           ],
@@ -94,5 +100,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
       MusicQueue.instance.audioPlayer.state =
           MusicQueue.instance.audioPlayer.state;
     });
+  }
+
+  void shuffle() async {
+    //Todo shuffle songs
+  }
+
+  void repeat() async {
+    //Todo repeat song
   }
 }

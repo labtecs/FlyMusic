@@ -94,7 +94,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
                 return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    return _buildRow(snapshot.data[index], index);
+                    return _buildRow(snapshot.data[index], index+1);
                   },
                 );
               }

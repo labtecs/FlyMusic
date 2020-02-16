@@ -128,6 +128,9 @@ class _StartScreenState extends State<StartScreen>
           controller: _tabController,
         ),
       ),
+      /*Todo remove floatingActionButtonCode
+      Code bleibt für eventuelle änderungen
+
       floatingActionButton: SpeedDial(
         child: Icon(Icons.add),
         onOpen: () => print('OPENING DIAL'),
@@ -147,7 +150,7 @@ class _StartScreenState extends State<StartScreen>
             onTap: () => print('SECOND CHILD'),
           ),
         ],
-      ),
+      ),*/
     );
   }
 

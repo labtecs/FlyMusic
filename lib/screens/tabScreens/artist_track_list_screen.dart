@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/drawerScreens/player_screen.dart';
+import 'package:flymusic/screens/popupScreens/songPopup_screen.dart';
 
 import '../main_screen.dart';
 
@@ -28,7 +29,7 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
         backgroundColor: Colors.transparent,
       ),
       title: Text(song.title),
-      trailing: Icon(Icons.play_arrow),
+      trailing: SongPopup(),
       onTap: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => PlayerScreen()));

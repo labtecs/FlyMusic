@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_queue.dart';
+import 'package:flymusic/screens/popupScreens/songPopup_screen.dart';
 
 class ArtistScreen extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
         backgroundColor: Colors.transparent,
       ),
       title: Text(artist.name),
-      trailing: Icon(Icons.play_arrow),
+      trailing: SongPopup(),
       onTap: () {
         MusicQueue.instance.playArtist(artist);
       },

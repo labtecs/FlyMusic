@@ -29,7 +29,12 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
     ),
       title: Text(song.title),
       subtitle: Text("03:21"),
-      trailing: Icon(Icons.more_vert),
+      trailing: InkWell(
+        child: Icon(Icons.more_vert),
+        onTap: () {
+          Fluttertoast.showToast(msg: "test");
+        },
+      ),
       onTap: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => PlayerScreen())

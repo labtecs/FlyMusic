@@ -27,7 +27,12 @@ class _AlbumListState extends State<AlbumList> {
       },
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AlbumTrackListScreen(key: null,albumTitle: album.name, albumID: album.id)),
+            context, MaterialPageRoute(builder: (context) =>
+            AlbumTrackListScreen(key: null,
+                albumTitle: album.name,
+                albumID: album.id,
+                artID: album.artId
+            ),),
         );
       },
     );

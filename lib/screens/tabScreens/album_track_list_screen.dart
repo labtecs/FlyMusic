@@ -11,7 +11,9 @@ class AlbumTrackListScreen extends StatefulWidget {
 
   String albumTitle;
   int albumID;
-  AlbumTrackListScreen({Key key, this.albumTitle, this.albumID}) : super (key: key);
+  int artID;
+
+  AlbumTrackListScreen({Key key, this.albumTitle, this.albumID, this.artID}) : super (key: key);
   @override
   _AlbumTrackListScreenState createState() => _AlbumTrackListScreenState();
 }
@@ -23,10 +25,10 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
   Widget _buildRow(Song song, int idx) {
     return ListTile(
       leading: CircleAvatar(
-        child: StartScreen.getArt(song.artId),
-        backgroundColor: Colors.transparent,
+        child: Text("$idx"),
     ),
-      title: Text("$idx.  " + song.title),
+      title: Text(song.title),
+      subtitle: Text("03:21"),
       trailing: Icon(Icons.more_vert),
       onTap: () {
         Navigator.push(
@@ -43,10 +45,6 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
   
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: //Icon(Icons.play_arrow),
-        Text(widget.albumTitle),
-      ),
       floatingActionButton: SpeedDial(
         child: Icon(Icons.add),
         backgroundColor: Colors.transparent,
@@ -68,21 +66,42 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
           ),
         ],
       ),
-      body: FutureBuilder<List<Song>>(
-        future: database.songDao.findSongsByAlbumId(widget.albumID),
-        builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
-          if(snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return _buildRow(snapshot.data[index], index);
-                },
-            );
-          }
-          else {
-            return Text("no data");
-          }
-        },
+      body: NestedScrollView(
+    headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+      return <Widget>[
+        SliverAppBar(
+          expandedHeight: 200.0,
+          floating: false,
+          pinned: true,
+          flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              title: Text(widget.albumTitle,
+                  style: TextStyle(color: Colors.white, fontSize: 16.0,
+                  )
+              ),
+              background: StartScreen.getArt(widget.artID),
+          ),
+        ),
+      ];
+      },
+        body: Center(
+          child: FutureBuilder<List<Song>>(
+            future: database.songDao.findSongsByAlbumId(widget.albumID),
+            builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+              if(snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return _buildRow(snapshot.data[index], index);
+                  },
+                );
+              }
+              else {
+                return Text("no data");
+              }
+            },
+          ),
+        ),
       ),
     );
   }

@@ -24,7 +24,7 @@ class StartScreen extends StatefulWidget {
         future: database.artDao.findArtById(artId),
         builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
-            return Image.file(File(snapshot.data.path));
+            return Image.file(File(snapshot.data.path), fit: BoxFit.cover);
           } else {
             return Image(image: AssetImage("asset/images/placeholder.jpg"));
           }

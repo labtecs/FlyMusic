@@ -20,14 +20,14 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
 
   List<Song> songs = List();
 
-  Widget _buildRow(Song song) {
+  Widget _buildRow(Song song, int idx) {
     return ListTile(
       leading: CircleAvatar(
         child: StartScreen.getArt(song.artId),
         backgroundColor: Colors.transparent,
-      ),
-      title: Text(song.title),
-      trailing: Icon(Icons.play_arrow),
+    ),
+      title: Text("$idx.  " + song.title),
+      trailing: Icon(Icons.more_vert),
       onTap: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => PlayerScreen())
@@ -75,7 +75,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
             return ListView.builder(
               itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
-                  return _buildRow(snapshot.data[index]);
+                  return _buildRow(snapshot.data[index], index);
                 },
             );
           }

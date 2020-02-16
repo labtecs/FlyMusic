@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/drawerScreens/player_screen.dart';
+import 'package:flymusic/screens/popupScreens/songPopup_screen.dart';
 
 import '../main_screen.dart';
 
@@ -30,27 +31,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
       title: Text(song.title),
       subtitle: Text("00:00"),
       //Todo korrekte Zeit
-      trailing: PopupMenuButton(
-        icon: Icon(Icons.more_vert),
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            value: 1,
-            child: Text("Abspielen"),
-          ),
-          PopupMenuItem(
-            value: 2,
-            child: Text("Als nächstes Speilen"),
-          ),
-          PopupMenuItem(
-            value: 3,
-            child: Text("Zur Wiedergabeliste hinzufügen"),
-          ),
-          PopupMenuItem(
-            value: 4,
-            child: Text("Zur Warteschlange hinzufügen"),
-          ),
-        ],
-      ),
+      trailing: SongPopup(),
       onTap: () {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => PlayerScreen())

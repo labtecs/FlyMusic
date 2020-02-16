@@ -46,11 +46,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-
-        },
-      ),
     );
   }
 
@@ -68,34 +63,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 action: (BuildContext context, Directory folder) async {
                   Navigator.of(context).pop();
                   setState(() {
+                    MusicFinder.instance.readFolderIntoDatabase(folder);
                     folderLocation = folder.toString();
-                    return showDialog<void>(
-                      context: context,
-                      barrierDismissible: false, // user must tap button!
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Import von Musik'),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: <Widget>[
-                                Text('Das Importieren der Musik'),
-                                Text('dauert einen Moment'),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text('Ok'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
                   });
-                  MusicFinder.instance.readFolderIntoDatabase(folder);
+
+                  showDialog<void>(
+                    context: context,
+                    barrierDismissible: false, // user must tap button!
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Import von Musik'),
+                        content: SingleChildScrollView(
+                          child: ListBody(
+                            children: <Widget>[
+                              Text('Das Importieren der Musik'),
+                              Text('dauert einen Moment'),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Ok'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 });
           }));
     }

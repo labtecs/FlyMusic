@@ -39,13 +39,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
               color: Colors.white,
               fontSize: 16,
             ),),
-            subtitle: Text(MusicQueue.instance.currentSong.artist, style: TextStyle(
+            subtitle: Text(getArtist(), style: TextStyle(
               fontSize: 12,
               color: Colors.white,
             ),),
           ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10, 50, 10, 10),
+            padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
             child: Slider(
               value: postition,
               onChanged: (value) {
@@ -148,6 +148,16 @@ class _PlayerScreenState extends State<PlayerScreen> {
     catch(q) {
       return title;
 
+    }
+  }
+  String getArtist() {
+    String artist = "no artist";
+    try{
+      artist = MusicQueue.instance.currentSong.artist;
+      return artist;
+    }
+    catch(q) {
+      return artist;
     }
   }
 }

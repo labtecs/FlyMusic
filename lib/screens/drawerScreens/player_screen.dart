@@ -15,14 +15,14 @@ class PlayerScreen extends StatefulWidget {
 class _PlayerScreenState extends State<PlayerScreen> {
   _PlayerScreenState();
 
-  Color farbe = Colors.white;
-
   @override
   Widget build(BuildContext context) {
+    double halfDisplaySize = MediaQuery.of(context).size.height /2;
     return Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        title: Text(getTitle()),
         elevation: 0.0,
         backgroundColor: Colors.transparent,
       ),
@@ -31,10 +31,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
         children: <Widget>[
           Container(
             child: StartScreen.getArt(MusicQueue.instance.currentSong?.artId),
-            height: MediaQuery.of(context).size.height / 2,
+            height: halfDisplaySize + 50,
           ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10, 100, 10, 10),
+            padding: EdgeInsetsDirectional.fromSTEB(10, MediaQuery.of(context).size.height / 5, 10, 10),
             child: LinearProgressIndicator(
               value: 0.5,
               backgroundColor: Colors.white,
@@ -121,5 +121,17 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
   void repeat() async {
     //Todo repeat song
+  }
+
+  String getTitle() {
+    String title = "no title";
+    try{
+      title = MusicQueue.instance.currentSong.title;
+      return title;
+    }
+    catch(q) {
+      return title;
+
+    }
   }
 }

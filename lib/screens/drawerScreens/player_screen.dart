@@ -22,7 +22,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(getTitle()),
         elevation: 0.0,
         backgroundColor: Colors.transparent,
       ),
@@ -33,8 +32,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
             child: StartScreen.getArt(MusicQueue.instance.currentSong?.artId),
             height: halfDisplaySize + 50,
           ),
+          ListTile(
+            title: Text(getTitle(),style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),),
+            subtitle: Text(MusicQueue.instance.currentSong.artist, style: TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+            ),),
+          ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(10, MediaQuery.of(context).size.height / 5, 10, 10),
+            padding: EdgeInsetsDirectional.fromSTEB(10, 50, 10, 10),
             child: LinearProgressIndicator(
               value: 0.5,
               backgroundColor: Colors.white,

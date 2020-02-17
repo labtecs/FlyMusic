@@ -15,66 +15,72 @@ class PlayerScreen extends StatefulWidget {
 class _PlayerScreenState extends State<PlayerScreen> {
   _PlayerScreenState();
 
+  Color farbe = Colors.white;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white10,
-        appBar: AppBar(
-          title: Text(MusicQueue.instance.currentSong?.title ?? "no song"),
-          backgroundColor: Colors.transparent,
-          //elevation: 0.0, //Macht die Appbar komplett transparent.
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            StartScreen.getArt(MusicQueue.instance.currentSong?.artId),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: LinearProgressIndicator(
-                value: 0.5,
-                backgroundColor: Colors.white,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                InkWell(
-                  child: Container(
-                    child: Icon(Icons.shuffle, size: 40,color: Colors.white),
-                  ),
-                  onTap: (){
-                    shuffle();
-                  },
-                ),
-                InkWell(
-                  onTap: previous,
-                  child: Container(
-                      child: Icon(Icons.skip_previous,size: 60,  color: Colors.white,)
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    play();
-                  },
-                  child: Icon(getPlayIcon(), size: 70,color: Colors.white,),
-                ),
-                InkWell(
-                  onTap: () {
-                    next();
-                  },
-                  child: Icon(Icons.skip_next, size: 60,color: Colors.white),
-                ),
+      backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+      ),
+      body: Column(
 
-                InkWell(
-                  onTap: () {
-                    repeat();
-                  },
-                  child: Icon(Icons.repeat, size: 40,color: Colors.white),
-                )
-              ],
-            )
-          ],
-        ));
+        children: <Widget>[
+          Container(
+            child: StartScreen.getArt(MusicQueue.instance.currentSong?.artId),
+            height: MediaQuery.of(context).size.height / 2,
+          ),
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10, 100, 10, 10),
+            child: LinearProgressIndicator(
+              value: 0.5,
+              backgroundColor: Colors.white,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                child: Container(
+                  child: Icon(Icons.shuffle, size: 40,color: Colors.white),
+                ),
+                onTap: (){
+                  shuffle();
+                },
+              ),
+              InkWell(
+                onTap: previous,
+                child: Container(
+                    child: Icon(Icons.skip_previous,size: 60,color: Colors.white)
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  play();
+                },
+                child: Icon(getPlayIcon(), size: 70,color: Colors.white),
+              ),
+              InkWell(
+                onTap: () {
+                  next();
+                },
+                child: Icon(Icons.skip_next, size: 60,color: Colors.white),
+              ),
+
+              InkWell(
+                onTap: () {
+                  repeat();
+                },
+                child: Icon(Icons.repeat, size: 40,color: Colors.white),
+              )
+            ],
+          )
+        ],
+      ),
+    );
   }
 
   IconData getPlayIcon() {

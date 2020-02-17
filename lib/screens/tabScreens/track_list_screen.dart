@@ -16,25 +16,30 @@ class _TrackListState extends State<TrackList> {
   List<Song> songs = List();
 
   Widget _buildRow(Song song) {
-    return ListTile(
-      leading: CircleAvatar(
-        child: StartScreen.getArt(song.artId),
-        backgroundColor: Colors.transparent,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
       ),
-      title: Text(song.title),
-      subtitle: Text("00:00"),
-      trailing: SongPopup(),
-      onTap: () {
-        MusicQueue.instance.playSong(song);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlayerScreen()));
-      },
-      onLongPress: () {
-        MusicQueue.instance.addSong(song);
-        Fluttertoast.showToast(
-          msg: "${song.title} zur Warteliste hinzugefügt",
-        );
-      },
+      child: ListTile(
+        leading: CircleAvatar(
+          child: StartScreen.getArt(song.artId),
+          backgroundColor: Colors.transparent,
+        ),
+        title: Text(song.title,style: TextStyle(color: Colors.black),),
+        subtitle: Text("00:00",style: TextStyle(color: Colors.black)),
+        trailing: SongPopup(),
+        onTap: () {
+          MusicQueue.instance.playSong(song);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => PlayerScreen()));
+        },
+        onLongPress: () {
+          MusicQueue.instance.addSong(song);
+          Fluttertoast.showToast(
+            msg: "${song.title} zur Warteliste hinzugefügt",
+          );
+        },
+      ),
     );
   }
 

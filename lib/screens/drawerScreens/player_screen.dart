@@ -15,6 +15,7 @@ class PlayerScreen extends StatefulWidget {
 class _PlayerScreenState extends State<PlayerScreen> {
   _PlayerScreenState();
 
+  double postition = 0;
   @override
   Widget build(BuildContext context) {
     double halfDisplaySize = MediaQuery.of(context).size.height /2;
@@ -45,9 +46,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
           ),
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(10, 50, 10, 10),
-            child: LinearProgressIndicator(
-              value: 0.5,
-              backgroundColor: Colors.white,
+            child: Slider(
+              value: postition,
+              onChanged: (value) {
+                setState(() => postition = value);
+              },
+              min: 0,
+              max: 100,
+              label: "$postition",
             ),
           ),
           Row(

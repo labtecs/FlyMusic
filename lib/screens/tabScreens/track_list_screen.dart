@@ -5,7 +5,7 @@ import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/drawerScreens/player_screen.dart';
 import 'package:flymusic/screens/main_screen.dart';
-import 'package:flymusic/screens/popupScreens/songPopup_screen.dart';
+import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 
 class TrackList extends StatefulWidget {
   @override
@@ -27,14 +27,14 @@ class _TrackListState extends State<TrackList> {
         ),
         title: Text(song.title,style: TextStyle(color: Colors.black),),
         subtitle: Text("00:00",style: TextStyle(color: Colors.black)),
-        trailing: SongPopup(),
+        trailing: SongPopup(song),
         onTap: () {
           MusicQueue.instance.playSong(song);
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => PlayerScreen()));
         },
         onLongPress: () {
-          MusicQueue.instance.addSong(song);
+          MusicQueue.instance.addItem(song);
           Fluttertoast.showToast(
             msg: "${song.title} zur Warteliste hinzugefügt",
           );

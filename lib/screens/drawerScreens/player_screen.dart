@@ -35,11 +35,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
             height: halfDisplaySize + 50,
           ),
           ListTile(
-            title: Text(getTitle(),style: TextStyle(
+            title: Text(MusicQueue.instance.currentSong?.title ?? "no title",style: TextStyle(
               color: Colors.white,
               fontSize: 16,
             ),),
-            subtitle: Text(getArtist(), style: TextStyle(
+            subtitle: Text(MusicQueue.instance.currentSong?.artist ?? "no artist", style: TextStyle(
               fontSize: 12,
               color: Colors.white,
             ),),
@@ -137,27 +137,5 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
   void repeat() async {
     //Todo repeat song
-  }
-
-  String getTitle() {
-    String title = "no title";
-    try{
-      title = MusicQueue.instance.currentSong.title;
-      return title;
-    }
-    catch(q) {
-      return title;
-
-    }
-  }
-  String getArtist() {
-    String artist = "no artist";
-    try{
-      artist = MusicQueue.instance.currentSong.artist;
-      return artist;
-    }
-    catch(q) {
-      return artist;
-    }
   }
 }

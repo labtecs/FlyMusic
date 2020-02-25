@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/music/music_queue.dart';
 
 class SongPopup extends StatefulWidget {
+  final Object item;
+
+  SongPopup(this.item);
+
   @override
   _SongPopupState createState() => _SongPopupState();
 }
@@ -18,20 +23,25 @@ class _SongPopupState extends State<SongPopup> {
         ),
         PopupMenuItem(
           value: 1,
-          child: Text("Als nächstes Speilen"),
+          child: Text("Als nächstes Spielen"),
         ),
         PopupMenuItem(
           value: 2,
-          child: Text("Zur Wiedergabeliste hinzufügen"),
-        ),
-        PopupMenuItem(
-          value: 3,
           child: Text("Zur Warteschlange hinzufügen"),
         ),
       ],
       onSelected: (value) {
-        Fluttertoast.showToast(msg: "$value");
-        print("value");
+        switch (value) {
+          case 0:
+            MusicQueue.instance.playItem(widget.item);
+            break;
+          case 1:
+            MusicQueue.instance.playItemNext(widget.item);
+            break;
+          case 2:
+            MusicQueue.instance.addItem(widget.item);
+            break;
+        }
       },
     );
   }

@@ -10,10 +10,36 @@ class MusicQueue {
 
   factory MusicQueue() => instance;
   final AudioPlayer audioPlayer = AudioPlayer();
+  QueueItem currentItem;
   Song currentSong;
 
   MusicQueue._internal() {
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
+  }
+
+  playItem(Object item) async {
+    if (item is Song) {
+      playSong(item);
+    } else if (item is Album) {
+      playAlbum(item);
+    } else if (item is Artist) {
+      playArtist(item);
+    }
+  }
+
+  playItemNext(Object item) async {
+    if (item is Song) {
+    } else if (item is Album) {
+    } else if (item is Artist) {}
+  }
+
+  addItem(Object item) async {
+    if (item is Song) {
+      _addSong(item);
+    } else if (item is Album) {
+      _addAlbum(item);
+    } else if (item is Artist) {
+      _addArtist(item);}
   }
 
   playSong(Song song) async {
@@ -26,65 +52,60 @@ class MusicQueue {
     await playPause();
   }
 
-  playAlbum(Album album) async{
+  playAlbum(Album album) async {
     await clear();
     await _addAlbum(album);
     await playIfNotPlaying();
   }
 
-  playArtist(Artist artist) async{
+  playArtist(Artist artist) async {
     await clear();
     await _addArtist(artist);
     await playIfNotPlaying();
   }
 
-  addSong(Song song) async {
+  _addSong(Song song) async {
     //kommt unten in die Warteliste
     QueueItem lastItem = await database.queueDao.getLastItem();
     database.queueDao
         .addItem(new QueueItem(null, song.id, lastItem?.position++ ?? 0));
-    await playIfNotPlaying();
   }
 
-  addArtist(Artist artist) async {
-    await _addArtist(artist);
-    await playIfNotPlaying();
+  addSongNext(Song song) async {
+    //kommt unten in die Warteliste
+    //TODO
+//    QueueItem lastItem = await database.queueDao.getLastItem();
+//    database.queueDao
+//        .addItem(new QueueItem(null, song.id, lastItem?.position++ ?? 0));
   }
 
-  addAlbum(Album album) async {
-    await _addAlbum(album);
-    await playIfNotPlaying();
-  }
-
-  playIfNotPlaying() async{
+  playIfNotPlaying() async {
     if (audioPlayer.state != AudioPlayerState.PLAYING) {
       await playPause();
     }
   }
 
-
-
-  clear(){
-
-  }
+  clear() {}
 
   _addAlbum(Album album) async {
     //alle lieder in die warteschlange (unten)
     _addItems((await database.songDao.findSongIdsByAlbumId(album.id))
-        .map((item) => item.id).toList());
+        .map((item) => item.id)
+        .toList());
   }
 
   _addArtist(Artist artist) async {
     //alle lieder in die warteschlange (unten)
     _addItems((await database.songDao.findSongIdsByArtistId(artist.id))
-        .map((item) => item.id).toList());
+        .map((item) => item.id)
+        .toList());
   }
 
   _addItems(List<int> items) async {
     var lastItem = await database.queueDao.getLastItem();
     var insertItems =
         items.map((id) => new QueueItem(null, id, lastItem?.position++ ?? 0));
-    database.queueDao.addItems(insertItems);
+    database.queueDao.addItems(insertItems.toList());
   }
 
   playPause() async {
@@ -103,11 +124,11 @@ class MusicQueue {
 
   //20 lieder vor dem aktuellen - davor löschen TODO
   playNext() async {
-    var queueItem = await database.queueDao.getNextItem(currentSong?.id ?? -1);
-    if (queueItem == null) {
+    currentItem = await database.queueDao.getNextItem(currentItem?.position ?? -1);
+    if (currentItem == null) {
       return;
     }
-    currentSong = await database.songDao.findSongById(queueItem.songId);
+    currentSong = await database.songDao.findSongById(currentItem.songId);
     if (currentSong == null) {
       return;
     }
@@ -119,12 +140,11 @@ class MusicQueue {
 
   //warteschlange leer -> nächstes lied in "alle lieder"
   playPrevious() async {
-    var queueItem =
-        await database.queueDao.getPreviousItem(currentSong?.id ?? 1);
-    if (queueItem == null) {
+    currentItem = await database.queueDao.getPreviousItem(currentItem?.position ?? 1);
+    if (currentItem == null) {
       return;
     }
-    currentSong = await database.songDao.findSongById(queueItem.songId);
+    currentSong = await database.songDao.findSongById(currentItem.songId);
     if (currentSong == null) {
       return;
     }

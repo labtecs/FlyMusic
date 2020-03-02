@@ -1,9 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/main_screen.dart';
-import 'package:flymusic/database/dao/queue_dao.dart';
 import 'package:flymusic/screens/tabScreens/queue_screen.dart';
 
 //TODO next song?
@@ -38,11 +36,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
             height: halfDisplaySize + 50,
           ),
           ListTile(
-            title: Text(MusicQueue.instance.currentSong?.title ?? "no title",style: TextStyle(
+            title: Text(MusicQueue.instance.currentSong?.title ?? "no title",
+              style: TextStyle(
               color: Colors.white,
               fontSize: 16,
             ),),
-            subtitle: Text(MusicQueue.instance.currentSong?.artist ?? "no artist", style: TextStyle(
+            subtitle: Text(MusicQueue.instance.currentSong?.artist ?? "no artist",
+              style: TextStyle(
               fontSize: 12,
               color: Colors.white,
             ),),
@@ -85,7 +85,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
               InkWell(
                 onTap: previous,
                 child: Container(
-                    child: Icon(Icons.skip_previous,size: 60,color: Colors.white)
+                    child: Icon(Icons.skip_previous,
+                        size: 60,
+                        color: Colors.white
+                    ),
                 ),
               ),
               InkWell(

@@ -4,6 +4,7 @@ import 'package:flymusic/database/model/art.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_finder.dart';
+import 'package:flymusic/music/music_queue.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -69,6 +70,40 @@ class _StartScreenState extends State<StartScreen>
   TabController _tabController;
   int _page = 0;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void _showBottomSheetCallback() {
+    _scaffoldKey.currentState.showBottomSheet<void>((BuildContext context) {
+      return Container(
+        decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: Colors.black)),
+            color: Colors.grey
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              CircleAvatar(
+                child: StartScreen.getArt2(MusicQueue.instance.currentSong),
+                backgroundColor: Colors.transparent,
+              ),
+              IconButton(
+                icon: Icon(Icons.skip_previous),
+              ),
+              IconButton(
+                icon: Icon(Icons.play_arrow),
+              ),
+              IconButton(
+                icon: Icon(Icons.skip_next),
+              ),
+            ],
+          )
+          ),
+      );
+    });
+  }
+
   /*
   Tab Liste
    */
@@ -104,6 +139,7 @@ class _StartScreenState extends State<StartScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       drawer: DrawerScreen(),
       appBar: AppBar(
         title: ListTile(
@@ -115,6 +151,10 @@ class _StartScreenState extends State<StartScreen>
             icon: Icon(Icons.more_vert,
             color: Colors.white,
             ),
+            onPressed: () {
+              _showBottomSheetCallback();
+              child: const Text('Show Persistent Bottom Sheet');
+            },
           ),
         ),
         backgroundColor: Colors.black54,

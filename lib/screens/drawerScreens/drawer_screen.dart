@@ -3,6 +3,7 @@ import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/drawerScreens/impressum_screen.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/drawerScreens/settings_screen.dart';
+import 'package:flymusic/screens/tabScreens/queue_screen.dart';
 
 import '../main_screen.dart';
 
@@ -24,6 +25,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => PlayerScreen()));
+            },
+          ),          ListTile(
+            title: Text('Wiedergabeliste'),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => QueueScreen()));
             },
           ),
           ListTile(

@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
@@ -27,9 +26,10 @@ class _BottomPlayerState extends State<BottomPlayer> {
               Container(
                 height: 60,
                 child: InkWell(
-                  child: StartScreen.getArt3(MusicQueue.instance.currentSong, 10),
+                  child: StartScreen.getArt3(MusicQueue.instance.currentSong),
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerScreen()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => PlayerScreen()));
                   },
                 ),
               ),
@@ -55,9 +55,11 @@ class _BottomPlayerState extends State<BottomPlayer> {
           )
       ),
     );
-
   }
 
+  /**
+   * returns the play or pouse icon
+   */
   IconData getPlayIcon() {
     if (MusicQueue.instance.audioPlayer.state == AudioPlayerState.PLAYING) {
       return Icons.pause;
@@ -66,6 +68,9 @@ class _BottomPlayerState extends State<BottomPlayer> {
     }
   }
 
+  /**
+   * Starts playing or stopping music
+   */
   void play() async {
     await MusicQueue.instance.playPause();
     setState(() {
@@ -74,6 +79,9 @@ class _BottomPlayerState extends State<BottomPlayer> {
     });
   }
 
+  /**
+   * skipt to the next song
+   */
   void next() async {
     await MusicQueue.instance.playNext();
     setState(() {
@@ -82,6 +90,9 @@ class _BottomPlayerState extends State<BottomPlayer> {
     });
   }
 
+  /**
+   * skip previous
+   */
   void previous() async {
     await MusicQueue.instance.playPrevious();
     setState(() {
@@ -89,6 +100,4 @@ class _BottomPlayerState extends State<BottomPlayer> {
           MusicQueue.instance.audioPlayer.state;
     });
   }
-
-
 }

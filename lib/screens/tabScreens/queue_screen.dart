@@ -47,6 +47,10 @@ class _QueueScreenState extends State<QueueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Wiedergabeliste"),
+        backgroundColor: Colors.black54,
+      ),
         body: StreamBuilder<List<QueueItem>>(
       stream: database.queueDao.findAllItems(),
       builder: (BuildContext context, AsyncSnapshot<List<QueueItem>> snapshot) {

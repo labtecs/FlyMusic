@@ -12,6 +12,7 @@ import 'tabScreens/album/album_screen.dart';
 import 'tabScreens/artist/artist_screen.dart';
 import 'tabScreens/queue_screen.dart';
 import 'tabScreens/track_list_screen.dart';
+import 'package:flymusic/util/themes.dart';
 
 class StartScreen extends StatefulWidget {
   @override
@@ -62,14 +63,14 @@ class StartScreen extends StatefulWidget {
         });
 
 
-  }  static FutureBuilder getArt3(Song song, double ImageScale) {
+  }  static FutureBuilder getArt3(Song song) {
     return FutureBuilder<Art>(
         future: database.artDao.findArtById(song?.artId ?? -1),
         builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
-            return Image.asset(snapshot.data.path, scale: ImageScale,);
+            return Image.asset(snapshot.data.path);
           } else {
-            return Image.asset("asset/images/placeholder.jpg", scale: ImageScale);
+            return Image.asset("asset/images/placeholder.jpg",);
           }
         });
   }
@@ -90,7 +91,7 @@ class _StartScreenState extends State<StartScreen>
     ),
     Tab(icon: Icon(Icons.album)),
     Tab(icon: Icon(Icons.person)),
-    Tab(icon: Icon(Icons.queue_music)),
+   // Tab(icon: Icon(Icons.queue_music)),
   ];
 
   @override
@@ -143,7 +144,7 @@ class _StartScreenState extends State<StartScreen>
           TrackList(),
           AlbumList(),
           ArtistScreen(),
-          QueueScreen(),
+          //QueueScreen(),
         ],
         controller: _tabController,
       ),
@@ -186,7 +187,7 @@ class _StartScreenState extends State<StartScreen>
         return 'Alben';
       case 2:
         return 'Künstler';
-      case 3:
+     // case 3:
         return 'Warteschlange';
       default:
         return '';

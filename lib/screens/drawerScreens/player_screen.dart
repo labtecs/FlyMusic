@@ -1,8 +1,10 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/database/dao/queue_dao.dart';
+import 'package:flymusic/screens/tabScreens/queue_screen.dart';
 
 //TODO next song?
 class PlayerScreen extends StatefulWidget {
@@ -44,6 +46,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
               fontSize: 12,
               color: Colors.white,
             ),),
+            trailing: IconButton(
+              icon: new Icon(
+                Icons.queue_music,
+                size: 35,
+                color: Colors.white,
+            ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => QueueScreen()),
+                );
+              },
+            ),
           ),
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),

@@ -106,8 +106,19 @@ class _StartScreenState extends State<StartScreen>
     return Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
-        title: Text(getTitle()),
+        title: ListTile(
+          title: Text(getTitle(), style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),),
+          trailing: IconButton(
+            icon: Icon(Icons.more_vert,
+            color: Colors.white,
+            ),
+          ),
+        ),
         backgroundColor: Colors.black54,
+
       ),
       //body: TrackList(),
       body: TabBarView(

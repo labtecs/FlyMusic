@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/queue_item.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
@@ -26,7 +27,12 @@ class _QueueScreenState extends State<QueueScreen> {
                 backgroundColor: Colors.transparent,
               ),
               title: Text(snapshot.data.title),
-              trailing: Icon(Icons.delete),
+              trailing: IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  Fluttertoast.showToast(msg: "song removed");
+                },
+              ),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => PlayerScreen()));

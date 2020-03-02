@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/main_screen.dart';
+import 'package:flymusic/database/dao/queue_dao.dart';
 
 //TODO next song?
 class PlayerScreen extends StatefulWidget {

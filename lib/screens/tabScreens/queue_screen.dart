@@ -26,7 +26,7 @@ class _QueueScreenState extends State<QueueScreen> {
                 backgroundColor: Colors.transparent,
               ),
               title: Text(snapshot.data.title),
-              trailing: Icon(Icons.play_arrow),
+              trailing: Icon(Icons.delete),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => PlayerScreen()));

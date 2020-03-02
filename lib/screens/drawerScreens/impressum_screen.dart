@@ -7,7 +7,16 @@ class ImpressumScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Impressum"),
       ),
-      body: Text("hier entsteht ein impressum"),
+      body: ListView(
+        children: <Widget>[
+
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+          ),
+          Text("Eine App von:", style: TextStyle(fontSize: 25), textAlign: TextAlign.center,),
+          Text("Kilian und Oliver", style: TextStyle(fontSize: 30), textAlign: TextAlign.center,)
+        ],
+      ),
     );
   }
 }

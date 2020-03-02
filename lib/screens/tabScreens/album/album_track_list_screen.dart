@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
@@ -27,6 +26,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
     return ListTile(
       leading: CircleAvatar(
         child: Text("$idx"),
+        backgroundColor: Colors.black54,
     ),
       title: Text(song.title),
       subtitle: Text("00:00"),
@@ -47,34 +47,14 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
   
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: SpeedDial(
-        child: Icon(Icons.add),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        children: [
-          SpeedDialChild(
-              child: Icon(Icons.play_arrow),
-              backgroundColor: Colors.blue,
-              label: 'Abspielen',
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => print('FIRST CHILD')
-          ),
-          SpeedDialChild(
-            child: Icon(Icons.playlist_add),
-            backgroundColor: Colors.blue,
-            label: 'Warteschlange',
-            labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () => print('SECOND CHILD'),
-          ),
-        ],
-      ),
       body: NestedScrollView(
     headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
       return <Widget>[
         SliverAppBar(
           expandedHeight: 200.0,
           floating: false,
-          pinned: true,
+          pinned: false,
+          backgroundColor: Colors.black54,
           flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(widget.albumTitle,
@@ -94,12 +74,12 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
                 return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    return _buildRow(snapshot.data[index], index+1);
+                    return _buildRow(snapshot.data[index], index+1,);
                   },
                 );
               }
               else {
-                return Text("no data");
+                return Text("no data, or loding");
               }
             },
           ),

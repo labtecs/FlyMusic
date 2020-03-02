@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
@@ -45,28 +44,8 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: //Icon(Icons.play_arrow),
-            Text(widget.artistName),
-      ),
-      floatingActionButton: SpeedDial(
-        child: Icon(Icons.add),
-        onOpen: () => print('OPENING DIAL'),
-        onClose: () => print('DIAL CLOSED'),
-        children: [
-          SpeedDialChild(
-              child: Icon(Icons.play_arrow),
-              backgroundColor: Colors.blue,
-              label: 'Abspielen',
-              labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => print('FIRST CHILD')),
-          SpeedDialChild(
-            child: Icon(Icons.playlist_add),
-            backgroundColor: Colors.blue,
-            label: 'Warteschlange',
-            labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () => print('SECOND CHILD'),
-          ),
-        ],
+        title: Text(widget.artistName),
+        backgroundColor: Colors.black54,
       ),
       body: FutureBuilder<List<Song>>(
         future: database.songDao.findSongsByArtistId(widget.artistID),

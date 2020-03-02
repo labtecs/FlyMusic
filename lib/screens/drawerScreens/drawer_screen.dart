@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/drawerScreens/impressum_screen.dart';
-import 'package:flymusic/screens/drawerScreens/player_screen.dart';
+import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/drawerScreens/settings_screen.dart';
 
 import '../main_screen.dart';

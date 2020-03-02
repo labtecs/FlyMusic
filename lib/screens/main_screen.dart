@@ -4,10 +4,9 @@ import 'package:flymusic/database/model/art.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_finder.dart';
-import 'package:flymusic/music/music_queue.dart';
+import 'package:flymusic/screens/player/bottom_Player_Screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'drawerScreens/drawer_screen.dart';
 import 'tabScreens/album/album_screen.dart';
 import 'tabScreens/artist/artist_screen.dart';
@@ -61,6 +60,18 @@ class StartScreen extends StatefulWidget {
             );
           }
         });
+
+
+  }  static FutureBuilder getArt3(Song song, double ImageScale) {
+    return FutureBuilder<Art>(
+        future: database.artDao.findArtById(song?.artId ?? -1),
+        builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            return Image.asset(snapshot.data.path, scale: ImageScale,);
+          } else {
+            return Image.asset("asset/images/placeholder.jpg", scale: ImageScale);
+          }
+        });
   }
 }
 
@@ -69,40 +80,6 @@ class _StartScreenState extends State<StartScreen>
   Directory externalDirectory;
   TabController _tabController;
   int _page = 0;
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  void _showBottomSheetCallback() {
-    _scaffoldKey.currentState.showBottomSheet<void>((BuildContext context) {
-      return Container(
-        decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.black)),
-            color: Colors.grey
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              CircleAvatar(
-                child: StartScreen.getArt2(MusicQueue.instance.currentSong),
-                backgroundColor: Colors.transparent,
-              ),
-              IconButton(
-                icon: Icon(Icons.skip_previous),
-              ),
-              IconButton(
-                icon: Icon(Icons.play_arrow),
-              ),
-              IconButton(
-                icon: Icon(Icons.skip_next),
-              ),
-            ],
-          )
-          ),
-      );
-    });
-  }
 
   /*
   Tab Liste
@@ -136,10 +113,12 @@ class _StartScreenState extends State<StartScreen>
     super.dispose();
   }
 
+  /**
+   * Scaffold
+   */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       drawer: DrawerScreen(),
       appBar: AppBar(
         title: ListTile(
@@ -152,8 +131,6 @@ class _StartScreenState extends State<StartScreen>
             color: Colors.white,
             ),
             onPressed: () {
-              _showBottomSheetCallback();
-              child: const Text('Show Persistent Bottom Sheet');
             },
           ),
         ),
@@ -170,6 +147,7 @@ class _StartScreenState extends State<StartScreen>
         ],
         controller: _tabController,
       ),
+      bottomSheet: BottomPlayer(),
       bottomNavigationBar: Material(
         color: Colors.black54,
         child: TabBar(

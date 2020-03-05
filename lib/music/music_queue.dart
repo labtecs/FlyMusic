@@ -153,4 +153,8 @@ class MusicQueue {
       await playPrevious();
     }
   }
+
+  repeat() {}
+
+  shuffle() {}
 }

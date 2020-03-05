@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/tabScreens/queue_screen.dart';
 
-//TODO next song?
 class PlayerScreen extends StatefulWidget {
   PlayerScreen();
 
@@ -12,14 +13,50 @@ class PlayerScreen extends StatefulWidget {
   _PlayerScreenState createState() => _PlayerScreenState();
 }
 
-// TODO logic (warteliste)
 class _PlayerScreenState extends State<PlayerScreen> {
   _PlayerScreenState();
 
-  double postition = 0;
+  Duration audioPosition;
+  Duration duration;
+  StreamSubscription onPlayerStateChanged;
+  StreamSubscription onAudioPositionChanged;
+  StreamSubscription onDurationChanged;
+
+  @override
+  void initState() {
+    super.initState();
+    onPlayerStateChanged =
+        MusicQueue.instance.audioPlayer.onPlayerStateChanged.listen((state) {
+      setState(() {});
+    });
+
+    onAudioPositionChanged = MusicQueue
+        .instance.audioPlayer.onAudioPositionChanged
+        .listen((state) => {
+              setState(() {
+                audioPosition = state;
+              })
+            });
+
+    onDurationChanged =
+        MusicQueue.instance.audioPlayer.onDurationChanged.listen((state) => {
+              setState(() {
+                duration = state;
+              })
+            });
+  }
+
+  @override
+  void dispose() {
+    onPlayerStateChanged.cancel();
+    onAudioPositionChanged.cancel();
+    onDurationChanged.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    double halfDisplaySize = MediaQuery.of(context).size.height /2;
+    double halfDisplaySize = MediaQuery.of(context).size.height / 2;
     return Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
@@ -36,25 +73,30 @@ class _PlayerScreenState extends State<PlayerScreen> {
             height: halfDisplaySize + 50,
           ),
           ListTile(
-            title: Text(MusicQueue.instance.currentSong?.title ?? "no title",
+            title: Text(
+              MusicQueue.instance.currentSong?.title ?? "no title",
               style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),),
-            subtitle: Text(MusicQueue.instance.currentSong?.artist ?? "no artist",
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+            subtitle: Text(
+              MusicQueue.instance.currentSong?.artist ?? "no artist",
               style: TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-            ),),
+                fontSize: 12,
+                color: Colors.white,
+              ),
+            ),
             trailing: IconButton(
               icon: new Icon(
                 Icons.queue_music,
                 size: 35,
                 color: Colors.white,
-            ),
+              ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => QueueScreen()),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => QueueScreen()),
                 );
               },
             ),
@@ -62,13 +104,15 @@ class _PlayerScreenState extends State<PlayerScreen> {
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
             child: Slider(
-              value: postition,
+              value: audioPosition.inSeconds.toDouble(),
               onChanged: (value) {
-                setState(() => postition = value);
+                MusicQueue.instance.audioPlayer
+                    .seek(new Duration(seconds: value.toInt()));
               },
               min: 0,
-              max: 100,
-              label: "$postition",
+              max: duration.inSeconds.toDouble(),
+              label:
+                  "${audioPosition.inSeconds.toDouble()} \ ${duration.inSeconds.toDouble()}",
             ),
           ),
           Row(
@@ -76,39 +120,38 @@ class _PlayerScreenState extends State<PlayerScreen> {
             children: <Widget>[
               InkWell(
                 child: Container(
-                  child: Icon(Icons.shuffle, size: 40,color: Colors.white),
+                  child: Icon(Icons.shuffle, size: 40, color: Colors.white),
                 ),
-                onTap: (){
-                  shuffle();
+                onTap: () {
+                  MusicQueue.instance.shuffle();
                 },
               ),
               InkWell(
-                onTap: previous,
+                onTap: () {
+                  MusicQueue.instance.playPrevious();
+                },
                 child: Container(
-                    child: Icon(Icons.skip_previous,
-                        size: 60,
-                        color: Colors.white
-                    ),
+                  child:
+                      Icon(Icons.skip_previous, size: 60, color: Colors.white),
                 ),
               ),
               InkWell(
                 onTap: () {
-                  play();
+                  MusicQueue.instance.playPause();
                 },
-                child: Icon(getPlayIcon(), size: 70,color: Colors.white),
+                child: Icon(getPlayIcon(), size: 70, color: Colors.white),
               ),
               InkWell(
                 onTap: () {
-                  next();
+                  MusicQueue.instance.playNext();
                 },
-                child: Icon(Icons.skip_next, size: 60,color: Colors.white),
+                child: Icon(Icons.skip_next, size: 60, color: Colors.white),
               ),
-
               InkWell(
                 onTap: () {
-                  repeat();
+                  MusicQueue.instance.repeat();
                 },
-                child: Icon(Icons.repeat, size: 40,color: Colors.white),
+                child: Icon(Icons.repeat, size: 40, color: Colors.white),
               )
             ],
           )
@@ -123,37 +166,5 @@ class _PlayerScreenState extends State<PlayerScreen> {
     } else {
       return Icons.play_circle_outline;
     }
-  }
-
-  void play() async {
-    await MusicQueue.instance.playPause();
-    setState(() {
-      MusicQueue.instance.audioPlayer.state =
-          MusicQueue.instance.audioPlayer.state;
-    });
-  }
-
-  void next() async {
-    await MusicQueue.instance.playNext();
-    setState(() {
-      MusicQueue.instance.audioPlayer.state =
-          MusicQueue.instance.audioPlayer.state;
-    });
-  }
-
-  void previous() async {
-    await MusicQueue.instance.playPrevious();
-    setState(() {
-      MusicQueue.instance.audioPlayer.state =
-          MusicQueue.instance.audioPlayer.state;
-    });
-  }
-
-  void shuffle() async {
-    //Todo shuffle songs
-  }
-
-  void repeat() async {
-    //Todo repeat song
   }
 }

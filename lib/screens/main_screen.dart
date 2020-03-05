@@ -62,9 +62,9 @@ class StartScreen extends StatefulWidget {
         });
 
 
-  }  static FutureBuilder getArt3(Song song, double ImageScale) {
+  }  static FutureBuilder getArt3(int artId, double ImageScale) {
     return FutureBuilder<Art>(
-        future: database.artDao.findArtById(song?.artId ?? -1),
+        future: database.artDao.findArtById(artId),
         builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             return Image.asset(snapshot.data.path, scale: ImageScale,);

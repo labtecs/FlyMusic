@@ -11,12 +11,13 @@ class BottomPlayer extends StatefulWidget {
 }
 
 class _BottomPlayerState extends State<BottomPlayer> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           border: Border(top: BorderSide(color: Colors.black)),
-          color: Colors.grey
+          color: Colors.black54,
       ),
       child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),

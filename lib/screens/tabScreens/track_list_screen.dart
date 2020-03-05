@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_queue.dart';
+import 'package:flymusic/screens/player/bottom_Player_Screen.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
@@ -60,6 +61,8 @@ class _TrackListState extends State<TrackList> {
           return Text("no data");
         }
       },
-    ));
+    ),
+      bottomSheet: BottomPlayer(),
+    );
   }
 }

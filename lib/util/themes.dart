@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 
-enum CurrentTheme { dark, light, newDartTheme}
-
 
 final ThemeData darkTheme = new ThemeData(
     brightness: Brightness.dark,
+    primarySwatch: Colors.blue,
+    primaryColor: Colors.black54,
     buttonColor: Colors.white,
-    unselectedWidgetColor: Colors.white,
-    primaryTextTheme:
-    new TextTheme(caption: new TextStyle(color: Colors.white)));
-
-final ThemeData lightTheme = new ThemeData(
-    primaryColor: Colors.blue,
-    backgroundColor: Colors.white,
-    buttonColor: Colors.black,
-    unselectedWidgetColor: Colors.white,
-    primaryTextTheme:
-    new TextTheme(caption: new TextStyle(color: Colors.white)));
-
-final ThemeData newDartTheme = new ThemeData(
-  
+    iconTheme: IconThemeData(
+      color: Colors.white,
+    ),
+    textTheme: TextTheme(
+        headline: TextStyle(color: Colors.white, fontSize: 20),
+      caption: TextStyle(color: Colors.white),
+      body1: TextStyle(color: Colors.white),
+    ),
 );

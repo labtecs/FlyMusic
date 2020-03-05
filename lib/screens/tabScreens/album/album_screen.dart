@@ -5,6 +5,7 @@ import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/screens/tabScreens/album/album_track_list_screen.dart';
 import 'package:flymusic/screens/main_screen.dart';
+import 'package:flymusic/screens/player/bottom_Player_Screen.dart';
 
 class AlbumList extends StatefulWidget {
   @override
@@ -58,6 +59,7 @@ class _AlbumListState extends State<AlbumList> {
           }
         },
       ),
+      bottomSheet: BottomPlayer(),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/main.dart';
+import 'package:flymusic/screens/player/bottom_Player_Screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/screens/tabScreens/artist/artist_track_list_screen.dart';
 
@@ -28,6 +29,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
         ),
         );
       },
+
     );
   }
 
@@ -48,7 +50,9 @@ class _ArtistScreenState extends State<ArtistScreen> {
           return Text("no data");
         }
       },
-    ));
+    ),
+      bottomSheet: BottomPlayer(),
+    );
   }
 
   /*

@@ -11,7 +11,7 @@ class ArtistScreen extends StatefulWidget {
 }
 
 class _ArtistScreenState extends State<ArtistScreen> {
-  @override
+
   Widget _buildRow(Artist artist) {
     return ListTile(
       leading: CircleAvatar(

@@ -4,8 +4,7 @@ import 'package:flymusic/database/model/queue_item.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
-
-import '../main_screen.dart';
+import 'package:flymusic/util/art_util.dart';
 
 class QueueScreen extends StatefulWidget {
   @override
@@ -23,7 +22,7 @@ class _QueueScreenState extends State<QueueScreen> {
           if (snapshot.hasData) {
             return ListTile(
               leading: CircleAvatar(
-                child: StartScreen.getArt(snapshot.data.artId),
+                child: ArtUtil.getArt(snapshot.data.artId),
                 backgroundColor: Colors.transparent,
               ),
               title: Text(snapshot.data.title),
@@ -47,20 +46,25 @@ class _QueueScreenState extends State<QueueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text("Wiedergabeliste"),
+          backgroundColor: Colors.black54,
+        ),
         body: StreamBuilder<List<QueueItem>>(
-      stream: database.queueDao.findAllItems(),
-      builder: (BuildContext context, AsyncSnapshot<List<QueueItem>> snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return _buildRow(snapshot.data[index]);
-            },
-          );
-        } else {
-          return Text("no data");
-        }
-      },
-    ));
+          stream: database.queueDao.findAllItems(),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<QueueItem>> snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return _buildRow(snapshot.data[index]);
+                },
+              );
+            } else {
+              return Text("no data");
+            }
+          },
+        ));
   }
 }

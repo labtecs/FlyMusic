@@ -4,6 +4,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/main_screen.dart';
+import 'package:flymusic/screens/player/player_screen.dart';
+import 'package:flymusic/util/art_util.dart';
 
 class BottomPlayer extends StatefulWidget {
   @override
@@ -52,15 +54,25 @@ class _BottomPlayerState extends State<BottomPlayer> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: Colors.black)),
-          color: Colors.grey),
+        border: Border(top: BorderSide(color: Colors.black)),
+        color: Colors.black54,
+      ),
       child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              InkWell(
-                child: StartScreen.getArt3(MusicQueue.instance.currentSong?.artId, 10),
+              Container(
+                height: 60,
+                child: InkWell(
+                  child: ArtUtil.getArt3(
+                      MusicQueue.instance.currentSong?.artId),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(
+                            builder: (context) => PlayerScreen()));
+                  },
+                ),
               ),
               IconButton(
                 icon: Icon(Icons.skip_previous),
@@ -69,7 +81,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
                 },
               ),
               IconButton(
-                icon: Icon(Icons.play_arrow),
+                icon: Icon(getPlayIcon()),
                 onPressed: () {
                   MusicQueue.instance.playPause();
                 },
@@ -92,4 +104,6 @@ class _BottomPlayerState extends State<BottomPlayer> {
       return Icons.play_circle_outline;
     }
   }
+
+
 }

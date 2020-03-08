@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/main.dart';
+import 'package:flymusic/screens/player/bottom_player_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/screens/tabScreens/album/album_track_list_screen.dart';
-import 'package:flymusic/screens/main_screen.dart';
+import 'package:flymusic/util/art_util.dart';
 
 class AlbumList extends StatefulWidget {
   @override
@@ -12,14 +13,12 @@ class AlbumList extends StatefulWidget {
 }
 
 class _AlbumListState extends State<AlbumList> {
-
   List<Album> albems = List();
-
 
   Widget _buildRow(Album album) {
     return ListTile(
       leading: CircleAvatar(
-        child: StartScreen.getArt(album.artId),
+        child: ArtUtil.getArt(album.artId),
         backgroundColor: Colors.transparent,
       ),
       title: Text(album.name),
@@ -29,12 +28,14 @@ class _AlbumListState extends State<AlbumList> {
       },
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) =>
-            AlbumTrackListScreen(key: null,
+          context,
+          MaterialPageRoute(
+            builder: (context) => AlbumTrackListScreen(
+                key: null,
                 albumTitle: album.name,
                 albumID: album.id,
-                artID: album.artId
-            ),),
+                artID: album.artId),
+          ),
         );
       },
     );
@@ -58,7 +59,7 @@ class _AlbumListState extends State<AlbumList> {
           }
         },
       ),
+      bottomSheet: BottomPlayer(),
     );
   }
 }
-

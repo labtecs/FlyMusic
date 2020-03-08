@@ -185,6 +185,13 @@ packages:
       url: "git://github.com/Nailik/dart-tags.git"
     source: git
     version: "0.2.2"
+  expandable:
+    dependency: "direct main"
+    description:
+      name: expandable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.2"
   filesize:
     dependency: transitive
     description:
@@ -395,7 +402,7 @@ packages:
       name: package_config
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.9.1"
   package_resolver:
     dependency: transitive
     description:
@@ -416,7 +423,21 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.0"
+    version: "1.6.5"
+  path_provider_macos:
+    dependency: transitive
+    description:
+      name: path_provider_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
+  path_provider_platform_interface:
+    dependency: transitive
+    description:
+      name: path_provider_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   pedantic:
     dependency: transitive
     description:
@@ -430,7 +451,7 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0+hotfix.3"
+    version: "4.3.0"
   petitparser:
     dependency: transitive
     description:
@@ -445,6 +466,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
+  plugin_platform_interface:
+    dependency: transitive
+    description:
+      name: plugin_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   pool:
     dependency: transitive
     description:
@@ -505,7 +533,7 @@ packages:
       name: source_gen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.4+7"
+    version: "0.9.5"
   source_span:
     dependency: transitive
     description:
@@ -519,7 +547,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   stack_trace:
     dependency: transitive
     description:
@@ -540,7 +568,7 @@ packages:
       name: stream_transform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   string_scanner:
     dependency: transitive
     description:
@@ -640,5 +668,5 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
-  dart: ">=2.6.0 <3.0.0"
-  flutter: ">=1.10.1 <2.0.0"
+  dart: ">=2.7.0 <3.0.0"
+  flutter: ">=1.12.0 <2.0.0"

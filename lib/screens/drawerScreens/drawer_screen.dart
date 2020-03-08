@@ -3,8 +3,8 @@ import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/drawerScreens/impressum_screen.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/drawerScreens/settings_screen.dart';
-
-import '../main_screen.dart';
+import 'package:flymusic/screens/tabScreens/queue_screen.dart';
+import 'package:flymusic/util/art_util.dart';
 
 class DrawerScreen extends StatefulWidget {
 
@@ -18,12 +18,18 @@ class _DrawerScreenState extends State<DrawerScreen> {
     return Drawer(
       child: ListView(
         children: <Widget>[
-          StartScreen.getArt2(MusicQueue.instance.currentSong),
+          ArtUtil.getArt2(MusicQueue.instance.currentSong),
           ListTile(
             title: Text('Aktuelle Wiedergabe'),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => PlayerScreen()));
+            },
+          ),          ListTile(
+            title: Text('Wiedergabeliste'),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => QueueScreen()));
             },
           ),
           ListTile(

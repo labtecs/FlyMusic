@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/tabScreens/queue_screen.dart';
+import 'package:flymusic/util/art_util.dart';
 
 class PlayerScreen extends StatefulWidget {
   PlayerScreen();
@@ -69,7 +69,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
         children: <Widget>[
           Container(
-            child: StartScreen.getArt(MusicQueue.instance.currentSong?.artId),
+            child: ArtUtil.getArt(MusicQueue.instance.currentSong?.artId),
             height: halfDisplaySize + 50,
           ),
           ListTile(

@@ -1,161 +1,84 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flymusic/database/model/art.dart';
-import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_finder.dart';
-import 'package:flymusic/screens/player/bottom_Player_Screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import 'drawerScreens/drawer_screen.dart';
 import 'tabScreens/album/album_screen.dart';
-import 'tabScreens/artist/artist_screen.dart';
-import 'tabScreens/queue_screen.dart';
 import 'tabScreens/track_list_screen.dart';
 
 class StartScreen extends StatefulWidget {
   @override
   _StartScreenState createState() => _StartScreenState();
-
-  static FutureBuilder getArt(int artId) {
-    return FutureBuilder<Art>(
-        future: database.artDao.findArtById(artId),
-        builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
-          if (snapshot.hasData && snapshot.data != null) {
-            return Image.file(File(snapshot.data.path), fit: BoxFit.cover);
-          } else {
-            return Image(image: AssetImage("asset/images/placeholder.jpg"));
-          }
-        });
-  }
-
-  static FutureBuilder getArt2(Song song) {
-    return FutureBuilder<Art>(
-        future: database.artDao.findArtById(song?.artId ?? -1),
-        builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
-          if (snapshot.hasData && snapshot.data != null) {
-            return DrawerHeader(
-              child: Text(
-                song?.title ?? "",
-                style: TextStyle(color: Colors.white),
-              ),
-              decoration: BoxDecoration(
-                  color: Colors.blue,
-                  image: DecorationImage(
-                      fit: BoxFit.fitWidth,
-                      image: Image.file(File(snapshot.data.path)).image)),
-            );
-            //  return MemoryImage(File(snapshot.data.path));
-          } else {
-            return DrawerHeader(
-              child: Text(
-                song?.title ?? "",
-                style: TextStyle(color: Colors.white),
-              ),
-              decoration: BoxDecoration(
-                  color: Colors.blue,
-                  image: DecorationImage(
-                      fit: BoxFit.fitWidth,
-                      image: ExactAssetImage("asset/images/placeholder.jpg"))),
-            );
-          }
-        });
-
-
-  }  static FutureBuilder getArt3(int artId, double ImageScale) {
-    return FutureBuilder<Art>(
-        future: database.artDao.findArtById(artId),
-        builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
-          if (snapshot.hasData && snapshot.data != null) {
-            return Image.asset(snapshot.data.path, scale: ImageScale,);
-          } else {
-            return Image.asset("asset/images/placeholder.jpg", scale: ImageScale);
-          }
-        });
-  }
 }
 
 class _StartScreenState extends State<StartScreen>
     with SingleTickerProviderStateMixin {
   Directory externalDirectory;
-  TabController _tabController;
-  int _page = 0;
 
-  /*
-  Tab Liste
-   */
-  static const _ktabs = <Tab>[
-    Tab(
-      icon: Icon(Icons.audiotrack),
-    ),
-    Tab(icon: Icon(Icons.album)),
-    Tab(icon: Icon(Icons.person)),
-    Tab(icon: Icon(Icons.queue_music)),
-  ];
+  int _page = 0;
+  PageController _c;
 
   @override
   void initState() {
-    super.initState();
-    _tabController = TabController(
-      length: _ktabs.length,
-      vsync: this,
+    _c = new PageController(
+      initialPage: _page,
     );
-    _tabController.addListener(() {
-      setState(() {
-        _page = _tabController.index;
-      });
-    });
+    super.initState();
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  /**
-   * Scaffold
-   */
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
         title: ListTile(
-          title: Text(getTitle(), style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),),
+          title: Text(
+            getTitle(),
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
           trailing: IconButton(
-            icon: Icon(Icons.more_vert,
-            color: Colors.white,
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.white,
             ),
-            onPressed: () {
-            },
+            onPressed: () {},
           ),
         ),
         backgroundColor: Colors.black54,
-
       ),
-      //body: TrackList(),
-      body: TabBarView(
+      bottomNavigationBar: new BottomNavigationBar(
+        currentIndex: _page,
+        onTap: (index) {
+          this._c.animateToPage(index,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut);
+        },
+        items: <BottomNavigationBarItem>[
+          new BottomNavigationBarItem(
+              icon: new Icon(Icons.audiotrack), title: new Text("Tracks")),
+          new BottomNavigationBarItem(
+              icon: new Icon(Icons.album), title: new Text("Albums")),
+          new BottomNavigationBarItem(
+              icon: new Icon(Icons.person), title: new Text("Artists")),
+        ],
+      ),
+      body: new PageView(
+        controller: _c,
+        onPageChanged: (newPage) {
+          setState(() {
+            this._page = newPage;
+          });
+        },
         children: <Widget>[
           TrackList(),
           AlbumList(),
-          ArtistScreen(),
-          QueueScreen(),
+          AlbumList(),
         ],
-        controller: _tabController,
       ),
-      bottomSheet: BottomPlayer(),
-      bottomNavigationBar: Material(
-        color: Colors.black54,
-        child: TabBar(
-          onTap: onTapped,
-          tabs: _ktabs,
-          controller: _tabController,
-        ),
-      ),
+      // bottomSheet: BottomPlayer(),
     );
   }
 
@@ -186,8 +109,6 @@ class _StartScreenState extends State<StartScreen>
         return 'Alben';
       case 2:
         return 'Künstler';
-      case 3:
-        return 'Warteschlange';
       default:
         return '';
     }

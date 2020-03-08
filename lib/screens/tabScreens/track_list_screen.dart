@@ -3,9 +3,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_queue.dart';
+import 'package:flymusic/screens/player/bottom_player_screen.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
-import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
+import 'package:flymusic/util/art_util.dart';
 
 class TrackList extends StatefulWidget {
   @override
@@ -22,11 +23,14 @@ class _TrackListState extends State<TrackList> {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          child: StartScreen.getArt(song.artId),
+          child: ArtUtil.getArt(song.artId),
           backgroundColor: Colors.transparent,
         ),
-        title: Text(song.title,style: TextStyle(color: Colors.black),),
-        subtitle: Text("00:00",style: TextStyle(color: Colors.black)),
+        title: Text(
+          song.title,
+          style: TextStyle(color: Colors.black),
+        ),
+        subtitle: Text("00:00", style: TextStyle(color: Colors.black)),
         trailing: SongPopup(song),
         onTap: () {
           MusicQueue.instance.playSong(song);
@@ -46,20 +50,22 @@ class _TrackListState extends State<TrackList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder<List<Song>>(
-      stream: database.songDao.findAllSongs(),
-      builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return _buildRow(snapshot.data[index]);
-            },
-          );
-        } else {
-          return Text("no data");
-        }
-      },
-    ));
+      body: StreamBuilder<List<Song>>(
+        stream: database.songDao.findAllSongs(),
+        builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return _buildRow(snapshot.data[index]);
+              },
+            );
+          } else {
+            return Text("no data");
+          }
+        },
+      ),
+      bottomSheet: BottomPlayer(),
+    );
   }
 }

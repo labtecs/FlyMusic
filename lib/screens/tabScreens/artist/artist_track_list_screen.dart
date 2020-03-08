@@ -4,8 +4,7 @@ import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
-
-import '../../main_screen.dart';
+import 'package:flymusic/util/art_util.dart';
 
 class ArtistTrackListScreen extends StatefulWidget {
   final String artistName;
@@ -24,7 +23,7 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
   Widget _buildRow(Song song) {
     return ListTile(
       leading: CircleAvatar(
-        child: StartScreen.getArt(song.artId),
+        child: ArtUtil.getArt(song.artId),
         backgroundColor: Colors.transparent,
       ),
       title: Text(song.title),

@@ -4,8 +4,7 @@ import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
-
-import '../../main_screen.dart';
+import 'package:flymusic/util/art_util.dart';
 
 class AlbumTrackListScreen extends StatefulWidget {
 
@@ -61,7 +60,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
                   style: TextStyle(color: Colors.white, fontSize: 16.0,
                   )
               ),
-              background: StartScreen.getArt(widget.artID),
+              background: ArtUtil.getArt(widget.artID),
           ),
         ),
       ];

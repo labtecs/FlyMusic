@@ -65,7 +65,6 @@ class _TrackListState extends State<TrackList> {
           }
         },
       ),
-      bottomSheet: BottomPlayer(),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'drawerScreens/drawer_screen.dart';
+import 'player/bottom_player_screen.dart';
 import 'tabScreens/album/album_screen.dart';
 import 'tabScreens/artist/artist_screen.dart';
 import 'tabScreens/queue_screen.dart';
@@ -36,6 +37,10 @@ class _StartScreenState extends State<StartScreen>
     return new Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
+        bottom: PreferredSize(
+            preferredSize: Size.fromHeight(80.0),
+            child: BottomPlayer()
+        ),
         title: ListTile(
           title: Text(
             getTitle(),
@@ -68,7 +73,7 @@ class _StartScreenState extends State<StartScreen>
           new BottomNavigationBarItem(
               icon: new Icon(Icons.person), title: new Text("Artists")),
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.list), title: new Text("Queue")),
+              icon: new Icon(Icons.list), title: new Text("Warteschlange")),
         ],
       ),
       body: new PageView(
@@ -116,6 +121,8 @@ class _StartScreenState extends State<StartScreen>
         return 'Alben';
       case 2:
         return 'Künstler';
+      case 3:
+        return 'Warteschlange';
       default:
         return '';
     }

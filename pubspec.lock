@@ -185,13 +185,6 @@ packages:
       url: "git://github.com/Nailik/dart-tags.git"
     source: git
     version: "0.2.2"
-  expandable:
-    dependency: "direct main"
-    description:
-      name: expandable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.2"
   filesize:
     dependency: transitive
     description:
@@ -508,6 +501,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.6"
+  shared_preferences:
+    dependency: "direct main"
+    description:
+      name: shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.6+2"
+  shared_preferences_macos:
+    dependency: transitive
+    description:
+      name: shared_preferences_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+6"
+  shared_preferences_platform_interface:
+    dependency: transitive
+    description:
+      name: shared_preferences_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
+  shared_preferences_web:
+    dependency: transitive
+    description:
+      name: shared_preferences_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2+4"
   shelf:
     dependency: transitive
     description:
@@ -669,4 +690,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.0 <2.0.0"
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"

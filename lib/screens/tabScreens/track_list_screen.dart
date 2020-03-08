@@ -23,7 +23,7 @@ class _TrackListState extends State<TrackList> {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          child: ArtUtil.getArt(song.artId),
+          child: ArtUtil.getArt(song),
           backgroundColor: Colors.transparent,
         ),
         title: Text(

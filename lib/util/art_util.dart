@@ -3,12 +3,25 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/model/art.dart';
 import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/main.dart';
 
 class ArtUtil {
-  static FutureBuilder getArt(int artId) {
+  static FutureBuilder getArt(Song song) {
     return FutureBuilder<Art>(
-        future: database.artDao.findArtById(artId),
+        future: database.artDao.findArtById(song?.artId ?? -1),
+        builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            return Image.file(File(snapshot.data.path), fit: BoxFit.cover);
+          } else {
+            return Image(image: AssetImage("asset/images/placeholder.jpg"));
+          }
+        });
+  }
+
+  static FutureBuilder getArtFromAlbum(Album album) {
+    return FutureBuilder<Art>(
+        future: database.artDao.findArtById(album?.artId ?? -1),
         builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
             return Image.file(File(snapshot.data.path), fit: BoxFit.cover);
@@ -51,9 +64,9 @@ class ArtUtil {
         });
   }
 
-  static FutureBuilder getArt3(int artId) {
+  static FutureBuilder getArt3(Song song) {
     return FutureBuilder<Art>(
-        future: database.artDao.findArtById(artId),
+        future: database.artDao.findArtById(song?.artId ?? -1),
         builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
           try {
             if (snapshot.hasData && snapshot.data != null) {

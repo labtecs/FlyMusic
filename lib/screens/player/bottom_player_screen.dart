@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
@@ -54,44 +53,53 @@ class _BottomPlayerState extends State<BottomPlayer> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.black)),
-        color: Colors.black54,
+        color: Colors.grey,
       ),
       child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                height: 60,
+                height: 65,
                 child: InkWell(
-                  child: ArtUtil.getArt3(
-                      MusicQueue.instance.currentSong?.artId),
+                  child:
+                      ArtUtil.getArt3(MusicQueue.instance.currentSong),
                   onTap: () {
-                    Navigator.push(context,
+                    Navigator.push(
+                        context,
                         MaterialPageRoute(
                             builder: (context) => PlayerScreen()));
                   },
                 ),
               ),
-              IconButton(
-                icon: Icon(Icons.skip_previous),
-                onPressed: () {
-                  MusicQueue.instance.playPrevious();
-                },
-              ),
-              IconButton(
-                icon: Icon(getPlayIcon()),
-                onPressed: () {
-                  MusicQueue.instance.playPause();
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.skip_next),
-                onPressed: () {
-                  MusicQueue.instance.playNext();
-                },
-              ),
+              Column(
+                children: <Widget>[
+                  Text("testtext"),
+                  Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.skip_previous),
+                        onPressed: () {
+                          MusicQueue.instance.playPrevious();
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(getPlayIcon()),
+                        onPressed: () {
+                          MusicQueue.instance.playPause();
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.skip_next),
+                        onPressed: () {
+                          MusicQueue.instance.playNext();
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              )
             ],
           )),
     );
@@ -104,6 +112,4 @@ class _BottomPlayerState extends State<BottomPlayer> {
       return Icons.play_circle_outline;
     }
   }
-
-
 }

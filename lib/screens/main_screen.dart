@@ -38,7 +38,7 @@ class _StartScreenState extends State<StartScreen>
       drawer: DrawerScreen(),
       appBar: AppBar(
         bottom: PreferredSize(
-            preferredSize: Size.fromHeight(80.0),
+            preferredSize: Size.fromHeight(65.0),
             child: BottomPlayer()
         ),
         title: ListTile(
@@ -90,7 +90,6 @@ class _StartScreenState extends State<StartScreen>
           QueueScreen()
         ],
       ),
-      // bottomSheet: BottomPlayer(),
     );
   }
 

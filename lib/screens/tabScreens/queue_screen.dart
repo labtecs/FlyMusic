@@ -22,7 +22,7 @@ class _QueueScreenState extends State<QueueScreen> {
           if (snapshot.hasData) {
             return ListTile(
               leading: CircleAvatar(
-                child: ArtUtil.getArt(snapshot.data.artId),
+                child: ArtUtil.getArt(snapshot.data),
                 backgroundColor: Colors.transparent,
               ),
               title: Text(snapshot.data.title),

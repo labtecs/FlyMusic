@@ -16,8 +16,8 @@ class PlayerScreen extends StatefulWidget {
 class _PlayerScreenState extends State<PlayerScreen> {
   _PlayerScreenState();
 
-  Duration audioPosition;
-  Duration duration;
+  Duration audioPosition = new Duration();
+  Duration duration = new Duration();
   StreamSubscription onPlayerStateChanged;
   StreamSubscription onAudioPositionChanged;
   StreamSubscription onDurationChanged;
@@ -69,7 +69,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
         children: <Widget>[
           Container(
-            child: ArtUtil.getArt(MusicQueue.instance.currentSong?.artId),
+            child: ArtUtil.getArt(MusicQueue.instance.currentSong),
             height: halfDisplaySize + 50,
           ),
           ListTile(
@@ -104,15 +104,15 @@ class _PlayerScreenState extends State<PlayerScreen> {
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
             child: Slider(
-              value: audioPosition.inSeconds.toDouble(),
+              value: audioPosition.inSeconds?.toDouble() ?? 0,
               onChanged: (value) {
                 MusicQueue.instance.audioPlayer
                     .seek(new Duration(seconds: value.toInt()));
               },
               min: 0,
-              max: duration.inSeconds.toDouble(),
+              max: duration.inSeconds?.toDouble() ?? 0,
               label:
-                  "${audioPosition.inSeconds.toDouble()} \ ${duration.inSeconds.toDouble()}",
+                  "${audioPosition.inSeconds?.toDouble() ?? 0} \ ${duration.inSeconds?.toDouble() ?? 0}",
             ),
           ),
           Row(

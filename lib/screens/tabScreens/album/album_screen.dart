@@ -18,7 +18,7 @@ class _AlbumListState extends State<AlbumList> {
   Widget _buildRow(Album album) {
     return ListTile(
       leading: CircleAvatar(
-        child: ArtUtil.getArt(album.artId),
+        child: ArtUtil.getArtFromAlbum(album),
         backgroundColor: Colors.transparent,
       ),
       title: Text(album.name),
@@ -32,9 +32,7 @@ class _AlbumListState extends State<AlbumList> {
           MaterialPageRoute(
             builder: (context) => AlbumTrackListScreen(
                 key: null,
-                albumTitle: album.name,
-                albumID: album.id,
-                artID: album.artId),
+                album: album),
           ),
         );
       },

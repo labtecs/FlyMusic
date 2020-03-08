@@ -7,6 +7,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'drawerScreens/drawer_screen.dart';
 import 'tabScreens/album/album_screen.dart';
+import 'tabScreens/artist/artist_screen.dart';
+import 'tabScreens/queue_screen.dart';
 import 'tabScreens/track_list_screen.dart';
 
 class StartScreen extends StatefulWidget {
@@ -51,6 +53,8 @@ class _StartScreenState extends State<StartScreen>
       ),
       bottomNavigationBar: new BottomNavigationBar(
         currentIndex: _page,
+        //Add this line will fix the issue.
+        type: BottomNavigationBarType.fixed,
         onTap: (index) {
           this._c.animateToPage(index,
               duration: const Duration(milliseconds: 500),
@@ -63,6 +67,8 @@ class _StartScreenState extends State<StartScreen>
               icon: new Icon(Icons.album), title: new Text("Albums")),
           new BottomNavigationBarItem(
               icon: new Icon(Icons.person), title: new Text("Artists")),
+          new BottomNavigationBarItem(
+              icon: new Icon(Icons.list), title: new Text("Queue")),
         ],
       ),
       body: new PageView(
@@ -75,7 +81,8 @@ class _StartScreenState extends State<StartScreen>
         children: <Widget>[
           TrackList(),
           AlbumList(),
-          AlbumList(),
+          ArtistScreen(),
+          QueueScreen()
         ],
       ),
       // bottomSheet: BottomPlayer(),

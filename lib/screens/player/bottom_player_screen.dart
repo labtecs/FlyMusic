@@ -12,8 +12,8 @@ class BottomPlayer extends StatefulWidget {
 }
 
 class _BottomPlayerState extends State<BottomPlayer> {
-  Duration audioPosition;
-  Duration duration;
+  Duration audioPosition = new Duration(seconds: 1);
+  Duration duration = new Duration(seconds: 1);
   StreamSubscription onPlayerStateChanged;
   StreamSubscription onAudioPositionChanged;
   StreamSubscription onDurationChanged;
@@ -52,19 +52,17 @@ class _BottomPlayerState extends State<BottomPlayer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey,
-      ),
-      child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        decoration: BoxDecoration(
+          color: Colors.grey,
+        ),
+        child: Column(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
                 height: 65,
                 child: InkWell(
-                  child:
-                      ArtUtil.getArt3(MusicQueue.instance.currentSong),
+                  child: ArtUtil.getArt(MusicQueue.instance.currentSong),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -73,36 +71,36 @@ class _BottomPlayerState extends State<BottomPlayer> {
                   },
                 ),
               ),
-              Column(
-                children: <Widget>[
-                  Text("testtext"),
-                  Row(
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.skip_previous),
-                        onPressed: () {
-                          MusicQueue.instance.playPrevious();
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(getPlayIcon()),
-                        onPressed: () {
-                          MusicQueue.instance.playPause();
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.skip_next),
-                        onPressed: () {
-                          MusicQueue.instance.playNext();
-                        },
-                      ),
-                    ],
-                  )
-                ],
-              )
+              GestureDetector(
+                onHorizontalDragEnd: (DragEndDetails details) =>
+                    _onHorizontalDrag(details),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(MusicQueue.instance.currentSong?.title ?? ""),
+                        Text(MusicQueue.instance.currentSong?.artist ?? "")
+                      ]),
+                ),
+              ),
+              Spacer(),
+              IconButton(
+                icon: Icon(getPlayIcon()),
+                onPressed: () {
+                  MusicQueue.instance.playPause();
+                },
+              ),
             ],
-          )),
-    );
+          ),
+          SizedBox(
+              height: 4.0,
+              child: LinearProgressIndicator(
+                value: audioPosition.inMilliseconds/duration.inMilliseconds,
+                valueColor: AlwaysStoppedAnimation(Colors.blueAccent),
+                backgroundColor: Colors.black54,
+              ))
+        ]));
   }
 
   IconData getPlayIcon() {
@@ -110,6 +108,18 @@ class _BottomPlayerState extends State<BottomPlayer> {
       return Icons.pause_circle_outline;
     } else {
       return Icons.play_circle_outline;
+    }
+  }
+
+  void _onHorizontalDrag(DragEndDetails details) {
+    if(details.primaryVelocity == 0) return; // user have just tapped on screen (no dragging)
+
+    if (details.primaryVelocity.compareTo(0) == -1) {
+      //dragged from left
+      MusicQueue.instance.playPrevious();
+    }else {
+     //dragged from right
+      MusicQueue.instance.playNext();
     }
   }
 }

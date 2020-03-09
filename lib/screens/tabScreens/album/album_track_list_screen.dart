@@ -49,15 +49,24 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
             SliverAppBar(
               expandedHeight: 200.0,
               floating: false,
-              pinned: false,
-              //    bottom: PreferredSize(
-              //      preferredSize: const Size.fromHeight(48.0),
-              //     child: Chip(label: Text("Dfsdf")),
-              //  ),
+              pinned: true,
+              bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(100.0),
+                  child: Expanded(
+                    child: DecoratedBox(
+                      decoration: const BoxDecoration(color: Colors.black26),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Chip(label: Text("Dfsdf")),
+                            Text(widget.album.name,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16.0))
+                          ]),
+                    ),
+                  )),
               backgroundColor: Colors.black54,
               flexibleSpace: FlexibleSpaceBar(
-                title: Text(widget.album.name,
-                    style: TextStyle(color: Colors.white, fontSize: 16.0)),
                 background: ArtUtil.getArtFromAlbum(widget.album),
               ),
             ),

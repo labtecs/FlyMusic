@@ -6,6 +6,8 @@ import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
+import '../../music/music_queue.dart';
+
 class QueueScreen extends StatefulWidget {
   @override
   _QueueScreenState createState() => _QueueScreenState();
@@ -29,7 +31,7 @@ class _QueueScreenState extends State<QueueScreen> {
               trailing: IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  Fluttertoast.showToast(msg: "song removed");
+                  MusicQueue.instance.remove(queueItem);
                 },
               ),
               onTap: () {
@@ -46,10 +48,6 @@ class _QueueScreenState extends State<QueueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Wiedergabeliste"),
-          backgroundColor: Colors.black54,
-        ),
         body: StreamBuilder<List<QueueItem>>(
           stream: database.queueDao.findAllItems(),
           builder:

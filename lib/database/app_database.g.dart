@@ -372,6 +372,16 @@ class _$QueueDao extends QueueDao {
                   'songId': item.songId,
                   'position': item.position
                 },
+            changeListener),
+        _queueItemDeletionAdapter = DeletionAdapter(
+            database,
+            'Queue',
+            ['id'],
+            (QueueItem item) => <String, dynamic>{
+                  'id': item.id,
+                  'songId': item.songId,
+                  'position': item.position
+                },
             changeListener);
 
   final sqflite.DatabaseExecutor database;
@@ -384,6 +394,8 @@ class _$QueueDao extends QueueDao {
       QueueItem(row['id'] as int, row['songId'] as int, row['position'] as int);
 
   final InsertionAdapter<QueueItem> _queueItemInsertionAdapter;
+
+  final DeletionAdapter<QueueItem> _queueItemDeletionAdapter;
 
   @override
   Stream<List<QueueItem>> findAllItems() {
@@ -433,5 +445,10 @@ class _$QueueDao extends QueueDao {
   Future<void> addItems(List<QueueItem> items) async {
     await _queueItemInsertionAdapter.insertList(
         items, sqflite.ConflictAlgorithm.abort);
+  }
+
+  @override
+  Future<void> remove(QueueItem item) async {
+    await _queueItemDeletionAdapter.delete(item);
   }
 }

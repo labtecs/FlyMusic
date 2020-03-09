@@ -24,4 +24,7 @@ abstract class QueueDao {
 
   @Query('UPDATE Queue SET position = position + :move')
   Future<void> moveItemsDownBy(int move);
+
+  @delete
+  Future<void> remove(QueueItem item);
 }

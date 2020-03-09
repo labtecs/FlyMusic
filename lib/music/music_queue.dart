@@ -15,6 +15,12 @@ class MusicQueue {
 
   MusicQueue._internal() {
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      if (state == AudioPlayerState.COMPLETED) {
+        //TODO crossfade possible here
+        playNext();
+      }
+    });
   }
 
   playItem(Object item) async {
@@ -39,7 +45,8 @@ class MusicQueue {
     } else if (item is Album) {
       _addAlbum(item);
     } else if (item is Artist) {
-      _addArtist(item);}
+      _addArtist(item);
+    }
   }
 
   playSong(Song song) async {
@@ -124,7 +131,8 @@ class MusicQueue {
 
   //20 lieder vor dem aktuellen - davor löschen TODO
   playNext() async {
-    currentItem = await database.queueDao.getNextItem(currentItem?.position ?? -1);
+    currentItem =
+        await database.queueDao.getNextItem(currentItem?.position ?? -1);
     if (currentItem == null) {
       return;
     }
@@ -140,7 +148,8 @@ class MusicQueue {
 
   //warteschlange leer -> nächstes lied in "alle lieder"
   playPrevious() async {
-    currentItem = await database.queueDao.getPreviousItem(currentItem?.position ?? 1);
+    currentItem =
+        await database.queueDao.getPreviousItem(currentItem?.position ?? 1);
     if (currentItem == null) {
       return;
     }
@@ -157,4 +166,8 @@ class MusicQueue {
   repeat() {}
 
   shuffle() {}
+
+  void remove(QueueItem queueItem) async {
+    await database.queueDao.remove(queueItem);
+  }
 }

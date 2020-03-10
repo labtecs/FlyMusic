@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:crclib/crclib.dart';
+import 'package:archive/archive.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/art.dart';
@@ -52,7 +52,7 @@ class MusicFinder {
           case ".png":
             if (defaultArt == null) {
               Uint8List bytes = f.readAsBytesSync();
-              int crcText = new Crc32Zlib().convert(bytes);
+              int crcText = getCrc32(bytes);
               if (crcText != null) {
                 defaultArt = await _findArt(bytes, thumbs, crcText);
               }
@@ -109,7 +109,7 @@ class MusicFinder {
       if (f.tags.containsKey('picture')) {
         AttachedPicture image = (f.tags['picture'] as AttachedPicture);
         // if (isBase64(image.imageData64)) {
-        int crcText = new Crc32Zlib().convert(image.imageData);
+        int crcText = getCrc32(image.imageData);
         if (crcText != null) {
           art = await _findArt(image.imageData, thumbs, crcText);
         }

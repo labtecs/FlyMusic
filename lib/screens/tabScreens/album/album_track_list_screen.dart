@@ -18,6 +18,20 @@ class AlbumTrackListScreen extends StatefulWidget {
 
 class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
   List<Song> songs = List();
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = new ScrollController();
+    _scrollController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Widget _buildRow(Song song, int idx) {
     return ListTile(
@@ -41,59 +55,70 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              expandedHeight: 200.0,
-              floating: false,
-              pinned: true,
-              bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(100.0),
-                  child: Expanded(
-                    child: DecoratedBox(
-                      decoration: const BoxDecoration(color: Colors.black26),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Chip(label: Text("Dfsdf")),
-                            Text(widget.album.name,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16.0))
-                          ]),
-                    ),
-                  )),
-              backgroundColor: Colors.black54,
-              flexibleSpace: FlexibleSpaceBar(
-                background: ArtUtil.getArtFromAlbum(widget.album),
-              ),
+    return new Scaffold(
+        body: new Stack(children: <Widget>[
+      new CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(100.0),
+                child: Expanded(
+                  child: DecoratedBox(
+                    decoration: const BoxDecoration(color: Colors.black26),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Chip(label: Text("Dfsdf")),
+                          Text(widget.album.name,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 16.0))
+                        ]),
+                  ),
+                )),
+            backgroundColor: Colors.black54,
+            flexibleSpace: FlexibleSpaceBar(
+              background: ArtUtil.getArtFromAlbum(widget.album),
             ),
-          ];
-        },
-        body: Center(
-          child: FutureBuilder<List<Song>>(
-            future: database.songDao.findSongsByAlbumId(widget.album.id),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return _buildRow(
-                      snapshot.data[index],
-                      index + 1,
-                    );
-                  },
-                );
-              } else {
-                return Text("no data, or loading");
-              }
-            },
           ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Container(
+                  child: FutureBuilder<List<Song>>(
+                future: database.songDao.findSongsByAlbumId(widget.album.id),
+                builder:
+                    (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return _buildRow(
+                          snapshot.data[index],
+                          index + 1,
+                        );
+                      },
+                    );
+                  } else {
+                    return Text("no data, or loading");
+                  }
+                },
+              ))
+            ]),
+          ),
+        ],
+      ),
+      new Positioned(
+        top: 256.0,
+        right: 16.0,
+        child: new FloatingActionButton(
+          onPressed: () {},
+          child: new Icon(Icons.add),
         ),
       ),
-    );
+    ]));
   }
 }

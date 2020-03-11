@@ -96,14 +96,9 @@ class MusicFinder {
     String album;
 
     int duration = 0;
-
     _flutterFFprobe.getMediaInformation(file.path).then((info) {
-      title = info['title'];
-      artist = info['artist'];
-      album = info['album'];
       duration = info['duration'];
     });
-
 
     //fallback and image
     var tags = await tp.getTagsFromByteArray(file.readAsBytes());

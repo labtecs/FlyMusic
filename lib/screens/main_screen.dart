@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_finder.dart';
+import 'package:flymusic/music/music_queue.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -20,6 +22,7 @@ class StartScreen extends StatefulWidget {
 class _StartScreenState extends State<StartScreen>
     with SingleTickerProviderStateMixin {
   Directory externalDirectory;
+  StreamSubscription onPlayerStateChanged;
 
   int _page = 0;
   PageController _c;
@@ -29,7 +32,18 @@ class _StartScreenState extends State<StartScreen>
     _c = new PageController(
       initialPage: _page,
     );
+    onPlayerStateChanged =
+        MusicQueue.instance.audioPlayer.onPlayerStateChanged.listen((state) {
+      setState(() {});
+    });
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    onPlayerStateChanged.cancel();
+    super.dispose();
   }
 
   @override
@@ -37,10 +51,7 @@ class _StartScreenState extends State<StartScreen>
     return new Scaffold(
       drawer: DrawerScreen(),
       appBar: AppBar(
-        bottom: PreferredSize(
-            preferredSize: Size.fromHeight(65.0),
-            child: BottomPlayer()
-        ),
+        bottom: getAppBarBottom(),
         title: ListTile(
           title: Text(
             getTitle(),
@@ -91,6 +102,15 @@ class _StartScreenState extends State<StartScreen>
         ],
       ),
     );
+  }
+
+  PreferredSize getAppBarBottom() {
+    if (MusicQueue.instance.currentSong == null) {
+      return PreferredSize(
+          preferredSize: Size.fromHeight(0.0), child: Container());
+    }
+    return PreferredSize(
+        preferredSize: Size.fromHeight(65.0), child: BottomPlayer());
   }
 
   Future<void> chooseFolder() async {

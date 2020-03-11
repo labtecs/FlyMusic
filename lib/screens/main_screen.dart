@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_finder.dart';
 import 'package:flymusic/music/music_queue.dart';
+import 'package:flymusic/screens/drawerScreens/settings_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -56,6 +57,16 @@ class _StartScreenState extends State<StartScreen>
           title: Text(
             getTitle(),
             style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          trailing: IconButton(
+            icon: Icon(
+              Icons.settings,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SettingsScreen()));
+            },
           ),
         ),
         backgroundColor: Colors.black54,

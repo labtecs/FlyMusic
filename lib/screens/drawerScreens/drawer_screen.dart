@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/drawerScreens/impressum_screen.dart';
-import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/drawerScreens/settings_screen.dart';
+import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/tabScreens/queue_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
 class DrawerScreen extends StatefulWidget {
-
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
 }
@@ -25,7 +24,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => PlayerScreen()));
             },
-          ),          ListTile(
+          ),
+          ListTile(
             title: Text('Wiedergabeliste'),
             onTap: () {
               Navigator.push(context,

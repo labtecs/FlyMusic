@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flymusic/music/music_finder.dart';
+import 'package:flymusic/screens/drawerScreens/impressum_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../../music/music_finder.dart';
-import 'dart:io';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -11,7 +13,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-
   String folderLocation = "noch nichts importiert";
 
   Directory externalDirectory;
@@ -43,6 +44,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onTap: () {
               chooseFolder();
             },
+          ),
+          ListTile(
+            title: Text("Impressum"),
+            trailing: Icon(Icons.info_outline),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ImpressumScreen()));
+            },
           )
         ],
       ),
@@ -51,49 +60,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> chooseFolder() async {
     var result =
-    await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
     if (result[PermissionGroup.storage] == PermissionStatus.granted) {
       //  await getStorage();
       Navigator.of(context).push<FolderPickerPage>(
           MaterialPageRoute(builder: (BuildContext context) {
-            return FolderPickerPage(
-                rootDirectory: Directory("/storage/emulated/0/"),
+        return FolderPickerPage(
+            rootDirectory: Directory("/storage/emulated/0/"),
 
-                /// a [Directory] object
-                action: (BuildContext context, Directory folder) async {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    MusicFinder.instance.readFolderIntoDatabase(folder);
-                    folderLocation = folder.toString();
-                  });
+            /// a [Directory] object
+            action: (BuildContext context, Directory folder) async {
+              Navigator.of(context).pop();
+              setState(() {
+                MusicFinder.instance.readFolderIntoDatabase(folder);
+                folderLocation = folder.toString();
+              });
 
-                  showDialog<void>(
-                    context: context,
-                    barrierDismissible: false, // user must tap button!
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Import von Musik'),
-                        content: SingleChildScrollView(
-                          child: ListBody(
-                            children: <Widget>[
-                              Text('Das Importieren der Musik'),
-                              Text('dauert einen Moment'),
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Ok'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Import von Musik'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          Text('Das Importieren der Musik'),
+                          Text('dauert einen Moment'),
                         ],
-                      );
-                    },
+                      ),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('Ok'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
                   );
-                });
-          }));
+                },
+              );
+            });
+      }));
     }
   }
 }

@@ -8,7 +8,6 @@ import 'package:flymusic/screens/drawerScreens/settings_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'drawerScreens/drawer_screen.dart';
 import 'player/bottom_player_screen.dart';
 import 'tabScreens/album/album_screen.dart';
 import 'tabScreens/artist/artist_screen.dart';

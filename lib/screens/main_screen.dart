@@ -8,10 +8,7 @@ import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'drawerScreens/drawer_screen.dart';
 import 'tabScreens/album/album_screen.dart';
-import 'tabScreens/artist/artist_screen.dart';
-import 'tabScreens/queue_screen.dart';
 import 'tabScreens/track_list_screen.dart';
-import 'package:flymusic/util/themes.dart';
 
 class StartScreen extends StatefulWidget {
   @override
@@ -99,6 +96,10 @@ class _StartScreenState extends State<StartScreen>
 
   /**
    * Scaffold
+   * - Drawer
+   * - AppBar
+   * - bottomNaviaationBar
+   * - PageView
    */
   @override
   Widget build(BuildContext context) {
@@ -128,7 +129,9 @@ class _StartScreenState extends State<StartScreen>
           new BottomNavigationBarItem(icon: new Icon(Icons.audiotrack), title: new Text("Tracks")),
           new BottomNavigationBarItem(icon: new Icon(Icons.album), title: new Text("Albums")),
           new BottomNavigationBarItem(icon: new Icon(Icons.person), title: new Text("Artists")),
+
         ],
+
       ),
       body: new PageView(
         controller: _c,
@@ -147,6 +150,9 @@ class _StartScreenState extends State<StartScreen>
     );
   }
 
+  /**
+   *
+   */
   Future<void> chooseFolder() async {
     var result =
         await PermissionHandler().requestPermissions([PermissionGroup.storage]);
@@ -166,6 +172,9 @@ class _StartScreenState extends State<StartScreen>
     }
   }
 
+  /**
+   * Gibt den Namen der Tabs zurück.
+   */
   String getTitle() {
     switch (_page) {
       case 0:

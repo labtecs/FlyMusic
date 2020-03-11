@@ -40,8 +40,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
         backgroundColor: Colors.black54,
       ),
       title: Text(song.title),
-      subtitle: Text("00:00"),
-      //Todo korrekte Zeit
+      subtitle: Text(song.duration.toString()),
       trailing: SongPopup(song),
       onTap: () {
         Navigator.push(

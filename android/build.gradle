@@ -17,6 +17,9 @@ allprojects {
         jcenter()
     }
 }
+ext {
+    flutterFFmpegPackage  = "audio-lts"
+}
 
 rootProject.buildDir = '../build'
 subprojects {

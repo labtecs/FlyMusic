@@ -30,7 +30,7 @@ class _TrackListState extends State<TrackList> {
           song.title,
           style: TextStyle(color: Colors.black),
         ),
-        subtitle: Text("00:00", style: TextStyle(color: Colors.black)),
+        subtitle: Text(song.duration.toString(), style: TextStyle(color: Colors.black)),
         trailing: SongPopup(song),
         onTap: () {
           MusicQueue.instance.playSong(song);

@@ -29,6 +29,7 @@ dependencies:
   folder_picker: ^0.3.0
   shared_preferences: ^0.5.6+2
   archive: ^2.0.13
+  flutter_ffmpeg: ^0.2.10
 
   fluttertoast: ^3.1.3
   flutter_speed_dial: ^1.2.5

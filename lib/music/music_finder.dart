@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:dart_tags/dart_tags.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/art.dart';
 import 'package:flymusic/database/model/artist.dart';
@@ -12,6 +13,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 class MusicFinder {
+  final FlutterFFprobe _flutterFFprobe = new FlutterFFprobe();
   static final MusicFinder instance = MusicFinder._internal();
 
   factory MusicFinder() => instance;
@@ -87,22 +89,35 @@ class MusicFinder {
   }
 
   Future<Song> _readFile(Art defaultArt, Directory folder, File file) async {
+    // await audioPlayer.setReleaseMode(ReleaseMode.RELEASE); // set release mode so that it never releases
     String title;
     String artist;
     Art art;
     String album;
 
+    int duration = 0;
+
+    _flutterFFprobe.getMediaInformation(file.path).then((info) {
+      title = info['title'];
+      artist = info['artist'];
+      album = info['album'];
+      duration = info['duration'];
+    });
+
+
+    //fallback and image
     var tags = await tp.getTagsFromByteArray(file.readAsBytes());
 
     await Future.forEach(tags, (f) async {
       if (f.version == '1.1') {
-        if (f.tags.containsKey('title')) {
+
+        if ((title == null || title.isEmpty) && f.tags.containsKey('title')) {
           title = f.tags['title'];
         }
-        if (f.tags.containsKey('artist')) {
+        if ((artist == null || artist.isEmpty) && f.tags.containsKey('artist')) {
           artist = f.tags['artist'];
         }
-        if (f.tags.containsKey('album')) {
+        if ((album == null || album.isEmpty) && f.tags.containsKey('album')) {
           album = f.tags['album'];
         }
       }
@@ -135,8 +150,8 @@ class MusicFinder {
     Album songAlbum = await _findAlbum(album, art);
     Artist songArtist = await _findArtist(currentArtist, artist);
 
-    return Song(null, title, artist, art?.id ?? -1, songAlbum.id, 0, file.path,
-        songArtist.id);
+    return Song(null, title, artist, art?.id ?? -1, songAlbum.id, duration,
+        file.path, songArtist.id);
   }
 
   Future<Album> _findAlbum(String album, Art art) async {
@@ -151,7 +166,7 @@ class MusicFinder {
         //insert album
         currentAlbum.id = await database.albumDao.insertAlbum(currentAlbum);
       }
-      if (currentAlbum.artId == -1 && art.id != -1) {
+      if (currentAlbum.artId == -1 && art != null && art.id != -1) {
         currentAlbum.artId = art.id;
         await database.albumDao.updateAlbum(currentAlbum);
       }

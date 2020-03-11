@@ -50,7 +50,6 @@ class _StartScreenState extends State<StartScreen>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      drawer: DrawerScreen(),
       appBar: AppBar(
         bottom: getAppBarBottom(),
         title: ListTile(

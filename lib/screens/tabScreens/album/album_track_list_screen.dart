@@ -44,52 +44,51 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              expandedHeight: 200.0,
-              floating: false,
-              pinned: false,
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(48.0),
-                child: DecoratedBox(
-                  decoration: const BoxDecoration(color: Colors.black26),
-                  child: Column(children: [
-                    Chip(label: Text("Dfsdf")),
-                    Text(widget.album.name,
-                        style: TextStyle(color: Colors.white, fontSize: 16.0))
-                  ]),
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                title: Text(widget.album.name),
+                expandedHeight: 200.0,
+                floating: false,
+                pinned: true,
+                backgroundColor: Colors.black54,
+                flexibleSpace: Stack(
+                  children: <Widget>[
+                    Positioned.fill(
+                        child:  ArtUtil.getArtFromAlbum(widget.album)),
+                  ],
                 ),
               ),
-              backgroundColor: Colors.black54,
-              flexibleSpace: FlexibleSpaceBar(
-                background: ArtUtil.getArtFromAlbum(widget.album),
+            ];
+          },
+          body: Column(children: <Widget>[
+            new Text('LISTA',
+                style: new TextStyle(
+                  fontSize: 15.2,
+                  fontWeight: FontWeight.bold,
+                )),
+            new Expanded(
+              child: FutureBuilder<List<Song>>(
+                future: database.songDao.findSongsByAlbumId(widget.album.id),
+                builder:
+                    (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return _buildRow(
+                          snapshot.data[index],
+                          index + 1,
+                        );
+                      },
+                    );
+                  } else {
+                    return Text("no data, or loading");
+                  }
+                },
               ),
             ),
-          ];
-        },
-        body: Center(
-          child: FutureBuilder<List<Song>>(
-            future: database.songDao.findSongsByAlbumId(widget.album.id),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return _buildRow(
-                      snapshot.data[index],
-                      index + 1,
-                    );
-                  },
-                );
-              } else {
-                return Text("no data, or loading");
-              }
-            },
-          ),
-        ),
-      ),
+          ])),
     );
   }
 }

@@ -57,13 +57,6 @@ class _StartScreenState extends State<StartScreen>
             getTitle(),
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          ),
         ),
         backgroundColor: Colors.black54,
       ),

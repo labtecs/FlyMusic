@@ -16,10 +16,10 @@ import 'tabScreens/track_list_screen.dart';
 
 class StartScreen extends StatefulWidget {
   @override
-  _StartScreenState createState() => _StartScreenState();
+  StartScreenState createState() => StartScreenState();
 }
 
-class _StartScreenState extends State<StartScreen>
+class StartScreenState extends State<StartScreen>
     with SingleTickerProviderStateMixin {
   Directory externalDirectory;
   StreamSubscription onPlayerStateChanged;
@@ -112,7 +112,7 @@ class _StartScreenState extends State<StartScreen>
           preferredSize: Size.fromHeight(0.0), child: Container());
     }
     return PreferredSize(
-        preferredSize: Size.fromHeight(65.0), child: BottomPlayer());
+        preferredSize: Size.fromHeight(65.0), child: BottomPlayer(this));
   }
 
   Future<void> chooseFolder() async {
@@ -147,11 +147,5 @@ class _StartScreenState extends State<StartScreen>
       default:
         return '';
     }
-  }
-
-  void onTapped(index) {
-    setState(() {
-      _page = index;
-    });
   }
 }

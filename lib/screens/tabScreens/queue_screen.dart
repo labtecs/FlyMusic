@@ -24,7 +24,7 @@ class _QueueScreenState extends State<QueueScreen> {
           if (snapshot.hasData) {
             return ListTile(
               leading: CircleAvatar(
-                child: ArtUtil.getArt(snapshot.data),
+                child: ArtUtil.getArtFromSong(snapshot.data),
                 backgroundColor: Colors.transparent,
               ),
               title: Text(snapshot.data.title),

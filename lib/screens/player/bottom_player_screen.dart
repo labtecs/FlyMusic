@@ -3,12 +3,17 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
+import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
 class BottomPlayer extends StatefulWidget {
+  final StartScreenState startScreenState;
+
+  BottomPlayer(this.startScreenState);
+
   @override
-  _BottomPlayerState createState() => _BottomPlayerState();
+  _BottomPlayerState createState() => _BottomPlayerState(startScreenState);
 }
 
 class _BottomPlayerState extends State<BottomPlayer> {
@@ -17,6 +22,10 @@ class _BottomPlayerState extends State<BottomPlayer> {
   StreamSubscription onPlayerStateChanged;
   StreamSubscription onAudioPositionChanged;
   StreamSubscription onDurationChanged;
+
+  final StartScreenState startScreenState;
+
+  _BottomPlayerState(this.startScreenState);
 
   @override
   void initState() {
@@ -62,7 +71,9 @@ class _BottomPlayerState extends State<BottomPlayer> {
               Container(
                 height: 65,
                 child: InkWell(
-                  child: ArtUtil.getArt(MusicQueue.instance.currentSong),
+                  child: Hero(
+                      tag: 'imageHero',
+                      child: ArtUtil.getArtFromSong(MusicQueue.instance.currentSong)),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -96,7 +107,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
           SizedBox(
               height: 4.0,
               child: LinearProgressIndicator(
-                value: audioPosition.inMilliseconds/duration.inMilliseconds,
+                value: audioPosition.inMilliseconds / duration.inMilliseconds,
                 valueColor: AlwaysStoppedAnimation(Colors.blueAccent),
                 backgroundColor: Colors.black54,
               ))
@@ -112,13 +123,14 @@ class _BottomPlayerState extends State<BottomPlayer> {
   }
 
   void _onHorizontalDrag(DragEndDetails details) {
-    if(details.primaryVelocity == 0) return; // user have just tapped on screen (no dragging)
+    if (details.primaryVelocity == 0)
+      return; // user have just tapped on screen (no dragging)
 
     if (details.primaryVelocity.compareTo(0) == -1) {
       //dragged from left
       MusicQueue.instance.playPrevious();
-    }else {
-     //dragged from right
+    } else {
+      //dragged from right
       MusicQueue.instance.playNext();
     }
   }

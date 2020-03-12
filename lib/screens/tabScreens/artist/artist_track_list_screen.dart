@@ -23,7 +23,7 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
   Widget _buildRow(Song song) {
     return ListTile(
       leading: CircleAvatar(
-        child: ArtUtil.getArt(song),
+        child: ArtUtil.getArtFromSong(song),
         backgroundColor: Colors.transparent,
       ),
       title: Text(song.title),

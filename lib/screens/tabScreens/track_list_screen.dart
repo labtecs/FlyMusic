@@ -3,8 +3,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/player/bottom_player_screen.dart';
-import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
@@ -23,19 +21,18 @@ class _TrackListState extends State<TrackList> {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          child: ArtUtil.getArt(song),
+          child: ArtUtil.getArtFromSong(song),
           backgroundColor: Colors.transparent,
         ),
         title: Text(
           song.title,
           style: TextStyle(color: Colors.black),
         ),
-        subtitle: Text(song.duration.toString(), style: TextStyle(color: Colors.black)),
+        subtitle: Text(song.duration.toString(),
+            style: TextStyle(color: Colors.black)),
         trailing: SongPopup(song),
         onTap: () {
           MusicQueue.instance.playSong(song);
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => PlayerScreen()));
         },
         onLongPress: () {
           MusicQueue.instance.addItem(song);

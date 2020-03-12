@@ -1,17 +1,21 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/art.dart';
 import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/main.dart';
 
 class ArtUtil {
-  static FutureBuilder getArt(Song song) {
+  static Widget getArtFromSong(Song song) {
+    if (song.art != null && song.artId == song.art.id) {
+      return Image.file(File(song.art.path), fit: BoxFit.cover);
+    }
     return FutureBuilder<Art>(
         future: database.artDao.findArtById(song?.artId ?? -1),
         builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
+            song.art = snapshot.data;
             return Image.file(File(snapshot.data.path), fit: BoxFit.cover);
           } else {
             return Image(image: AssetImage("asset/images/placeholder.jpg"));
@@ -19,7 +23,10 @@ class ArtUtil {
         });
   }
 
-  static FutureBuilder getArtFromAlbum(Album album) {
+  static Widget getArtFromAlbum(Album album) {
+    if (album.art != null && album.artId == album.art.id) {
+      return Image.file(File(album.art.path), fit: BoxFit.cover);
+    }
     return FutureBuilder<Art>(
         future: database.artDao.findArtById(album?.artId ?? -1),
         builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
@@ -27,61 +34,6 @@ class ArtUtil {
             return Image.file(File(snapshot.data.path), fit: BoxFit.cover);
           } else {
             return Image(image: AssetImage("asset/images/placeholder.jpg"));
-          }
-        });
-  }
-
-  static FutureBuilder getArt2(Song song) {
-    return FutureBuilder<Art>(
-        future: database.artDao.findArtById(song?.artId ?? -1),
-        builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
-          if (snapshot.hasData && snapshot.data != null) {
-            return DrawerHeader(
-              child: Text(
-                song?.title ?? "",
-                style: TextStyle(color: Colors.white),
-              ),
-              decoration: BoxDecoration(
-                  color: Colors.blue,
-                  image: DecorationImage(
-                      fit: BoxFit.fitWidth,
-                      image: Image.file(File(snapshot.data.path)).image)),
-            );
-            //  return MemoryImage(File(snapshot.data.path));
-          } else {
-            return DrawerHeader(
-              child: Text(
-                song?.title ?? "",
-                style: TextStyle(color: Colors.white),
-              ),
-              decoration: BoxDecoration(
-                  color: Colors.blue,
-                  image: DecorationImage(
-                      fit: BoxFit.fitWidth,
-                      image: ExactAssetImage("asset/images/placeholder.jpg"))),
-            );
-          }
-        });
-  }
-
-  static FutureBuilder getArt3(Song song) {
-    return FutureBuilder<Art>(
-        future: database.artDao.findArtById(song?.artId ?? -1),
-        builder: (BuildContext context, AsyncSnapshot<Art> snapshot) {
-          try {
-            if (snapshot.hasData && snapshot.data != null) {
-              return Image.asset(snapshot.data.path);
-            } else {
-              return Image.asset(
-                "asset/images/placeholder.jpg",
-              );
-            }
-          } catch (q) {
-            //should never be used
-            print("Bild konnte nicht geladen werden: " + snapshot.data.path);
-            return Image.asset(
-              "asset/images/placeholder.jpg",
-            );
           }
         });
   }

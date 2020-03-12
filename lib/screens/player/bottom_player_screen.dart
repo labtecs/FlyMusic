@@ -3,17 +3,14 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
 class BottomPlayer extends StatefulWidget {
-  final StartScreenState startScreenState;
-
-  BottomPlayer(this.startScreenState);
+  BottomPlayer();
 
   @override
-  _BottomPlayerState createState() => _BottomPlayerState(startScreenState);
+  _BottomPlayerState createState() => _BottomPlayerState();
 }
 
 class _BottomPlayerState extends State<BottomPlayer> {
@@ -23,9 +20,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
   StreamSubscription onAudioPositionChanged;
   StreamSubscription onDurationChanged;
 
-  final StartScreenState startScreenState;
-
-  _BottomPlayerState(this.startScreenState);
+  _BottomPlayerState();
 
   @override
   void initState() {
@@ -33,20 +28,6 @@ class _BottomPlayerState extends State<BottomPlayer> {
     onPlayerStateChanged =
         MusicQueue.instance.audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {});
-    });
-
-    onAudioPositionChanged =
-        MusicQueue.instance.audioPlayer.onAudioPositionChanged.listen((state) {
-      setState(() {
-        audioPosition = state;
-      });
-    });
-
-    onDurationChanged =
-        MusicQueue.instance.audioPlayer.onDurationChanged.listen((state) {
-      setState(() {
-        duration = state;
-      });
     });
   }
 
@@ -73,7 +54,8 @@ class _BottomPlayerState extends State<BottomPlayer> {
                 child: InkWell(
                   child: Hero(
                       tag: 'imageHero',
-                      child: ArtUtil.getArtFromSong(MusicQueue.instance.currentSong)),
+                      child: ArtUtil.getArtFromSong(
+                          MusicQueue.instance.currentSong)),
                   onTap: () {
                     Navigator.push(
                         context,
@@ -104,13 +86,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
               ),
             ],
           ),
-          SizedBox(
-              height: 4.0,
-              child: LinearProgressIndicator(
-                value: audioPosition.inMilliseconds / duration.inMilliseconds,
-                valueColor: AlwaysStoppedAnimation(Colors.blueAccent),
-                backgroundColor: Colors.black54,
-              ))
+          SizedBox(height: 4.0, child: BottomPlayerProgress())
         ]));
   }
 
@@ -133,5 +109,52 @@ class _BottomPlayerState extends State<BottomPlayer> {
       //dragged from right
       MusicQueue.instance.playNext();
     }
+  }
+}
+
+class BottomPlayerProgress extends StatefulWidget {
+  BottomPlayerProgress();
+
+  @override
+  _BottomPlayerProgressState createState() => _BottomPlayerProgressState();
+}
+
+class _BottomPlayerProgressState extends State<BottomPlayerProgress> {
+  Duration audioPosition = new Duration(seconds: 1);
+  Duration duration = new Duration(seconds: 1);
+  Duration rebuild = new Duration(seconds: 1);
+  StreamSubscription onAudioPositionChanged;
+  StreamSubscription onDurationChanged;
+
+  _BottomPlayerProgressState();
+
+  @override
+  void initState() {
+    super.initState();
+    onAudioPositionChanged =
+        MusicQueue.instance.audioPlayer.onAudioPositionChanged.listen((state) {
+      //rebuild max 1 per second
+      if ((audioPosition - state).abs() > rebuild) {
+        setState(() {
+          audioPosition = state;
+        });
+      }
+    });
+
+    onDurationChanged =
+        MusicQueue.instance.audioPlayer.onDurationChanged.listen((state) {
+      setState(() {
+        duration = state;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LinearProgressIndicator(
+      value: audioPosition.inMilliseconds / duration.inMilliseconds,
+      valueColor: AlwaysStoppedAnimation(Colors.blueAccent),
+      backgroundColor: Colors.black54,
+    );
   }
 }

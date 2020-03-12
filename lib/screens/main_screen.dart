@@ -26,6 +26,7 @@ class StartScreenState extends State<StartScreen>
 
   int _page = 0;
   PageController _c;
+  bool _bottomPlayerVisible = false;
 
   @override
   void initState() {
@@ -34,9 +35,12 @@ class StartScreenState extends State<StartScreen>
     );
     onPlayerStateChanged =
         MusicQueue.instance.audioPlayer.onPlayerStateChanged.listen((state) {
-      setState(() {});
+      if (MusicQueue.instance.currentSong != null &&
+          _bottomPlayerVisible == false) {
+        //make bottom player visible
+        setState(() {});
+      }
     });
-
     super.initState();
   }
 
@@ -112,7 +116,7 @@ class StartScreenState extends State<StartScreen>
           preferredSize: Size.fromHeight(0.0), child: Container());
     }
     return PreferredSize(
-        preferredSize: Size.fromHeight(65.0), child: BottomPlayer(this));
+        preferredSize: Size.fromHeight(65.0), child: BottomPlayer());
   }
 
   Future<void> chooseFolder() async {

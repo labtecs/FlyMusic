@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/util/art_util.dart';
@@ -48,12 +47,12 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
         child: CustomScrollView(
           slivers: [
             SliverPersistentHeader(
-              delegate: MySliverAppBar(expandedHeight: 200),
+              delegate: MySliverAppBar(expandedHeight: 200, album: widget.album),
               pinned: true,
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (_, index) => ListTile(
+                (_, index) => ListTile(
                   title: Text("Index: $index"),
                 ),
               ),
@@ -64,7 +63,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
     );
   }
 
-  /*
+/*
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
@@ -119,50 +118,55 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
+  final Album album;
 
-  MySliverAppBar({@required this.expandedHeight});
+  MySliverAppBar({@required this.expandedHeight,@required this.album});
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Stack(
       fit: StackFit.expand,
       overflow: Overflow.visible,
       children: [
-        Image.network(
-          "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-          fit: BoxFit.cover,
-        ),
+        ArtUtil.getArtFromAlbum(album),
         Center(
-          child: Opacity(
-            opacity: shrinkOffset / expandedHeight,
             child: Text(
-              "MySliverAppBar",
+              album.name,
               style: TextStyle(
                 color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 23,
+              ),
+          ),
+        ),
+        Positioned(
+          top: getTop(expandedHeight, shrinkOffset),
+          right: MediaQuery.of(context).size.width / 5,
+          child: MaterialButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(18.0)),
+            onPressed: () {},
+            color: Colors.blue,
+            child: Text(
+              "play",
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 23,
               ),
             ),
           ),
         ),
-        Positioned(
-          top: expandedHeight / 2 - shrinkOffset,
-          left: MediaQuery.of(context).size.width / 4,
-          child: Opacity(
-            opacity: (1 - shrinkOffset / expandedHeight),
-            child: Card(
-              elevation: 10,
-              child: SizedBox(
-                height: expandedHeight,
-                width: MediaQuery.of(context).size.width / 2,
-                child: FlutterLogo(),
-              ),
-            ),
-          ),
-        ),
       ],
     );
+  }
+
+  double getTop(double expandedHeight, double shrinkOffset) {
+    double num = 200 - 27 - shrinkOffset;
+    print("num $num shrink $shrinkOffset");
+    if (num < 27) {
+      num = 27;
+    }
+    return num;
   }
 
   @override

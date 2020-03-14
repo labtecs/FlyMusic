@@ -8,6 +8,9 @@ import 'package:flymusic/main.dart';
 
 class ArtUtil {
   static Widget getArtFromSong(Song song) {
+    if (song == null) {
+      return Image(image: AssetImage("asset/images/placeholder.jpg"));
+    }
     if (song.art != null && song.artId == song.art.id) {
       return Image.file(File(song.art.path), fit: BoxFit.cover);
     }
@@ -24,6 +27,9 @@ class ArtUtil {
   }
 
   static Widget getArtFromAlbum(Album album) {
+    if (album == null) {
+      return Image(image: AssetImage("asset/images/placeholder.jpg"));
+    }
     if (album.art != null && album.artId == album.art.id) {
       return Image.file(File(album.art.path), fit: BoxFit.cover);
     }

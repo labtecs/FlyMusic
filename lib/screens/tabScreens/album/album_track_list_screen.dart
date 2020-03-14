@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/main.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/util/art_util.dart';
@@ -29,8 +30,8 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
       //Todo korrekte Zeit
       trailing: SongPopup(song),
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlayerScreen()));
+        //  Navigator.push(
+        //       context, MaterialPageRoute(builder: (context) => PlayerScreen()));
       },
       onLongPress: () {
         Fluttertoast.showToast(
@@ -47,110 +48,107 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
         child: CustomScrollView(
           slivers: [
             SliverPersistentHeader(
-              delegate: MySliverAppBar(expandedHeight: 200, album: widget.album),
+              delegate:
+                  MySliverAppBar(expandedHeight: 350, album: widget.album),
               pinned: true,
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (_, index) => ListTile(
-                  title: Text("Index: $index"),
-                ),
-              ),
-            )
+            getBuilder()
           ],
         ),
       ),
     );
   }
 
-/*
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                title: Text(widget.album.name),
-                expandedHeight: 200.0,
-                floating: false,
-                pinned: true,
-                backgroundColor: Colors.black54,
-                flexibleSpace: Stack(
-                  children: <Widget>[
-                    Positioned.fill(
-                        child:  ArtUtil.getArtFromAlbum(widget.album)),
-                  ],
-                ),
-              ),
-            ];
-          },
-          body: Column(children: <Widget>[
-            new Text('LISTA',
-                style: new TextStyle(
-                  fontSize: 15.2,
-                  fontWeight: FontWeight.bold,
-                )),
-            new Expanded(
-              child: FutureBuilder<List<Song>>(
-                future: database.songDao.findSongsByAlbumId(widget.album.id),
-                builder:
-                    (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) {
-                        return _buildRow(
-                          snapshot.data[index],
-                          index + 1,
-                        );
-                      },
-                    );
-                  } else {
-                    return Text("no data, or loading");
-                  }
-                },
-              ),
-            ),
-          ])),
+  FutureBuilder getBuilder() {
+    return FutureBuilder<List<Song>>(
+      future: database.songDao.findSongsByAlbumId(widget.album.id),
+      // this is a code smell. Make sure that the future is NOT recreated when build is called. Create the future in initState instead.
+      builder: (context, snapshot) {
+        Widget newsListSliver;
+        if (snapshot.hasData) {
+          newsListSliver = SliverList(
+              delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return _buildRow(
+                snapshot.data[index],
+                index + 1,
+              );
+            },
+            childCount: snapshot.data.length,
+          ));
+        } else {
+          newsListSliver = SliverToBoxAdapter(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return newsListSliver;
+      },
     );
-  }*/
+  }
 }
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   final Album album;
 
-  MySliverAppBar({@required this.expandedHeight,@required this.album});
+  MySliverAppBar({@required this.expandedHeight, @required this.album});
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Stack(
       fit: StackFit.expand,
       overflow: Overflow.visible,
       children: [
-        ArtUtil.getArtFromAlbum(album),
-        Center(
-            child: Text(
-              album.name,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 23,
-              ),
-          ),
+        ShaderMask(
+          shaderCallback: (rect) {
+            return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.black, Colors.transparent],
+                    stops: [0.6, 1])
+                .createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+          },
+          blendMode: BlendMode.dstIn,
+          child: ArtUtil.getArtFromAlbum(album),
         ),
+        Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                color: Colors.black54,
+                child: Container(
+                  height: kToolbarHeight,
+                  child: Center(
+                    child: Text(
+                      album.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 23,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ]),
         Positioned(
           top: getTop(expandedHeight, shrinkOffset),
           right: MediaQuery.of(context).size.width / 5,
           child: MaterialButton(
             shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(18.0)),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PlayerScreen()));
+            },
             color: Colors.blue,
             child: Text(
               "play",
               style: TextStyle(
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
                 fontSize: 23,
               ),
             ),
@@ -161,10 +159,10 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   }
 
   double getTop(double expandedHeight, double shrinkOffset) {
-    double num = 200 - 27 - shrinkOffset;
+    double num = expandedHeight - 50 - shrinkOffset;
     print("num $num shrink $shrinkOffset");
-    if (num < 27) {
-      num = 27;
+    if (num < kToolbarHeight) {
+      num = kToolbarHeight;
     }
     return num;
   }
@@ -173,7 +171,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
   double get maxExtent => expandedHeight;
 
   @override
-  double get minExtent => kToolbarHeight;
+  double get minExtent => kToolbarHeight + 45;
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;

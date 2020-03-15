@@ -1,0 +1,10 @@
+Short/long press und Warteschlange button
+Einstellungen (abspielen/Warteschlange (als nächstes) /unten
+Button Warteschlange (als nächstes, unten)
+Liedreihe als eigenes stateless widget
+Album: abspielen, Warteschlange (oben unten?)
+Spotify Vergleich
+Lieder verschieben in Warteschlange
+Nächstes Lied - nochmal peüfen
+Anderer branch
+Onboarding screens

@@ -1,18 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/music/music_finder.dart';
-import 'package:flymusic/screens/drawerScreens/impressum_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences_settings/shared_preferences_settings.dart';
 
-class SettingsScreen extends StatefulWidget {
+class CustomSettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends State<CustomSettingsScreen> {
   String folderLocation = "noch nichts importiert";
 
   Directory externalDirectory;
@@ -20,41 +19,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Einstellungen"),
+    return SettingsScreen(title: "Application Settings", children: [
+      CheckboxSettingsTile(
+        settingKey: 'key-of-your-setting',
+        title: 'This is a simple Checkbox',
       ),
-      body: ListView(
-        children: <Widget>[
-          SwitchListTile(
-            title: Text('Lied in der Warteschlange nach oben setzen'),
-            value: _queueFirst,
-            onChanged: (value) {
-              setState(() {
-                _queueFirst = value;
-              });
-              Fluttertoast.showToast(msg: 'not implemented yet');
-              // Todo funktion
-            },
-          ),
-          ListTile(
-            title: Text("Musik importieren"),
-            subtitle: Text(folderLocation),
-            trailing: Icon(Icons.more_vert),
-            onTap: () {
-              chooseFolder();
-            },
-          ),
-          ListTile(
-            title: Text("Impressum"),
-            trailing: Icon(Icons.info_outline),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ImpressumScreen()));
-            },
-          )
-        ],
+    ]);
+  }
+
+  _showSettingsDialog() {
+    return AlertDialog(
+      title: Text('RadioButton'),
+      content: RadioListTile(
+        title: Text("Radio Text"),
+        groupValue: 0,
+        value: 1,
+        onChanged: (val) {},
       ),
+      actions: <Widget>[
+        new FlatButton(
+          child: new Text('CANCEL'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      ],
     );
   }
 

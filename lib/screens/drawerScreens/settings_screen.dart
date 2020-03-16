@@ -21,8 +21,46 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
   Widget build(BuildContext context) {
     return SettingsScreen(title: "Application Settings", children: [
       CheckboxSettingsTile(
-        settingKey: 'key-of-your-setting',
-        title: 'This is a simple Checkbox',
+        settingKey: 'Music Import',
+        title: 'Folders',
+      ),
+      CheckboxSettingsTile(
+        settingKey: 'Impressum',
+        title: 'Impressum',
+      ),
+      SettingsTileGroup(
+        title: 'Song Settings',
+        children: [
+          CheckboxSettingsTile(
+            settingKey: 'Short Press',
+            title: 'Short Press',
+          ),
+          CheckboxSettingsTile(
+            settingKey: 'Long Press',
+            title: 'Long Press',
+          ),
+          CheckboxSettingsTile(
+            settingKey: 'Action',
+            title: 'Action',
+          ),
+        ],
+      ),
+      SettingsTileGroup(
+        title: 'Album Settings',
+        children: [
+          CheckboxSettingsTile(
+            settingKey: 'Short Press',
+            title: 'Short Press',
+          ),
+          CheckboxSettingsTile(
+            settingKey: 'Long Press',
+            title: 'Long Press',
+          ),
+          CheckboxSettingsTile(
+            settingKey: 'Action',
+            title: 'Action',
+          ),
+        ],
       ),
     ]);
   }

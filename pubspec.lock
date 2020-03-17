@@ -218,6 +218,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_colorpicker:
+    dependency: transitive
+    description:
+      name: flutter_colorpicker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.6"
   flutter_ffmpeg:
     dependency: "direct main"
     description:
@@ -469,40 +476,26 @@ packages:
     source: hosted
     version: "2.0.5"
   rxdart:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.6"
   shared_preferences:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.6+2"
-  shared_preferences_macos:
-    dependency: transitive
+    version: "0.4.3"
+  shared_preferences_settings:
+    dependency: "direct main"
     description:
-      name: shared_preferences_macos
+      name: shared_preferences_settings
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1+6"
-  shared_preferences_platform_interface:
-    dependency: transitive
-    description:
-      name: shared_preferences_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
-  shared_preferences_web:
-    dependency: transitive
-    description:
-      name: shared_preferences_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2+4"
+    version: "1.0.0+1"
   shelf:
     dependency: transitive
     description:
@@ -643,4 +636,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+  flutter: ">=1.10.1 <2.0.0"

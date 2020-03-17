@@ -67,7 +67,7 @@ class StartScreenState extends State<StartScreen>
             ),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SettingsScreen()));
+                  MaterialPageRoute(builder: (context) => CustomSettingsScreen()));
             },
           ),
         ),

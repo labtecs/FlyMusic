@@ -5,7 +5,7 @@ import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/art.dart';
 import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/main.dart';
-
+//TODO Exception: Could not instantiate image codec. -> placeholder (auch in datenbank)
 class ArtUtil {
   static Widget getArtFromSong(Song song) {
     if (song == null) {

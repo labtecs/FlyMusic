@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/music/music_finder.dart';
-import 'package:flymusic/screens/drawerScreens/impressum_screen.dart';
+import 'package:flymusic/screens/impressum_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 

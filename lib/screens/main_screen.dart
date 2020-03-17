@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_finder.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/drawerScreens/settings_screen.dart';
+import 'file:///C:/Users/kilia/Documents/Projects/flymusic/lib/screens/settings_screen.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 

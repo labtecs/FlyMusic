@@ -1,10 +1,14 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_finder.dart';
+import 'package:flymusic/screens/impressum_screen.dart';
+import 'package:flymusic/util/shared_preferences_settings.dart';
+import 'package:flymusic/util/shared_prefrences_util.dart';
 import 'package:folder_picker/folder_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences_settings/shared_preferences_settings.dart';
 
 class CustomSettingsScreen extends StatefulWidget {
   @override
@@ -12,77 +16,103 @@ class CustomSettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<CustomSettingsScreen> {
-  String folderLocation = "noch nichts importiert";
-
   Directory externalDirectory;
-  bool _queueFirst = true;
 
   @override
   Widget build(BuildContext context) {
     return SettingsScreen(title: "Application Settings", children: [
-      CheckboxSettingsTile(
-        settingKey: 'Music Import',
-        title: 'Folders',
-      ),
-      CheckboxSettingsTile(
-        settingKey: 'Impressum',
-        title: 'Impressum',
-      ),
+      getFolders(),
+      SettingsTileGroup(title: 'Allgemein', children: [
+        SwitchSettingsTile(
+          icon: Icon(Icons.short_text),
+          settingKey: PrefKey.SHOW_POPUP.index.toString(),
+          title: 'Popup',
+          subtitle: 'Bei Lied/Album Aktionen Popup anzeigen',
+          defaultValue: true,
+        ),
+        SimpleSettingsTile(
+          icon: Icon(Icons.info_outline),
+          title: 'Impressum',
+          screen: ImpressumScreen(),
+        ),
+      ]),
       SettingsTileGroup(
-        title: 'Song Settings',
+        title: 'Lieder',
         children: [
-          CheckboxSettingsTile(
-            settingKey: 'Short Press',
-            title: 'Short Press',
+          RadioPickerSettingsTile(
+            settingKey: PrefKey.SONG_SHORT_PRESS.index.toString(),
+            title: 'Kurz drücken',
+            values: {
+              '1': 'Sofort Abspielen',
+              '2': 'Als nächstes Abspielen',
+              '3': 'An die Wiedergabeliste hinzufügen',
+              '-1': 'Keine Aktion'
+            },
+            defaultKey: '1',
           ),
-          CheckboxSettingsTile(
-            settingKey: 'Long Press',
-            title: 'Long Press',
+          RadioPickerSettingsTile(
+            settingKey: PrefKey.SONG_LONG_PRESS.index.toString(),
+            title: 'Lange drücken',
+            values: {
+              '1': 'Sofort Abspielen',
+              '2': 'Als nächstes Abspielen',
+              '3': 'An die Wiedergabeliste hinzufügen',
+              '-1': 'Keine Aktion'
+            },
+            defaultKey: '2',
           ),
-          CheckboxSettingsTile(
-            settingKey: 'Action',
-            title: 'Action',
+          RadioPickerSettingsTile(
+            settingKey: PrefKey.SONG_ACTION_BUTTON.index.toString(),
+            title: 'Aktions Button',
+            values: {
+              '1': 'Sofort Abspielen',
+              '2': 'Als nächstes Abspielen',
+              '3': 'An die Wiedergabeliste hinzufügen',
+              '-1': 'Keine Aktion'
+            },
+            defaultKey: '3',
           ),
         ],
       ),
       SettingsTileGroup(
-        title: 'Album Settings',
+        title: 'Alben',
         children: [
-          CheckboxSettingsTile(
-            settingKey: 'Short Press',
-            title: 'Short Press',
+          RadioPickerSettingsTile(
+            settingKey: PrefKey.ALBUM_SHORT_PRESS.index.toString(),
+            title: 'Kurz drücken',
+            values: {
+              '1': 'Sofort Abspielen',
+              '2': 'Als nächstes Abspielen',
+              '3': 'An die Wiedergabeliste hinzufügen',
+              '-1': 'Keine Aktion'
+            },
+            defaultKey: '1',
           ),
-          CheckboxSettingsTile(
-            settingKey: 'Long Press',
-            title: 'Long Press',
+          RadioPickerSettingsTile(
+            settingKey: PrefKey.ALBUM_LONG_PRESS.index.toString(),
+            title: 'Lange drücken',
+            values: {
+              '1': 'Sofort Abspielen',
+              '2': 'Als nächstes Abspielen',
+              '3': 'An die Wiedergabeliste hinzufügen',
+              '-1': 'Keine Aktion'
+            },
+            defaultKey: '2',
           ),
-          CheckboxSettingsTile(
-            settingKey: 'Action',
-            title: 'Action',
+          RadioPickerSettingsTile(
+            settingKey: PrefKey.ALBUM_ACTION_BUTTON.index.toString(),
+            title: 'Aktions Button',
+            values: {
+              '1': 'Sofort Abspielen',
+              '2': 'Als nächstes Abspielen',
+              '3': 'An die Wiedergabeliste hinzufügen',
+              '-1': 'Keine Aktion'
+            },
+            defaultKey: '3',
           ),
         ],
       ),
     ]);
-  }
-
-  _showSettingsDialog() {
-    return AlertDialog(
-      title: Text('RadioButton'),
-      content: RadioListTile(
-        title: Text("Radio Text"),
-        groupValue: 0,
-        value: 1,
-        onChanged: (val) {},
-      ),
-      actions: <Widget>[
-        new FlatButton(
-          child: new Text('CANCEL'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        )
-      ],
-    );
   }
 
   Future<void> chooseFolder() async {
@@ -98,10 +128,16 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
             /// a [Directory] object
             action: (BuildContext context, Directory folder) async {
               Navigator.of(context).pop();
-              setState(() {
-                MusicFinder.instance.readFolderIntoDatabase(folder);
-                folderLocation = folder.toString();
+
+              doWork(folder);
+
+              await SharedPreferencesUtil.getList(PrefKey.PATH_LIST)
+                  .then((list) async {
+                list.add(folder.toString());
+                await SharedPreferencesUtil.setList(PrefKey.PATH_LIST, list);
               });
+
+              setState(() {});
 
               showDialog<void>(
                 context: context,
@@ -130,6 +166,43 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
               );
             });
       }));
+    }
+  }
+
+  Widget getFolders() {
+    return FutureBuilder(
+        future: SharedPreferencesUtil.getList(PrefKey.PATH_LIST),
+        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+          return ExpansionSettingsTile(
+              initiallyExpanded: true,
+              icon: Icon(Icons.library_music),
+              title: "Musik Ordner",
+              children: getList(snapshot));
+        });
+  }
+
+  List<Widget> getList(AsyncSnapshot<List<String>> snapshot) {
+    if (snapshot.hasData && snapshot.data != null) {
+      var list = List<Widget>();
+      for (var item in snapshot.data) {
+        list.add(SimpleSettingsTile(
+          title: item,
+        ));
+      }
+      list.add(SimpleSettingsTile(
+        icon: Icon(Icons.create_new_folder),
+        title: 'Musikordner Hinzufügen',
+        onTap: () => chooseFolder(),
+      ));
+      return list;
+    } else {
+      return [
+        SimpleSettingsTile(
+          icon: Icon(Icons.create_new_folder),
+          title: 'Musikordner Hinzufügen',
+          onTap: () => chooseFolder(),
+        )
+      ];
     }
   }
 }

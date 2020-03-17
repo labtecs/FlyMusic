@@ -119,25 +119,6 @@ class StartScreenState extends State<StartScreen>
         preferredSize: Size.fromHeight(65.0), child: BottomPlayer());
   }
 
-  Future<void> chooseFolder() async {
-    var result =
-        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-    if (result[PermissionGroup.storage] == PermissionStatus.granted) {
-      //  await getStorage();
-      Navigator.of(context).push<FolderPickerPage>(
-          MaterialPageRoute(builder: (BuildContext context) {
-        return FolderPickerPage(
-            rootDirectory: Directory("/storage/emulated/0/"),
-
-            /// a [Directory] object
-            action: (BuildContext context, Directory folder) async {
-              Navigator.of(context).pop();
-              MusicFinder.instance.readFolderIntoDatabase(folder);
-            });
-      }));
-    }
-  }
-
   String getTitle() {
     switch (_page) {
       case 0:

@@ -38,6 +38,12 @@ class SharedPreferencesUtil {
     return prefs.getBool(prefKey.index.toString());
   }
 
+  static Future<List<String>> getList(PrefKey prefKey) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String
+    return prefs.getString(prefKey.index.toString())?.split("##") ?? List<String>();
+  }
+
   setBool(PrefKey prefKey, bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
@@ -68,9 +74,16 @@ class SharedPreferencesUtil {
     return await prefs.setDouble(prefKey.index.toString(), value);
   }
 
-
+  static setList(PrefKey prefKey, List<String> value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String
+    return await prefs.setString(prefKey.index.toString(), value.join('##'));
+  }
 }
 
+
 enum PrefKey{
-  PATH_LIST, SONG_CLICK, ALBUM_WAIT_LIST_ACTION
+  SONG_SHORT_PRESS, SONG_LONG_PRESS, SONG_ACTION_BUTTON,
+  ALBUM_SHORT_PRESS, ALBUM_LONG_PRESS, ALBUM_ACTION_BUTTON,
+  SHOW_POPUP, PATH_LIST
 }

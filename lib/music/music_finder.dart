@@ -1,16 +1,25 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+//TODO change to moor
+//TODO use this in isolate https://moor.simonbinder.eu/docs/advanced-features/isolates/
+
 import 'package:archive/archive.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:flymusic/database/app_database.dart';
 import 'package:flymusic/database/model/album.dart';
 import 'package:flymusic/database/model/art.dart';
 import 'package:flymusic/database/model/artist.dart';
 import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/main.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
+
+
+doWork(Directory list) async {
+  await MusicFinder.instance.readFolderIntoDatabase(list);
+}
 
 class MusicFinder {
   final FlutterFFprobe _flutterFFprobe = new FlutterFFprobe();
@@ -25,15 +34,25 @@ class MusicFinder {
   Album currentAlbum;
   Artist currentArtist;
   Directory thumbs;
+  Directory docs;
+  AppDatabase database;
 
-  readFolderIntoDatabase(Directory folder) async {
-    Directory docs = await getApplicationDocumentsDirectory();
+  initialize() async {
+    docs = await getApplicationDocumentsDirectory();
     thumbs = Directory(docs.path + "/thumbs");
     thumbs.createSync();
+    final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
+    await _flutterFFmpegConfig.disableLogs();
+  }
+
+  readFolderIntoDatabase(Directory folder) async {
     await _readFolder(folder);
   }
 
   Future<void> _readFolder(FileSystemEntity folder) async {
+    this.database = await $FloorAppDatabase
+        .databaseBuilder('app_database.db')
+        .build();
     List<FileSystemEntity> files =
         (folder as Directory).listSync(recursive: false);
 
@@ -89,7 +108,6 @@ class MusicFinder {
   }
 
   Future<Song> _readFile(Art defaultArt, Directory folder, File file) async {
-    // await audioPlayer.setReleaseMode(ReleaseMode.RELEASE); // set release mode so that it never releases
     String title;
     String artist;
     Art art;
@@ -105,11 +123,11 @@ class MusicFinder {
 
     await Future.forEach(tags, (f) async {
       if (f.version == '1.1') {
-
         if ((title == null || title.isEmpty) && f.tags.containsKey('title')) {
           title = f.tags['title'];
         }
-        if ((artist == null || artist.isEmpty) && f.tags.containsKey('artist')) {
+        if ((artist == null || artist.isEmpty) &&
+            f.tags.containsKey('artist')) {
           artist = f.tags['artist'];
         }
         if ((album == null || album.isEmpty) && f.tags.containsKey('album')) {
@@ -169,7 +187,7 @@ class MusicFinder {
     return currentAlbum;
   }
 
-  static Future<Artist> _findArtist(Artist currentArtist, String artist) async {
+  Future<Artist> _findArtist(Artist currentArtist, String artist) async {
     //save songs that i have read until now
     if (currentArtist?.name != artist) {
       //search album for song

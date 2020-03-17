@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flymusic/database/model/album.dart';
-import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/main.dart';
+import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/util/art_util.dart';
+import 'package:provider/provider.dart';
 
 class AlbumTrackListScreen extends StatefulWidget {
   final Album album;
@@ -26,8 +25,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
         backgroundColor: Colors.black54,
       ),
       title: Text(song.title),
-      subtitle: Text("00:00"),
-      //Todo korrekte Zeit
+      subtitle: Text(song.duration.toString()),
       trailing: SongPopup(song),
       onTap: () {
         //  Navigator.push(
@@ -61,7 +59,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
 
   FutureBuilder getBuilder() {
     return FutureBuilder<List<Song>>(
-      future: database.songDao.findSongsByAlbumId(widget.album.id),
+      future: Provider.of<SongDao>(context).findSongsByAlbum(widget.album),
       // this is a code smell. Make sure that the future is NOT recreated when build is called. Create the future in initState instead.
       builder: (context, snapshot) {
         Widget newsListSliver;
@@ -110,7 +108,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                 .createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
           },
           blendMode: BlendMode.dstIn,
-          child: ArtUtil.getArtFromAlbum(album),
+          child: ArtUtil.getArtFromAlbum(album, context),
         ),
         Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/main.dart';
+import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/util/art_util.dart';
+import 'package:provider/provider.dart';
 
 class TrackList extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class _TrackListState extends State<TrackList> {
       ),
       child: ListTile(
         leading: CircleAvatar(
-          child: ArtUtil.getArtFromSong(song),
+          child: ArtUtil.getArtFromSong(song, context),
           backgroundColor: Colors.transparent,
         ),
         title: Text(
@@ -48,7 +48,7 @@ class _TrackListState extends State<TrackList> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<List<Song>>(
-        stream: database.songDao.findAllSongs(),
+        stream: Provider.of<SongDao>(context).findAllSongs(),
         builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

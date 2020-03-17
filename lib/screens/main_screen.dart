@@ -2,11 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flymusic/music/music_finder.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'file:///C:/Users/kilia/Documents/Projects/flymusic/lib/screens/settings_screen.dart';
-import 'package:folder_picker/folder_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:flymusic/screens/settings_screen.dart';
 
 import 'player/bottom_player_screen.dart';
 import 'tabScreens/album/album_screen.dart';
@@ -66,8 +63,10 @@ class StartScreenState extends State<StartScreen>
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CustomSettingsScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CustomSettingsScreen()));
             },
           ),
         ),

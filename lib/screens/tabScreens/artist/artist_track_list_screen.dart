@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/main.dart';
+import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/util/art_util.dart';
+import 'package:provider/provider.dart';
 
 class ArtistTrackListScreen extends StatefulWidget {
-  final String artistName;
-  final int artistID;
+  final Artist artist;
 
-  ArtistTrackListScreen({Key key, this.artistName, this.artistID})
-      : super(key: key);
+  ArtistTrackListScreen({Key key, this.artist}) : super(key: key);
 
   @override
   _ArtistTrackListScreenState createState() => _ArtistTrackListScreenState();
@@ -23,7 +21,7 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
   Widget _buildRow(Song song) {
     return ListTile(
       leading: CircleAvatar(
-        child: ArtUtil.getArtFromSong(song),
+        child: ArtUtil.getArtFromSong(song, context),
         backgroundColor: Colors.transparent,
       ),
       title: Text(song.title),
@@ -43,11 +41,11 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.artistName),
+        title: Text(widget.artist.name),
         backgroundColor: Colors.black54,
       ),
       body: FutureBuilder<List<Song>>(
-        future: database.songDao.findSongsByArtistId(widget.artistID),
+        future: Provider.of<SongDao>(context).findSongsByArtist(widget.artist),
         builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

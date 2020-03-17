@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flymusic/database/model/song.dart';
 import 'package:flymusic/music/music_queue.dart';
 
 class SongPopup extends StatefulWidget {

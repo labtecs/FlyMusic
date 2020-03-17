@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flymusic/database/model/album.dart';
-import 'package:flymusic/main.dart';
-import 'package:flymusic/screens/player/bottom_player_screen.dart';
+import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/screens/tabScreens/album/album_track_list_screen.dart';
 import 'package:flymusic/util/art_util.dart';
+import 'package:provider/provider.dart';
 
 class AlbumList extends StatefulWidget {
   @override
@@ -13,12 +12,10 @@ class AlbumList extends StatefulWidget {
 }
 
 class _AlbumListState extends State<AlbumList> {
-  List<Album> albems = List();
-
   Widget _buildRow(Album album) {
     return ListTile(
       leading: CircleAvatar(
-        child: ArtUtil.getArtFromAlbum(album),
+        child: ArtUtil.getArtFromAlbum(album, context),
         backgroundColor: Colors.transparent,
       ),
       title: Text(album.name),
@@ -30,9 +27,7 @@ class _AlbumListState extends State<AlbumList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AlbumTrackListScreen(
-                key: null,
-                album: album),
+            builder: (context) => AlbumTrackListScreen(key: null, album: album),
           ),
         );
       },
@@ -42,8 +37,8 @@ class _AlbumListState extends State<AlbumList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<Album>>(
-        future: database.albumDao.findAllAlbums(),
+      body: StreamBuilder<List<Album>>(
+        stream: Provider.of<AlbumDao>(context).findAllAlbums(),
         builder: (BuildContext context, AsyncSnapshot<List<Album>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

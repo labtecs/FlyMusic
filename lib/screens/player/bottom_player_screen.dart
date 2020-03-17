@@ -55,7 +55,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
                   child: Hero(
                       tag: 'imageHero',
                       child: ArtUtil.getArtFromSong(
-                          MusicQueue.instance.currentSong)),
+                          MusicQueue.instance.currentSong, context)),
                   onTap: () {
                     Navigator.push(
                         context,

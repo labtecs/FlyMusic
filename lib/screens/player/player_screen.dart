@@ -71,7 +71,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
           Container(
             child: Hero(
                 tag: 'imageHero',
-                child: ArtUtil.getArtFromSong(MusicQueue.instance.currentSong)),
+                child: ArtUtil.getArtFromSong(MusicQueue.instance.currentSong, context)),
             height: halfDisplaySize + 50,
           ),
           ListTile(

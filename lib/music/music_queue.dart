@@ -1,8 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flymusic/database/model/album.dart';
-import 'package:flymusic/database/model/artist.dart';
-import 'package:flymusic/database/model/queue_item.dart';
-import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/main.dart';
 
 class MusicQueue {
@@ -10,6 +7,7 @@ class MusicQueue {
 
   factory MusicQueue() => instance;
   final AudioPlayer audioPlayer = AudioPlayer();
+
   QueueItem currentItem;
   Song currentSong;
 
@@ -51,8 +49,9 @@ class MusicQueue {
 
   playSong(Song song) async {
     //kommt oben in die warteschlange die anderen lieder werden nach unten verschoben
-    database.queueDao.moveItemsDownBy(1);
-    database.queueDao.addItem(new QueueItem(null, song.id, 0));
+    MyApp.db.queueItemDao.moveItemsDownBy(1);
+    MyApp.db.queueItemDao
+        .insert(QueueItem(id: null, position: 0, songId: song.id));
     if (audioPlayer.state == AudioPlayerState.PLAYING) {
       await audioPlayer.stop();
     }
@@ -73,9 +72,14 @@ class MusicQueue {
 
   _addSong(Song song) async {
     //kommt unten in die Warteliste
-    QueueItem lastItem = await database.queueDao.getLastItem();
-    database.queueDao
-        .addItem(new QueueItem(null, song.id, lastItem?.position++ ?? 0));
+    QueueItem lastItem = await MyApp.db.queueItemDao.getLastItem();
+    int newPosition = 0;
+    if (lastItem != null) {
+      newPosition = lastItem.position + 1;
+    }
+
+    MyApp.db.queueItemDao
+        .insert(QueueItem(id: null, position: newPosition, songId: song.id));
   }
 
   addSongNext(Song song) async {
@@ -96,23 +100,27 @@ class MusicQueue {
 
   _addAlbum(Album album) async {
     //alle lieder in die warteschlange (unten)
-    _addItems((await database.songDao.findSongIdsByAlbumId(album.id))
+    _addItems((await MyApp.db.songDao.findSongsByAlbum(album))
         .map((item) => item.id)
         .toList());
   }
 
   _addArtist(Artist artist) async {
     //alle lieder in die warteschlange (unten)
-    _addItems((await database.songDao.findSongIdsByArtistId(artist.id))
+    _addItems((await MyApp.db.songDao.findSongsByArtist(artist))
         .map((item) => item.id)
         .toList());
   }
 
   _addItems(List<int> items) async {
-    var lastItem = await database.queueDao.getLastItem();
-    var insertItems =
-        items.map((id) => new QueueItem(null, id, lastItem?.position++ ?? 0));
-    database.queueDao.addItems(insertItems.toList());
+    var lastItem = await MyApp.db.queueItemDao.getLastItem();
+    int newPosition = 0;
+    if (lastItem != null) {
+      newPosition = lastItem.position + 1;
+    }
+    var insertItems = items.map(
+        (id) => new QueueItem(id: null, position: newPosition, songId: id));
+    MyApp.db.queueItemDao.insertAll(insertItems.toList());
   }
 
   playPause() async {
@@ -132,11 +140,11 @@ class MusicQueue {
   //20 lieder vor dem aktuellen - davor löschen TODO
   playNext() async {
     currentItem =
-        await database.queueDao.getNextItem(currentItem?.position ?? -1);
+        await MyApp.db.queueItemDao.getNextItem(currentItem?.position ?? -1);
     if (currentItem == null) {
       return;
     }
-    currentSong = await database.songDao.findSongById(currentItem.songId);
+    currentSong = await MyApp.db.songDao.findSongById(currentItem.songId);
     if (currentSong == null) {
       return;
     }
@@ -149,11 +157,11 @@ class MusicQueue {
   //warteschlange leer -> nächstes lied in "alle lieder"
   playPrevious() async {
     currentItem =
-        await database.queueDao.getPreviousItem(currentItem?.position ?? 1);
+        await MyApp.db.queueItemDao.getPreviousItem(currentItem?.position ?? 1);
     if (currentItem == null) {
       return;
     }
-    currentSong = await database.songDao.findSongById(currentItem.songId);
+    currentSong = await MyApp.db.songDao.findSongById(currentItem.songId);
     if (currentSong == null) {
       return;
     }
@@ -168,6 +176,6 @@ class MusicQueue {
   shuffle() {}
 
   void remove(QueueItem queueItem) async {
-    await database.queueDao.remove(queueItem);
+    await MyApp.db.queueItemDao.deleteQueueItem(queueItem);
   }
 }

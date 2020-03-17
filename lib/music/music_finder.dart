@@ -1,24 +1,40 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-//TODO change to moor
-//TODO use this in isolate https://moor.simonbinder.eu/docs/advanced-features/isolates/
-
 import 'package:archive/archive.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
-import 'package:flymusic/database/app_database.dart';
-import 'package:flymusic/database/model/album.dart';
-import 'package:flymusic/database/model/art.dart';
-import 'package:flymusic/database/model/artist.dart';
-import 'package:flymusic/database/model/song.dart';
+import 'package:flymusic/database/moor_database.dart';
+import 'package:moor/isolate.dart';
+import 'package:moor/moor.dart';
+import 'package:moor_ffi/moor_ffi.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
 
+//how this isolate works in detail https://moor.simonbinder.eu/docs/advanced-features/isolates/
+
+// This needs to be a top-level method because it's run on a background isolate
+DatabaseConnection _backgroundConnection() {
+  // construct the database. You can also wrap the VmDatabase in a "LazyDatabase" if you need to run
+  // work before the database opens.
+  final database = VmDatabase.memory();
+  return DatabaseConnection.fromExecutor(database);
+}
 
 doWork(Directory list) async {
-  await MusicFinder.instance.readFolderIntoDatabase(list);
+  // create a moor executor in a new background isolate. If you want to start the isolate yourself, you
+  // can also call MoorIsolate.inCurrent() from the background isolate
+  MoorIsolate isolate = await MoorIsolate.spawn(_backgroundConnection);
+
+  // we can now create a database connection that will use the isolate internally. This is NOT what's
+  // returned from _backgroundConnection, moor uses an internal proxy class for isolate communication.
+  DatabaseConnection connection = await isolate.connect();
+
+  final db = AppDatabase.connect(connection);
+
+  // you can now use your database exactly like you regularly would, it transparently uses a
+  // background isolate internally
+  await MusicFinder.instance.readFolderIntoDatabase(list, db);
 }
 
 class MusicFinder {
@@ -45,14 +61,12 @@ class MusicFinder {
     await _flutterFFmpegConfig.disableLogs();
   }
 
-  readFolderIntoDatabase(Directory folder) async {
+  readFolderIntoDatabase(Directory folder, AppDatabase database) async {
+    this.database = database;
     await _readFolder(folder);
   }
 
   Future<void> _readFolder(FileSystemEntity folder) async {
-    this.database = await $FloorAppDatabase
-        .databaseBuilder('app_database.db')
-        .build();
     List<FileSystemEntity> files =
         (folder as Directory).listSync(recursive: false);
 
@@ -80,8 +94,8 @@ class MusicFinder {
               if (defaultArt == null) {
                 File file = File('${thumbs.path}/$crcText$ending');
                 await file.writeAsBytes(bytes);
-                defaultArt = new Art(null, file.path, crcText.toString());
-                defaultArt.id = await database.artDao.insertArt(defaultArt);
+                defaultArt = new Art(path: file.path, crc: crcText.toString());
+                //TODO test defaultArt.id = await database.artDao.insertArt(defaultArt);
               }
             }
             break;
@@ -94,12 +108,12 @@ class MusicFinder {
     await Future.forEach(songFiles, (f) async {
       songs.add(await _readFile(defaultArt, folder, f));
       if (songs.length >= 100) {
-        await database.songDao.insertAllSongs(songs);
+        await database.songDao.insertAll(songs);
         songs.clear();
       }
     });
 
-    await database.songDao.insertAllSongs(songs);
+    await database.songDao.insertAll(songs);
     songs.clear();
 
     await Future.forEach(directories, (d) async {
@@ -108,14 +122,14 @@ class MusicFinder {
   }
 
   Future<Song> _readFile(Art defaultArt, Directory folder, File file) async {
-    String title;
-    String artist;
+    String songTitle;
+    String songArtist;
+    String songAlbum;
     Art art;
-    String album;
 
-    int duration = 0;
+    int songDuration = 0;
     _flutterFFprobe.getMediaInformation(file.path).then((info) {
-      duration = info['duration'];
+      songDuration = info['duration'];
     });
 
     //fallback and image
@@ -123,15 +137,17 @@ class MusicFinder {
 
     await Future.forEach(tags, (f) async {
       if (f.version == '1.1') {
-        if ((title == null || title.isEmpty) && f.tags.containsKey('title')) {
-          title = f.tags['title'];
+        if ((songTitle == null || songTitle.isEmpty) &&
+            f.tags.containsKey('title')) {
+          songTitle = f.tags['title'];
         }
-        if ((artist == null || artist.isEmpty) &&
+        if ((songArtist == null || songArtist.isEmpty) &&
             f.tags.containsKey('artist')) {
-          artist = f.tags['artist'];
+          songArtist = f.tags['artist'];
         }
-        if ((album == null || album.isEmpty) && f.tags.containsKey('album')) {
-          album = f.tags['album'];
+        if ((songAlbum == null || songAlbum.isEmpty) &&
+            f.tags.containsKey('album')) {
+          songAlbum = f.tags['album'];
         }
       }
       if (f.tags.containsKey('picture')) {
@@ -144,27 +160,34 @@ class MusicFinder {
       }
     });
 
-    if (title == null || title.isEmpty) {
-      title = basename(file.path);
+    if (songTitle == null || songTitle.isEmpty) {
+      songTitle = basename(file.path);
     }
 
-    if (album == null || album.isEmpty) {
-      album = folder.path.split("/").last;
+    if (songAlbum == null || songAlbum.isEmpty) {
+      songAlbum = folder.path.split("/").last;
     }
 
-    if (artist == null || artist.isEmpty) {
-      artist = "Unkown";
+    if (songArtist == null || songArtist.isEmpty) {
+      songArtist = "Unkown";
     }
 
     if (art == null) {
       art = defaultArt;
     }
 
-    Album songAlbum = await _findAlbum(album, art);
-    Artist songArtist = await _findArtist(currentArtist, artist);
-
-    return Song(null, title, artist, art?.id ?? -1, songAlbum.id, duration,
-        file.path, songArtist.id);
+    Album album = await _findAlbum(songAlbum, art);
+    Artist artist = await _findArtist(currentArtist, songArtist);
+//TODO empty art in database
+    return Song(
+        id: null,
+        title: songTitle,
+        artist: songArtist,
+        uri: file.path,
+        duration: songDuration,
+        artCrc: art.crc,
+        albumName: songAlbum,
+        artistName: songArtist);
   }
 
   Future<Album> _findAlbum(String album, Art art) async {
@@ -175,14 +198,15 @@ class MusicFinder {
 
       if (currentAlbum == null) {
         //create new album
-        currentAlbum = Album(null, album, art?.id ?? -1);
+        currentAlbum = Album(name: album, artCrc: art.crc);
         //insert album
-        currentAlbum.id = await database.albumDao.insertAlbum(currentAlbum);
+        await database.albumDao.insert(currentAlbum);
+        //TODO test currentAlbum.id = await database.albumDao.insertAlbum(currentAlbum);
       }
-      if (currentAlbum.artId == -1 && art != null && art.id != -1) {
-        currentAlbum.artId = art.id;
-        await database.albumDao.updateAlbum(currentAlbum);
-      }
+      // TODO if (currentAlbum.artId == -1 && art != null && art.id != -1) {
+      //   currentAlbum.artId = art.id;
+      //   await database.albumDao.updateAlbum(currentAlbum);
+      //  }
     }
     return currentAlbum;
   }
@@ -195,9 +219,10 @@ class MusicFinder {
 
       if (currentArtist == null) {
         //create new album
-        currentArtist = Artist(null, artist);
+        currentArtist = Artist(name: artist);
         //insert album
-        currentArtist.id = await database.artistDao.insertArtist(currentArtist);
+        await database.artistDao.insert(currentArtist);
+        //TODO test currentArtist.id =
       }
     }
     return currentArtist;
@@ -209,8 +234,9 @@ class MusicFinder {
     if (art == null) {
       File file = File('${thumbs.path}/$crcText.jpg');
       await file.writeAsBytes(imageData);
-      art = new Art(null, file.path, crcText.toString());
-      art.id = await database.artDao.insertArt(art);
+      art = new Art(crc: crcText.toString(), path: file.path);
+      await database.artDao.insert(art);
+      //TODO test art.id
     }
     return art;
   }

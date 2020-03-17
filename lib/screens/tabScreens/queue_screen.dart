@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flymusic/database/model/queue_item.dart';
-import 'package:flymusic/database/model/song.dart';
-import 'package:flymusic/main.dart';
+import 'package:flymusic/database/moor_database.dart';
+import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
 import 'package:flymusic/util/art_util.dart';
-
-import '../../music/music_queue.dart';
+import 'package:provider/provider.dart';
 
 class QueueScreen extends StatefulWidget {
   @override
@@ -18,13 +15,13 @@ class _QueueScreenState extends State<QueueScreen> {
 
   Widget _buildRow(QueueItem queueItem) {
     return FutureBuilder<Song>(
-        future: database.songDao.findSongById(queueItem.songId),
+        future: Provider.of<SongDao>(context).findSongById(queueItem.songId),
         // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Song> snapshot) {
           if (snapshot.hasData) {
             return ListTile(
               leading: CircleAvatar(
-                child: ArtUtil.getArtFromSong(snapshot.data),
+                child: ArtUtil.getArtFromSong(snapshot.data, context),
                 backgroundColor: Colors.transparent,
               ),
               title: Text(snapshot.data.title),
@@ -49,20 +46,19 @@ class _QueueScreenState extends State<QueueScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamBuilder<List<QueueItem>>(
-          stream: database.queueDao.findAllItems(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<QueueItem>> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return _buildRow(snapshot.data[index]);
-                },
-              );
-            } else {
-              return Text("no data");
-            }
-          },
-        ));
+      stream: Provider.of<QueueItemDao>(context).findAllQueueItems(),
+      builder: (BuildContext context, AsyncSnapshot<List<QueueItem>> snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return _buildRow(snapshot.data[index]);
+            },
+          );
+        } else {
+          return Text("no data");
+        }
+      },
+    ));
   }
 }

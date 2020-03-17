@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flymusic/main.dart';
 import 'package:flymusic/music/music_finder.dart';
-import 'package:flymusic/screens/impressum_screen.dart';
+import 'package:flymusic/screens/impress_screen.dart';
 import 'package:flymusic/util/shared_preferences_settings.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 import 'package:folder_picker/folder_picker.dart';
@@ -33,7 +31,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
         SimpleSettingsTile(
           icon: Icon(Icons.info_outline),
           title: 'Impressum',
-          screen: ImpressumScreen(),
+          screen: ImpressScreen(),
         ),
       ]),
       SettingsTileGroup(

@@ -148,6 +148,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                         children: <Widget>[
                           Text('Das Importieren der Musik'),
                           Text('dauert einen Moment'),
+                          CircularProgressIndicator()
                         ],
                       ),
                     ),

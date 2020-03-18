@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
-import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
+import 'package:flymusic/screens/tabScreens/other/song_item.dart';
 import 'package:flymusic/util/art_util.dart';
 import 'package:provider/provider.dart';
 
@@ -17,27 +16,6 @@ class AlbumTrackListScreen extends StatefulWidget {
 
 class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
   List<Song> songs = List();
-
-  Widget _buildRow(Song song, int idx) {
-    return ListTile(
-      leading: CircleAvatar(
-        child: Text("$idx"),
-        backgroundColor: Colors.black54,
-      ),
-      title: Text(song.title),
-      subtitle: Text(song.duration.toString()),
-      trailing: SongPopup(song),
-      onTap: () {
-        //  Navigator.push(
-        //       context, MaterialPageRoute(builder: (context) => PlayerScreen()));
-      },
-      onLongPress: () {
-        Fluttertoast.showToast(
-          msg: "${song.title}",
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +45,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
           newsListSliver = SliverList(
               delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return _buildRow(
-                snapshot.data[index],
-                index + 1,
-              );
+              return buildSongItem(snapshot.data[index], context);
             },
             childCount: snapshot.data.length,
           ));

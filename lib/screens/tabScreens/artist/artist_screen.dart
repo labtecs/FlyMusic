@@ -10,7 +10,7 @@ class ArtistScreen extends StatefulWidget {
 }
 
 class _ArtistScreenState extends State<ArtistScreen> {
-  Widget _buildRow(Artist artist) {
+  Widget _buildArtistRow(Artist artist) {
     return ListTile(
       leading: CircleAvatar(
         child: Image.asset("asset/images/artist_placeholder.jpg"),
@@ -42,7 +42,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                return _buildRow(snapshot.data[index]);
+                return _buildArtistRow(snapshot.data[index]);
               },
             );
           } else {

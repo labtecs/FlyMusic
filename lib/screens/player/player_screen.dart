@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/tabScreens/queue_screen.dart';
+import 'package:flymusic/screens/tabScreens/other/queue_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
 class PlayerScreen extends StatefulWidget {

@@ -3,24 +3,17 @@ import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/screens/tabScreens/other/song_item.dart';
 import 'package:provider/provider.dart';
 
-class ArtistTrackListScreen extends StatefulWidget {
-  final Artist artist;
-
-  ArtistTrackListScreen({Key key, this.artist}) : super(key: key);
-
+class TrackList extends StatefulWidget {
   @override
-  _ArtistTrackListScreenState createState() => _ArtistTrackListScreenState();
+  _TrackListState createState() => _TrackListState();
 }
 
-class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
+class _TrackListState extends State<TrackList> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.artist.name),
-        backgroundColor: Colors.black54,
-      ),
-      body: FutureBuilder<List<Song>>(
-        future: Provider.of<SongDao>(context).findSongsByArtist(widget.artist),
+      body: StreamBuilder<List<Song>>(
+        stream: Provider.of<SongDao>(context).findAllSongs(),
         builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(

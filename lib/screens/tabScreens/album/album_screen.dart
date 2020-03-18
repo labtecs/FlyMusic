@@ -12,7 +12,8 @@ class AlbumList extends StatefulWidget {
 }
 
 class _AlbumListState extends State<AlbumList> {
-  Widget _buildRow(Album album) {
+
+  Widget _buildAlbumRow(Album album) {
     return ListTile(
       leading: CircleAvatar(
         child: ArtUtil.getArtFromAlbum(album, context),
@@ -44,7 +45,7 @@ class _AlbumListState extends State<AlbumList> {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                return _buildRow(snapshot.data[index]);
+                return _buildAlbumRow(snapshot.data[index]);
               },
             );
           } else {

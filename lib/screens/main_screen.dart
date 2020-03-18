@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/settings_screen.dart';
+import 'package:flymusic/screens/tabScreens/other/track_list_screen.dart';
 
 import 'player/bottom_player_screen.dart';
 import 'tabScreens/album/album_screen.dart';
 import 'tabScreens/artist/artist_screen.dart';
-import 'tabScreens/queue_screen.dart';
-import 'tabScreens/track_list_screen.dart';
+import 'tabScreens/other/queue_screen.dart';
 
 class StartScreen extends StatefulWidget {
   @override

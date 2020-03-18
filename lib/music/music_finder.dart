@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/main.dart';
-import 'package:moor/isolate.dart';
 import 'package:moor/moor.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:path/path.dart';
@@ -27,6 +26,11 @@ main(List<Directory> list) async {
   await MusicFinder().readFolderIntoDatabase(list);
 }
 
+readTags(File file) async {
+  var tags = await TagProcessor().getTagsFromByteArray(file.readAsBytes());
+  return tags;
+}
+
 class MusicFinder {
   final FlutterFFprobe _flutterFFprobe = new FlutterFFprobe();
   TagProcessor tp = new TagProcessor();
@@ -38,12 +42,12 @@ class MusicFinder {
   AppDatabase database;
 
   readFolderIntoDatabase(List<Directory> folder) async {
-  //  MoorIsolate isolate = await MoorIsolate.spawn(backgroundConnection);
-    // we can now create a database connection that will use the isolate internally. This is NOT what's
-    // returned from _backgroundConnection, moor uses an internal proxy class for isolate communication.
-   // DatabaseConnection connection = await isolate.connect();
+    //  MoorIsolate isolate = await MoorIsolate.spawn(backgroundConnection);
+    //  we can now create a database connection that will use the isolate internally. This is NOT what's
+    //    returned from _backgroundConnection, moor uses an internal proxy class for isolate communication.
+//    DatabaseConnection connection = await isolate.connect();
+    // database = AppDatabase.connect(connection);
     database = MyApp.db;
-
     docs = folder[1];
     thumbs = folder[2];
     await _readFolder(folder[0]);
@@ -110,14 +114,13 @@ class MusicFinder {
     String songArtist;
     String songAlbum;
     Art art;
-
     int songDuration = 0;
     _flutterFFprobe.getMediaInformation(file.path).then((info) {
       songDuration = info['duration'];
     });
 
     //fallback and image
-    var tags = await tp.getTagsFromByteArray(file.readAsBytes());
+    var tags = await compute(readTags, file);
 
     await Future.forEach(tags, (f) async {
       if (f.version == '1.1') {
@@ -136,7 +139,6 @@ class MusicFinder {
       }
       if (f.tags.containsKey('picture')) {
         AttachedPicture image = (f.tags['picture'] as AttachedPicture);
-        // if (isBase64(image.imageData64)) {
         int crcText = getCrc32(image.imageData);
         if (crcText != null) {
           art = await _findArt(image.imageData, thumbs, crcText);
@@ -169,8 +171,8 @@ class MusicFinder {
         artist: songArtist,
         duration: songDuration,
         artCrc: art.crc,
-        albumName: songAlbum,
-        artistName: songArtist);
+        albumName: album.name,
+        artistName: artist.name);
   }
 
   Future<Album> _findAlbum(String album, Art art) async {
@@ -184,7 +186,6 @@ class MusicFinder {
         currentAlbum = Album(name: album, artCrc: art.crc);
         //insert album
         await database.albumDao.insert(currentAlbum);
-        //TODO test currentAlbum.id
       }
       // TODO if (currentAlbum.artId == -1 && art != null && art.id != -1) {
       //   currentAlbum.artId = art.id;
@@ -205,7 +206,6 @@ class MusicFinder {
         currentArtist = Artist(name: artist);
         //insert album
         await database.artistDao.insert(currentArtist);
-        //TODO test currentArtist.id =
       }
     }
     return currentArtist;

@@ -35,10 +35,11 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
   // Called by the AppDatabase class
   SongDao(this.db) : super(db);
 
-  Future insert(Song song) => into(songs).insert(song);
+  Future insert(Song song) =>
+      into(songs).insert(song, mode: InsertMode.insertOrIgnore);
 
-  Future insertAll(List<Song> songList) =>
-      db.batch((b) => b.insertAll(songs, songList));
+  Future insertAll(List<Song> songList) => db.batch(
+      (b) => b.insertAll(songs, songList, mode: InsertMode.insertOrIgnore));
 
   Stream<List<Song>> findAllSongs() => (select(songs)
         ..orderBy(
@@ -68,7 +69,8 @@ class AlbumDao extends DatabaseAccessor<AppDatabase> with _$AlbumDaoMixin {
   // Called by the AppDatabase class
   AlbumDao(this.db) : super(db);
 
-  Future insert(Album album) => into(albums).insert(album);
+  Future insert(Album album) =>
+      into(albums).insert(album, mode: InsertMode.insertOrIgnore);
 
   Future updateAlbum(Album album) => update(albums).replace(album);
 
@@ -92,7 +94,8 @@ class ArtistDao extends DatabaseAccessor<AppDatabase> with _$ArtistDaoMixin {
   // Called by the AppDatabase class
   ArtistDao(this.db) : super(db);
 
-  Future insert(Artist artist) => into(artists).insert(artist);
+  Future insert(Artist artist) =>
+      into(artists).insert(artist, mode: InsertMode.insertOrIgnore);
 
   Stream<List<Artist>> findAllArtists() => (select(artists)
         ..orderBy(
@@ -114,7 +117,8 @@ class ArtDao extends DatabaseAccessor<AppDatabase> with _$ArtDaoMixin {
   // Called by the AppDatabase class
   ArtDao(this.db) : super(db);
 
-  Future insert(Art art) => into(arts).insert(art);
+  Future insert(Art art) =>
+      into(arts).insert(art, mode: InsertMode.insertOrIgnore);
 
   Future<Art> findArtByCrc(String crc) =>
       (select(arts)..where((a) => a.crc.equals(crc))).getSingle();
@@ -128,10 +132,11 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
   // Called by the AppDatabase class
   QueueItemDao(this.db) : super(db);
 
-  Future insert(QueueItem queueItem) => into(queueItems).insert(queueItem);
+  Future insert(QueueItem queueItem) =>
+      into(queueItems).insert(queueItem, mode: InsertMode.insertOrIgnore);
 
-  Future insertAll(List<QueueItem> queueItemList) =>
-      db.batch((b) => b.insertAll(queueItems, queueItemList));
+  Future insertAll(List<QueueItem> queueItemList) => db.batch((b) =>
+      b.insertAll(queueItems, queueItemList, mode: InsertMode.insertOrIgnore));
 
   Future deleteQueueItem(QueueItem queueItem) =>
       delete(queueItems).delete(queueItem);

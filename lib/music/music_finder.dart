@@ -18,7 +18,7 @@ doIsolated(Directory list) async {
   Directory thumbs = Directory(docs.path + "/thumbs");
   await thumbs.create();
   final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
-  _flutterFFmpegConfig.disableLogs();
+  await _flutterFFmpegConfig.disableLogs();
   await MusicFinder().readFolderIntoDatabase([list, docs, thumbs]);
   //compute(main, [list, docs, thumbs]);
 }

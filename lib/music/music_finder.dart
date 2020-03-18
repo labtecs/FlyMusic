@@ -3,48 +3,32 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:dart_tags/dart_tags.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flymusic/database/moor_database.dart';
+import 'package:flymusic/main.dart';
 import 'package:moor/isolate.dart';
 import 'package:moor/moor.dart';
-import 'package:moor_ffi/moor_ffi.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-//how this isolate works in detail https://moor.simonbinder.eu/docs/advanced-features/isolates/
-
-// This needs to be a top-level method because it's run on a background isolate
-DatabaseConnection _backgroundConnection() {
-  // construct the database. You can also wrap the VmDatabase in a "LazyDatabase" if you need to run
-  // work before the database opens.
-  final database = VmDatabase.memory();
-  return DatabaseConnection.fromExecutor(database);
+doIsolated(Directory list) async {
+  Directory docs = await getApplicationDocumentsDirectory();
+  Directory thumbs = Directory(docs.path + "/thumbs");
+  await thumbs.create();
+  final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
+  await _flutterFFmpegConfig.disableLogs();
+  await MusicFinder().readFolderIntoDatabase([list, docs, thumbs]);
+  //compute(main, [list, docs, thumbs]);
 }
 
-doWork(Directory list) async {
-  // create a moor executor in a new background isolate. If you want to start the isolate yourself, you
-  // can also call MoorIsolate.inCurrent() from the background isolate
-  MoorIsolate isolate = await MoorIsolate.spawn(_backgroundConnection);
-
-  // we can now create a database connection that will use the isolate internally. This is NOT what's
-  // returned from _backgroundConnection, moor uses an internal proxy class for isolate communication.
-  DatabaseConnection connection = await isolate.connect();
-
-  final db = AppDatabase.connect(connection);
-
-  // you can now use your database exactly like you regularly would, it transparently uses a
-  // background isolate internally
-  await MusicFinder.instance.readFolderIntoDatabase(list, db);
+main(List<Directory> list) async {
+  await MusicFinder().readFolderIntoDatabase(list);
 }
 
 class MusicFinder {
   final FlutterFFprobe _flutterFFprobe = new FlutterFFprobe();
-  static final MusicFinder instance = MusicFinder._internal();
-
-  factory MusicFinder() => instance;
-
-  MusicFinder._internal();
-
   TagProcessor tp = new TagProcessor();
   List<Song> songs = new List();
   Album currentAlbum;
@@ -53,17 +37,16 @@ class MusicFinder {
   Directory docs;
   AppDatabase database;
 
-  initialize() async {
-    docs = await getApplicationDocumentsDirectory();
-    thumbs = Directory(docs.path + "/thumbs");
-    thumbs.createSync();
-    final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
-    await _flutterFFmpegConfig.disableLogs();
-  }
+  readFolderIntoDatabase(List<Directory> folder) async {
+  //  MoorIsolate isolate = await MoorIsolate.spawn(backgroundConnection);
+    // we can now create a database connection that will use the isolate internally. This is NOT what's
+    // returned from _backgroundConnection, moor uses an internal proxy class for isolate communication.
+   // DatabaseConnection connection = await isolate.connect();
+    database = MyApp.db;
 
-  readFolderIntoDatabase(Directory folder, AppDatabase database) async {
-    this.database = database;
-    await _readFolder(folder);
+    docs = folder[1];
+    thumbs = folder[2];
+    await _readFolder(folder[0]);
   }
 
   Future<void> _readFolder(FileSystemEntity folder) async {
@@ -95,7 +78,8 @@ class MusicFinder {
                 File file = File('${thumbs.path}/$crcText$ending');
                 await file.writeAsBytes(bytes);
                 defaultArt = new Art(path: file.path, crc: crcText.toString());
-                //TODO test defaultArt.id = await database.artDao.insertArt(defaultArt);
+                await database.artDao.insert(defaultArt);
+                //TODO test defaultArt.id
               }
             }
             break;
@@ -180,10 +164,9 @@ class MusicFinder {
     Artist artist = await _findArtist(currentArtist, songArtist);
 //TODO empty art in database
     return Song(
-        id: null,
+        path: file.path,
         title: songTitle,
         artist: songArtist,
-        uri: file.path,
         duration: songDuration,
         artCrc: art.crc,
         albumName: songAlbum,
@@ -201,7 +184,7 @@ class MusicFinder {
         currentAlbum = Album(name: album, artCrc: art.crc);
         //insert album
         await database.albumDao.insert(currentAlbum);
-        //TODO test currentAlbum.id = await database.albumDao.insertAlbum(currentAlbum);
+        //TODO test currentAlbum.id
       }
       // TODO if (currentAlbum.artId == -1 && art != null && art.id != -1) {
       //   currentAlbum.artId = art.id;

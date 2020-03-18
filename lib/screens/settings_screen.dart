@@ -127,7 +127,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
             action: (BuildContext context, Directory folder) async {
               Navigator.of(context).pop();
 
-              doWork(folder);
+              doIsolated(folder);
 
               await SharedPreferencesUtil.getList(PrefKey.PATH_LIST)
                   .then((list) async {

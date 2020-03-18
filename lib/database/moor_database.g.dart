@@ -8,19 +8,17 @@ part of 'moor_database.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class Song extends DataClass implements Insertable<Song> {
-  final int id;
+  final String path;
   final String title;
   final String artist;
-  final String uri;
   final int duration;
   final String artCrc;
   final String albumName;
   final String artistName;
   Song(
-      {@required this.id,
+      {@required this.path,
       @required this.title,
       @required this.artist,
-      @required this.uri,
       @required this.duration,
       this.artCrc,
       this.albumName,
@@ -28,15 +26,14 @@ class Song extends DataClass implements Insertable<Song> {
   factory Song.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
-    final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
+    final intType = db.typeSystem.forDartType<int>();
     return Song(
-      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      path: stringType.mapFromDatabaseResponse(data['${effectivePrefix}path']),
       title:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
       artist:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}artist']),
-      uri: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uri']),
       duration:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}duration']),
       artCrc:
@@ -51,10 +48,9 @@ class Song extends DataClass implements Insertable<Song> {
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return Song(
-      id: serializer.fromJson<int>(json['id']),
+      path: serializer.fromJson<String>(json['path']),
       title: serializer.fromJson<String>(json['title']),
       artist: serializer.fromJson<String>(json['artist']),
-      uri: serializer.fromJson<String>(json['uri']),
       duration: serializer.fromJson<int>(json['duration']),
       artCrc: serializer.fromJson<String>(json['artCrc']),
       albumName: serializer.fromJson<String>(json['albumName']),
@@ -65,10 +61,9 @@ class Song extends DataClass implements Insertable<Song> {
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'path': serializer.toJson<String>(path),
       'title': serializer.toJson<String>(title),
       'artist': serializer.toJson<String>(artist),
-      'uri': serializer.toJson<String>(uri),
       'duration': serializer.toJson<int>(duration),
       'artCrc': serializer.toJson<String>(artCrc),
       'albumName': serializer.toJson<String>(albumName),
@@ -79,12 +74,11 @@ class Song extends DataClass implements Insertable<Song> {
   @override
   SongsCompanion createCompanion(bool nullToAbsent) {
     return SongsCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      path: path == null && nullToAbsent ? const Value.absent() : Value(path),
       title:
           title == null && nullToAbsent ? const Value.absent() : Value(title),
       artist:
           artist == null && nullToAbsent ? const Value.absent() : Value(artist),
-      uri: uri == null && nullToAbsent ? const Value.absent() : Value(uri),
       duration: duration == null && nullToAbsent
           ? const Value.absent()
           : Value(duration),
@@ -100,19 +94,17 @@ class Song extends DataClass implements Insertable<Song> {
   }
 
   Song copyWith(
-          {int id,
+          {String path,
           String title,
           String artist,
-          String uri,
           int duration,
           String artCrc,
           String albumName,
           String artistName}) =>
       Song(
-        id: id ?? this.id,
+        path: path ?? this.path,
         title: title ?? this.title,
         artist: artist ?? this.artist,
-        uri: uri ?? this.uri,
         duration: duration ?? this.duration,
         artCrc: artCrc ?? this.artCrc,
         albumName: albumName ?? this.albumName,
@@ -121,10 +113,9 @@ class Song extends DataClass implements Insertable<Song> {
   @override
   String toString() {
     return (StringBuffer('Song(')
-          ..write('id: $id, ')
+          ..write('path: $path, ')
           ..write('title: $title, ')
           ..write('artist: $artist, ')
-          ..write('uri: $uri, ')
           ..write('duration: $duration, ')
           ..write('artCrc: $artCrc, ')
           ..write('albumName: $albumName, ')
@@ -135,25 +126,22 @@ class Song extends DataClass implements Insertable<Song> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      id.hashCode,
+      path.hashCode,
       $mrjc(
           title.hashCode,
           $mrjc(
               artist.hashCode,
               $mrjc(
-                  uri.hashCode,
-                  $mrjc(
-                      duration.hashCode,
-                      $mrjc(artCrc.hashCode,
-                          $mrjc(albumName.hashCode, artistName.hashCode))))))));
+                  duration.hashCode,
+                  $mrjc(artCrc.hashCode,
+                      $mrjc(albumName.hashCode, artistName.hashCode)))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Song &&
-          other.id == this.id &&
+          other.path == this.path &&
           other.title == this.title &&
           other.artist == this.artist &&
-          other.uri == this.uri &&
           other.duration == this.duration &&
           other.artCrc == this.artCrc &&
           other.albumName == this.albumName &&
@@ -161,51 +149,46 @@ class Song extends DataClass implements Insertable<Song> {
 }
 
 class SongsCompanion extends UpdateCompanion<Song> {
-  final Value<int> id;
+  final Value<String> path;
   final Value<String> title;
   final Value<String> artist;
-  final Value<String> uri;
   final Value<int> duration;
   final Value<String> artCrc;
   final Value<String> albumName;
   final Value<String> artistName;
   const SongsCompanion({
-    this.id = const Value.absent(),
+    this.path = const Value.absent(),
     this.title = const Value.absent(),
     this.artist = const Value.absent(),
-    this.uri = const Value.absent(),
     this.duration = const Value.absent(),
     this.artCrc = const Value.absent(),
     this.albumName = const Value.absent(),
     this.artistName = const Value.absent(),
   });
   SongsCompanion.insert({
-    this.id = const Value.absent(),
+    @required String path,
     @required String title,
     @required String artist,
-    @required String uri,
     @required int duration,
     this.artCrc = const Value.absent(),
     this.albumName = const Value.absent(),
     this.artistName = const Value.absent(),
-  })  : title = Value(title),
+  })  : path = Value(path),
+        title = Value(title),
         artist = Value(artist),
-        uri = Value(uri),
         duration = Value(duration);
   SongsCompanion copyWith(
-      {Value<int> id,
+      {Value<String> path,
       Value<String> title,
       Value<String> artist,
-      Value<String> uri,
       Value<int> duration,
       Value<String> artCrc,
       Value<String> albumName,
       Value<String> artistName}) {
     return SongsCompanion(
-      id: id ?? this.id,
+      path: path ?? this.path,
       title: title ?? this.title,
       artist: artist ?? this.artist,
-      uri: uri ?? this.uri,
       duration: duration ?? this.duration,
       artCrc: artCrc ?? this.artCrc,
       albumName: albumName ?? this.albumName,
@@ -218,13 +201,12 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   final GeneratedDatabase _db;
   final String _alias;
   $SongsTable(this._db, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedIntColumn _id;
+  final VerificationMeta _pathMeta = const VerificationMeta('path');
+  GeneratedTextColumn _path;
   @override
-  GeneratedIntColumn get id => _id ??= _constructId();
-  GeneratedIntColumn _constructId() {
-    return GeneratedIntColumn('id', $tableName, false,
-        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  GeneratedTextColumn get path => _path ??= _constructPath();
+  GeneratedTextColumn _constructPath() {
+    return GeneratedTextColumn('path', $tableName, false, minTextLength: 0);
   }
 
   final VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -241,14 +223,6 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   GeneratedTextColumn get artist => _artist ??= _constructArtist();
   GeneratedTextColumn _constructArtist() {
     return GeneratedTextColumn('artist', $tableName, false, minTextLength: 0);
-  }
-
-  final VerificationMeta _uriMeta = const VerificationMeta('uri');
-  GeneratedTextColumn _uri;
-  @override
-  GeneratedTextColumn get uri => _uri ??= _constructUri();
-  GeneratedTextColumn _constructUri() {
-    return GeneratedTextColumn('uri', $tableName, false, minTextLength: 0);
   }
 
   final VerificationMeta _durationMeta = const VerificationMeta('duration');
@@ -292,7 +266,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
 
   @override
   List<GeneratedColumn> get $columns =>
-      [id, title, artist, uri, duration, artCrc, albumName, artistName];
+      [path, title, artist, duration, artCrc, albumName, artistName];
   @override
   $SongsTable get asDslTable => this;
   @override
@@ -303,8 +277,11 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   VerificationContext validateIntegrity(SongsCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.id.present) {
-      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    if (d.path.present) {
+      context.handle(
+          _pathMeta, path.isAcceptableValue(d.path.value, _pathMeta));
+    } else if (isInserting) {
+      context.missing(_pathMeta);
     }
     if (d.title.present) {
       context.handle(
@@ -317,11 +294,6 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
           _artistMeta, artist.isAcceptableValue(d.artist.value, _artistMeta));
     } else if (isInserting) {
       context.missing(_artistMeta);
-    }
-    if (d.uri.present) {
-      context.handle(_uriMeta, uri.isAcceptableValue(d.uri.value, _uriMeta));
-    } else if (isInserting) {
-      context.missing(_uriMeta);
     }
     if (d.duration.present) {
       context.handle(_durationMeta,
@@ -345,7 +317,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {path};
   @override
   Song map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -355,17 +327,14 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   @override
   Map<String, Variable> entityToSql(SongsCompanion d) {
     final map = <String, Variable>{};
-    if (d.id.present) {
-      map['id'] = Variable<int, IntType>(d.id.value);
+    if (d.path.present) {
+      map['path'] = Variable<String, StringType>(d.path.value);
     }
     if (d.title.present) {
       map['title'] = Variable<String, StringType>(d.title.value);
     }
     if (d.artist.present) {
       map['artist'] = Variable<String, StringType>(d.artist.value);
-    }
-    if (d.uri.present) {
-      map['uri'] = Variable<String, StringType>(d.uri.value);
     }
     if (d.duration.present) {
       map['duration'] = Variable<int, IntType>(d.duration.value);
@@ -816,18 +785,19 @@ class $ArtsTable extends Arts with TableInfo<$ArtsTable, Art> {
 class QueueItem extends DataClass implements Insertable<QueueItem> {
   final int id;
   final int position;
-  final int songId;
-  QueueItem({@required this.id, @required this.position, this.songId});
+  final String songPath;
+  QueueItem({@required this.id, @required this.position, this.songPath});
   factory QueueItem.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
+    final stringType = db.typeSystem.forDartType<String>();
     return QueueItem(
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       position:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}position']),
-      songId:
-          intType.mapFromDatabaseResponse(data['${effectivePrefix}song_id']),
+      songPath: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}song_path']),
     );
   }
   factory QueueItem.fromJson(Map<String, dynamic> json,
@@ -836,7 +806,7 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
     return QueueItem(
       id: serializer.fromJson<int>(json['id']),
       position: serializer.fromJson<int>(json['position']),
-      songId: serializer.fromJson<int>(json['songId']),
+      songPath: serializer.fromJson<String>(json['songPath']),
     );
   }
   @override
@@ -845,7 +815,7 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'position': serializer.toJson<int>(position),
-      'songId': serializer.toJson<int>(songId),
+      'songPath': serializer.toJson<String>(songPath),
     };
   }
 
@@ -856,58 +826,59 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
       position: position == null && nullToAbsent
           ? const Value.absent()
           : Value(position),
-      songId:
-          songId == null && nullToAbsent ? const Value.absent() : Value(songId),
+      songPath: songPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(songPath),
     );
   }
 
-  QueueItem copyWith({int id, int position, int songId}) => QueueItem(
+  QueueItem copyWith({int id, int position, String songPath}) => QueueItem(
         id: id ?? this.id,
         position: position ?? this.position,
-        songId: songId ?? this.songId,
+        songPath: songPath ?? this.songPath,
       );
   @override
   String toString() {
     return (StringBuffer('QueueItem(')
           ..write('id: $id, ')
           ..write('position: $position, ')
-          ..write('songId: $songId')
+          ..write('songPath: $songPath')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(position.hashCode, songId.hashCode)));
+      $mrjf($mrjc(id.hashCode, $mrjc(position.hashCode, songPath.hashCode)));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is QueueItem &&
           other.id == this.id &&
           other.position == this.position &&
-          other.songId == this.songId);
+          other.songPath == this.songPath);
 }
 
 class QueueItemsCompanion extends UpdateCompanion<QueueItem> {
   final Value<int> id;
   final Value<int> position;
-  final Value<int> songId;
+  final Value<String> songPath;
   const QueueItemsCompanion({
     this.id = const Value.absent(),
     this.position = const Value.absent(),
-    this.songId = const Value.absent(),
+    this.songPath = const Value.absent(),
   });
   QueueItemsCompanion.insert({
     this.id = const Value.absent(),
     @required int position,
-    this.songId = const Value.absent(),
+    this.songPath = const Value.absent(),
   }) : position = Value(position);
   QueueItemsCompanion copyWith(
-      {Value<int> id, Value<int> position, Value<int> songId}) {
+      {Value<int> id, Value<int> position, Value<String> songPath}) {
     return QueueItemsCompanion(
       id: id ?? this.id,
       position: position ?? this.position,
-      songId: songId ?? this.songId,
+      songPath: songPath ?? this.songPath,
     );
   }
 }
@@ -938,17 +909,17 @@ class $QueueItemsTable extends QueueItems
     );
   }
 
-  final VerificationMeta _songIdMeta = const VerificationMeta('songId');
-  GeneratedIntColumn _songId;
+  final VerificationMeta _songPathMeta = const VerificationMeta('songPath');
+  GeneratedTextColumn _songPath;
   @override
-  GeneratedIntColumn get songId => _songId ??= _constructSongId();
-  GeneratedIntColumn _constructSongId() {
-    return GeneratedIntColumn('song_id', $tableName, true,
+  GeneratedTextColumn get songPath => _songPath ??= _constructSongPath();
+  GeneratedTextColumn _constructSongPath() {
+    return GeneratedTextColumn('song_path', $tableName, true,
         $customConstraints: 'NULL REFERENCES Song(id)');
   }
 
   @override
-  List<GeneratedColumn> get $columns => [id, position, songId];
+  List<GeneratedColumn> get $columns => [id, position, songPath];
   @override
   $QueueItemsTable get asDslTable => this;
   @override
@@ -968,9 +939,9 @@ class $QueueItemsTable extends QueueItems
     } else if (isInserting) {
       context.missing(_positionMeta);
     }
-    if (d.songId.present) {
-      context.handle(
-          _songIdMeta, songId.isAcceptableValue(d.songId.value, _songIdMeta));
+    if (d.songPath.present) {
+      context.handle(_songPathMeta,
+          songPath.isAcceptableValue(d.songPath.value, _songPathMeta));
     }
     return context;
   }
@@ -992,8 +963,8 @@ class $QueueItemsTable extends QueueItems
     if (d.position.present) {
       map['position'] = Variable<int, IntType>(d.position.value);
     }
-    if (d.songId.present) {
-      map['song_id'] = Variable<int, IntType>(d.songId.value);
+    if (d.songPath.present) {
+      map['song_path'] = Variable<String, StringType>(d.songPath.value);
     }
     return map;
   }

@@ -3,6 +3,8 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 part 'moor_database.g.dart';
 
+//flutter packages pub run build_runner watch
+//TODO pagination
 // This annotation tells the code generator which tables this DB works with
 @UseMoor(
     tables: [Songs, Albums, Artists, Arts, QueueItems],
@@ -47,8 +49,8 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
         ))
       .watch();
 
-  Future<Song> findSongById(int id) =>
-      (select(songs)..where((s) => s.id.equals(id))).getSingle();
+  Future<Song> findSongByPath(String path) =>
+      (select(songs)..where((s) => s.path.equals(path))).getSingle();
 
   Future<List<Song>> findSongsByArtist(Artist artist) =>
       (select(songs)..where((s) => s.artistName.equals(artist.name))).get();
@@ -177,13 +179,14 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
 }
 
 class Songs extends Table {
-  IntColumn get id => integer().autoIncrement()();
+  @override
+  Set<Column> get primaryKey => {path};
+
+  TextColumn get path => text().withLength(min: 0)();
 
   TextColumn get title => text().withLength(min: 0)();
 
   TextColumn get artist => text().withLength(min: 0)();
-
-  TextColumn get uri => text().withLength(min: 0)();
 
   IntColumn get duration => integer()();
 
@@ -230,6 +233,6 @@ class QueueItems extends Table {
 
   IntColumn get position => integer()();
 
-  IntColumn get songId =>
-      integer().nullable().customConstraint('NULL REFERENCES Song(id)')();
+  TextColumn get songPath =>
+      text().nullable().customConstraint('NULL REFERENCES Song(id)')();
 }

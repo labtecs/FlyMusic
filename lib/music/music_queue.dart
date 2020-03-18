@@ -48,6 +48,7 @@ class MusicQueue {
   }
 
   playSong(Song song) async {
+    /*
     //kommt oben in die warteschlange die anderen lieder werden nach unten verschoben
     MyApp.db.queueItemDao.moveItemsDownBy(1);
     MyApp.db.queueItemDao
@@ -55,7 +56,7 @@ class MusicQueue {
     if (audioPlayer.state == AudioPlayerState.PLAYING) {
       await audioPlayer.stop();
     }
-    await playPause();
+    await playPause();*/
   }
 
   playAlbum(Album album) async {
@@ -78,8 +79,8 @@ class MusicQueue {
       newPosition = lastItem.position + 1;
     }
 
-    MyApp.db.queueItemDao
-        .insert(QueueItem(id: null, position: newPosition, songId: song.id));
+    MyApp.db.queueItemDao.insert(
+        QueueItem(id: null, position: newPosition, songPath: song.path));
   }
 
   addSongNext(Song song) async {
@@ -101,25 +102,25 @@ class MusicQueue {
   _addAlbum(Album album) async {
     //alle lieder in die warteschlange (unten)
     _addItems((await MyApp.db.songDao.findSongsByAlbum(album))
-        .map((item) => item.id)
+        .map((item) => item.path)
         .toList());
   }
 
   _addArtist(Artist artist) async {
     //alle lieder in die warteschlange (unten)
     _addItems((await MyApp.db.songDao.findSongsByArtist(artist))
-        .map((item) => item.id)
+        .map((item) => item.path)
         .toList());
   }
 
-  _addItems(List<int> items) async {
+  _addItems(List<String> items) async {
     var lastItem = await MyApp.db.queueItemDao.getLastItem();
     int newPosition = 0;
     if (lastItem != null) {
       newPosition = lastItem.position + 1;
     }
-    var insertItems = items.map(
-        (id) => new QueueItem(id: null, position: newPosition, songId: id));
+    var insertItems = items.map((path) =>
+        new QueueItem(id: null, position: newPosition, songPath: path));
     MyApp.db.queueItemDao.insertAll(insertItems.toList());
   }
 
@@ -144,11 +145,11 @@ class MusicQueue {
     if (currentItem == null) {
       return;
     }
-    currentSong = await MyApp.db.songDao.findSongById(currentItem.songId);
+    currentSong = await MyApp.db.songDao.findSongByPath(currentItem.songPath);
     if (currentSong == null) {
       return;
     }
-    int result = await audioPlayer.play(currentSong.uri, isLocal: true);
+    int result = await audioPlayer.play(currentSong.path, isLocal: true);
     if (result != 1) {
       await playNext();
     }
@@ -161,11 +162,11 @@ class MusicQueue {
     if (currentItem == null) {
       return;
     }
-    currentSong = await MyApp.db.songDao.findSongById(currentItem.songId);
+    currentSong = await MyApp.db.songDao.findSongByPath(currentItem.songPath);
     if (currentSong == null) {
       return;
     }
-    int result = await audioPlayer.play(currentSong.uri, isLocal: true);
+    int result = await audioPlayer.play(currentSong.path, isLocal: true);
     if (result != 1) {
       await playPrevious();
     }
@@ -176,6 +177,6 @@ class MusicQueue {
   shuffle() {}
 
   void remove(QueueItem queueItem) async {
-    await MyApp.db.queueItemDao.deleteQueueItem(queueItem);
+    // await MyApp.db.queueItemDao.deleteQueueItem(queueItem);
   }
 }

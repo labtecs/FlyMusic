@@ -71,6 +71,7 @@ class SharedPreferencesUtil {
 }
 
 enum PrefKey {
+  FIRST_APP_START,
   PATH_LIST,
   SONG_SHORT_PRESS,
   SONG_LONG_PRESS,

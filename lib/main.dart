@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/screens/main_screen.dart';
+import 'package:flymusic/util/shared_prefrences_util.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (await SharedPreferencesUtil.instance.getBool(PrefKey.FIRST_APP_START) !=
+      false) {
+//TODO first start: "Warteschlange" und "Alle lieder" playlist in Playlists
+    //TODO init settings
+    //TODO start screen
+  }
+
   runApp(MyApp());
 }
 
-//TODO first start: empty icon in art database with id 0?
-//TODO first start: "Warteschlange" und "Alle lieder" playlist in Playlists
-
 class MyApp extends StatelessWidget {
-  static final db  = AppDatabase();
+  static final db = AppDatabase();
 
   MyApp();
 

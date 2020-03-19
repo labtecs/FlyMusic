@@ -83,7 +83,6 @@ class MusicFinder {
                 await file.writeAsBytes(bytes);
                 defaultArt = new Art(path: file.path, crc: crcText.toString());
                 await database.artDao.insert(defaultArt);
-                //TODO test defaultArt.id
               }
             }
             break;
@@ -164,13 +163,13 @@ class MusicFinder {
 
     Album album = await _findAlbum(songAlbum, art);
     Artist artist = await _findArtist(currentArtist, songArtist);
-//TODO empty art in database
+
     return Song(
         path: file.path,
         title: songTitle,
         artist: songArtist,
         duration: songDuration,
-        artCrc: art.crc,
+        artCrc: art?.crc ?? "0",
         albumName: album.name,
         artistName: artist.name);
   }
@@ -183,14 +182,14 @@ class MusicFinder {
 
       if (currentAlbum == null) {
         //create new album
-        currentAlbum = Album(name: album, artCrc: art.crc);
+        currentAlbum = Album(name: album, artCrc: art?.crc ?? "0");
         //insert album
         await database.albumDao.insert(currentAlbum);
       }
-      // TODO if (currentAlbum.artId == -1 && art != null && art.id != -1) {
-      //   currentAlbum.artId = art.id;
-      //   await database.albumDao.updateAlbum(currentAlbum);
-      //  }
+      if (currentAlbum.artCrc == "0" && art != null && art.crc != "0") {
+        await database.albumDao
+            .updateAlbum(currentAlbum.copyWith(artCrc: art.crc));
+      }
     }
     return currentAlbum;
   }
@@ -219,7 +218,6 @@ class MusicFinder {
       await file.writeAsBytes(imageData);
       art = new Art(crc: crcText.toString(), path: file.path);
       await database.artDao.insert(art);
-      //TODO test art.id
     }
     return art;
   }

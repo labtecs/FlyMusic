@@ -200,13 +200,16 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
       customUpdate('UPDATE QueueItems SET position = position + $move');
 }
 
-@UseDao(tables: [PlaylistItems])
+@UseDao(tables: [Playlists])
 class PlaylistDao extends DatabaseAccessor<AppDatabase>
     with _$PlaylistDaoMixin {
   final AppDatabase db;
 
   // Called by the AppDatabase class
   PlaylistDao(this.db) : super(db);
+
+  Future insert(Playlist playlist) =>
+      into(playlists).insert(playlist, mode: InsertMode.insertOrIgnore);
 }
 
 @UseDao(tables: [QueueItems])

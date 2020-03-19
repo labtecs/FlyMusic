@@ -93,14 +93,10 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                 color: Colors.black54,
                 child: Container(
                   height: kToolbarHeight,
-                  child: Center(
-                    child: Text(
+                  child: AppBar(
+                    backgroundColor: Colors.transparent,
+                    title: Text(
                       album.name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 23,
-                      ),
                     ),
                   ),
                 ),

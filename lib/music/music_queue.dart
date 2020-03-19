@@ -59,7 +59,6 @@ class MusicQueue {
     }
   }
 
-  playSong(Song song) async {
     /*
     //kommt oben in die warteschlange die anderen lieder werden nach unten verschoben
     MyApp.db.queueItemDao.moveItemsDownBy(1);
@@ -69,7 +68,7 @@ class MusicQueue {
       await audioPlayer.stop();
     }
     await playPause();*/
-  }
+
 
   playAlbum(Album album) async {
     await clear();

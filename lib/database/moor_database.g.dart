@@ -232,7 +232,8 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   @override
   GeneratedTextColumn get path => _path ??= _constructPath();
   GeneratedTextColumn _constructPath() {
-    return GeneratedTextColumn('path', $tableName, false, minTextLength: 0);
+    return GeneratedTextColumn('path', $tableName, false,
+        minTextLength: 0, $customConstraints: 'UNIQUE');
   }
 
   final VerificationMeta _titleMeta = const VerificationMeta('title');
@@ -346,7 +347,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {path, id};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Song map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;

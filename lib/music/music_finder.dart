@@ -18,6 +18,8 @@ doIsolated(Directory list) async {
   await thumbs.create();
   final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
   _flutterFFmpegConfig.disableLogs();
+ // _flutterFFmpegConfig.disableStatistics();
+//  _flutterFFmpegConfig.disableRedirection();
   await MusicFinder().readFolderIntoDatabase([list, docs, thumbs]);
   //compute(main, [list, docs, thumbs]);
 }
@@ -42,11 +44,6 @@ class MusicFinder {
   AppDatabase database;
 
   readFolderIntoDatabase(List<Directory> folder) async {
-    //  MoorIsolate isolate = await MoorIsolate.spawn(backgroundConnection);
-    //  we can now create a database connection that will use the isolate internally. This is NOT what's
-    //    returned from _backgroundConnection, moor uses an internal proxy class for isolate communication.
-//    DatabaseConnection connection = await isolate.connect();
-    // database = AppDatabase.connect(connection);
     database = MyApp.db;
     docs = folder[1];
     thumbs = folder[2];
@@ -55,17 +52,19 @@ class MusicFinder {
 
   Future<void> _readFolder(FileSystemEntity folder) async {
     List<FileSystemEntity> files =
-        (folder as Directory).listSync(recursive: false);
+    (folder as Directory).listSync(recursive: false);
 
     List<Directory> directories = new List();
     List<File> songFiles = new List();
-    List<Insertable<Song>> songs = new List();
     List<Insertable<PlaylistItem>> playlistItems = new List();
     Art defaultArt;
 
     await Future.forEach(files, (f) async {
       if (f is File) {
-        String ending = "." + f.uri.toString().split(".").last;
+        String ending = "." + f.uri
+            .toString()
+            .split(".")
+            .last;
         switch (ending) {
           case ".mp3":
             songFiles.add(f);
@@ -93,46 +92,38 @@ class MusicFinder {
       }
     });
 
-    await Future.forEach(songFiles, (f) async {
-      var song = await _readFile(defaultArt, folder, f);
+    insertSong(SongsCompanion song) async {
+      var id = await database.songDao.insert(song);
       //insert song into "all songs" playlist
-      playlistItems.add(PlaylistItem(playlistId: 0, songId: song.id.value));
+      playlistItems.add(PlaylistItem(playlistId: 0, songId: id));
       //insert song into "album" playlist
-      playlistItems.add(PlaylistItem(
-          playlistId: currentAlbum.playlistId, songId: song.id.value));
+      playlistItems
+          .add(PlaylistItem(playlistId: currentAlbum.playlistId, songId: id));
       //insert song into "artist" playlist
-      playlistItems.add(PlaylistItem(
-          playlistId: currentArtist.playlistId, songId: song.id.value));
+      playlistItems
+          .add(PlaylistItem(playlistId: currentArtist.playlistId, songId: id));
+      await database.playlistItemDao.insertAll(playlistItems);
+      playlistItems.clear();
+    }
 
-      songs.add(song);
-      if (songs.length >= 100) {
-        await database.songDao.insertAll(songs);
-        await database.playlistItemDao.insertAll(playlistItems);
-        playlistItems.clear();
-        songs.clear();
-      }
+    await Future.forEach(songFiles, (f) async {
+      insertSong(await _readFile(defaultArt, folder, f));
     });
-
-    await database.songDao.insertAll(songs);
-    await database.playlistItemDao.insertAll(playlistItems);
-    playlistItems.clear();
-    songs.clear();
 
     await Future.forEach(directories, (d) async {
       await _readFolder(d);
     });
   }
 
-  Future<SongsCompanion> _readFile(
-      Art defaultArt, Directory folder, File file) async {
+  Future<SongsCompanion> _readFile(Art defaultArt, Directory folder,
+      File file) async {
     String songTitle;
     String songArtist;
     String songAlbum;
     Art art;
     int songDuration = 0;
-    _flutterFFprobe.getMediaInformation(file.path).then((info) {
-      songDuration = info['duration'];
-    });
+    var info = await _flutterFFprobe.getMediaInformation(file.path);
+    songDuration = info['duration'] ?? 0;
 
     //fallback and image
     //TODO too slow always opening new thread work with callbacks
@@ -167,7 +158,9 @@ class MusicFinder {
     }
 
     if (songAlbum == null || songAlbum.isEmpty) {
-      songAlbum = folder.path.split("/").last;
+      songAlbum = folder.path
+          .split("/")
+          .last;
     }
 
     if (songArtist == null || songArtist.isEmpty) {
@@ -234,8 +227,8 @@ class MusicFinder {
     return currentArtist;
   }
 
-  Future<Art> _findArt(
-      List<int> imageData, Directory thumbs, int crcText) async {
+  Future<Art> _findArt(List<int> imageData, Directory thumbs,
+      int crcText) async {
     Art art = await database.artDao.findArtByCrc(crcText.toString());
     if (art == null) {
       File file = File('${thumbs.path}/$crcText.jpg');

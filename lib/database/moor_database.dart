@@ -226,12 +226,12 @@ class PlaylistItemDao extends DatabaseAccessor<AppDatabase>
 
 class Songs extends Table {
   @override
-  Set<Column> get primaryKey => {path, id};
+  Set<Column> get primaryKey => {id};
 
   //id foreign keys use less storage (smaller database)
   IntColumn get id => integer().autoIncrement()();
 
-  TextColumn get path => text().withLength(min: 0)();
+  TextColumn get path => text().withLength(min: 0).customConstraint('UNIQUE')();
 
   TextColumn get title => text().withLength(min: 0)();
 

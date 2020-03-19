@@ -64,8 +64,8 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
         ))
       .watch();
 
-  Future<Song> findSongByPath(String path) =>
-      (select(songs)..where((s) => s.path.equals(path))).getSingle();
+  Future<Song> findSongById(int id) =>
+      (select(songs)..where((s) => s.id.equals(id))).getSingle();
 
   Future<List<Song>> findSongsByArtist(Artist artist) =>
       (select(songs)..where((s) => s.artistName.equals(artist.name))).get();
@@ -220,13 +220,16 @@ class PlaylistItemDao extends DatabaseAccessor<AppDatabase>
   // Called by the AppDatabase class
   PlaylistItemDao(this.db) : super(db);
 
-  Future insertAll(List<Insertable<PlaylistItem>> itemsList) => db.batch(
-          (b) => b.insertAll(playlistItems, itemsList, mode: InsertMode.insertOrIgnore));
+  Future insertAll(List<Insertable<PlaylistItem>> itemsList) => db.batch((b) =>
+      b.insertAll(playlistItems, itemsList, mode: InsertMode.insertOrIgnore));
 }
 
 class Songs extends Table {
   @override
-  Set<Column> get primaryKey => {path};
+  Set<Column> get primaryKey => {path, id};
+
+  //id foreign keys use less storage (smaller database)
+  IntColumn get id => integer().autoIncrement()();
 
   TextColumn get path => text().withLength(min: 0)();
 
@@ -240,10 +243,10 @@ class Songs extends Table {
       text().nullable().customConstraint('NULL REFERENCES Art(crc)')();
 
   TextColumn get albumName =>
-      text().nullable().customConstraint('NULL REFERENCES Album(name)')();
+      text().nullable().customConstraint('NOT NULL REFERENCES Album(name)')();
 
   TextColumn get artistName =>
-      text().nullable().customConstraint('NULL REFERENCES Artist(name)')();
+      text().nullable().customConstraint('NOT NULL REFERENCES Artist(name)')();
 }
 
 class Albums extends Table {
@@ -253,7 +256,8 @@ class Albums extends Table {
   //Album name ist unique, kommt nur einmal vor (deshalb primary key)
   TextColumn get name => text().withLength(min: 1)();
 
-  IntColumn get playlistId => integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
+  IntColumn get playlistId =>
+      integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
 
   TextColumn get artCrc =>
       text().nullable().customConstraint('NULL REFERENCES Art(crc)')();
@@ -266,7 +270,8 @@ class Artists extends Table {
   //Artist name ist unique, kommt nur einmal vor (deshalb primary key)
   TextColumn get name => text().withLength(min: 1)();
 
-  IntColumn get playlistId => integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
+  IntColumn get playlistId =>
+      integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
 }
 
 class Arts extends Table {
@@ -281,12 +286,13 @@ class Arts extends Table {
 class QueueItems extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  IntColumn get playlistId => integer().customConstraint('NULL REFERENCES Playlist(id)')();
+  IntColumn get playlistId =>
+      integer().customConstraint('NULL REFERENCES Playlist(id)')();
 
   IntColumn get position => integer()();
 
-  TextColumn get songPath =>
-      text().nullable().customConstraint('NULL REFERENCES Song(id)')();
+  IntColumn get songId =>
+      integer().customConstraint('NOT NULL REFERENCES Song(id)')();
 }
 
 class Playlists extends Table {
@@ -299,10 +305,10 @@ class Playlists extends Table {
 //relation zwischen playlist und song
 class PlaylistItems extends Table {
   @override
-  Set<Column> get primaryKey => {playlistId, songPath};
+  Set<Column> get primaryKey => {playlistId, songId};
 
   IntColumn get playlistId => integer()();
 
-  TextColumn get songPath =>
-      text().nullable().customConstraint('NULL REFERENCES Song(id)')();
+  IntColumn get songId =>
+      integer().customConstraint('NOT NULL REFERENCES Song(id)')();
 }

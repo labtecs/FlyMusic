@@ -59,7 +59,7 @@ class MusicFinder {
 
     List<Directory> directories = new List();
     List<File> songFiles = new List();
-    List<Song> songs = new List();
+    List<Insertable<Song>> songs = new List();
     List<Insertable<PlaylistItem>> playlistItems = new List();
     Art defaultArt;
 
@@ -96,13 +96,13 @@ class MusicFinder {
     await Future.forEach(songFiles, (f) async {
       var song = await _readFile(defaultArt, folder, f);
       //insert song into "all songs" playlist
-      playlistItems.add(PlaylistItem(playlistId: 0, songPath: song.path));
+      playlistItems.add(PlaylistItem(playlistId: 0, songId: song.id.value));
       //insert song into "album" playlist
       playlistItems.add(PlaylistItem(
-          playlistId: currentAlbum.playlistId, songPath: song.path));
+          playlistId: currentAlbum.playlistId, songId: song.id.value));
       //insert song into "artist" playlist
       playlistItems.add(PlaylistItem(
-          playlistId: currentArtist.playlistId, songPath: song.path));
+          playlistId: currentArtist.playlistId, songId: song.id.value));
 
       songs.add(song);
       if (songs.length >= 100) {
@@ -123,7 +123,8 @@ class MusicFinder {
     });
   }
 
-  Future<Song> _readFile(Art defaultArt, Directory folder, File file) async {
+  Future<SongsCompanion> _readFile(
+      Art defaultArt, Directory folder, File file) async {
     String songTitle;
     String songArtist;
     String songAlbum;
@@ -134,6 +135,7 @@ class MusicFinder {
     });
 
     //fallback and image
+    //TODO too slow always opening new thread work with callbacks
     var tags = await compute(readTags, file);
 
     await Future.forEach(tags, (f) async {
@@ -176,17 +178,17 @@ class MusicFinder {
       art = defaultArt;
     }
 
-    Album album = await _findAlbum(songAlbum, art);
-    Artist artist = await _findArtist(currentArtist, songArtist);
+    currentAlbum = await _findAlbum(songAlbum, art);
+    currentArtist = await _findArtist(currentArtist, songArtist);
 
-    return Song(
+    return SongsCompanion.insert(
         path: file.path,
         title: songTitle,
         artist: songArtist,
         duration: songDuration,
-        artCrc: art?.crc ?? "0",
-        albumName: album.name,
-        artistName: artist.name);
+        artCrc: Value(art?.crc ?? null),
+        albumName: Value(currentAlbum.name),
+        artistName: Value(currentArtist.name));
   }
 
   Future<Album> _findAlbum(String album, Art art) async {

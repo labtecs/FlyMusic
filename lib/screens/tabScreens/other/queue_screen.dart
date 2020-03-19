@@ -15,7 +15,7 @@ class _QueueScreenState extends State<QueueScreen> {
 
   Widget _buildRow(QueueItem queueItem) {
     return FutureBuilder<Song>(
-        future: Provider.of<SongDao>(context).findSongByPath(queueItem.songPath),
+        future: Provider.of<SongDao>(context).findSongById(queueItem.songId),
         // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<Song> snapshot) {
           if (snapshot.hasData) {

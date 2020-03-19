@@ -91,7 +91,7 @@ class MusicQueue {
     }
 
     MyApp.db.queueItemDao.insert(
-        QueueItem(id: null, position: newPosition, songPath: song.path));
+        QueueItem(id: null, position: newPosition, songId: song.id));
   }
 
   addSongNext(Song song) async {
@@ -113,25 +113,25 @@ class MusicQueue {
   _addAlbum(Album album) async {
     //alle lieder in die warteschlange (unten)
     _addItems((await MyApp.db.songDao.findSongsByAlbum(album))
-        .map((item) => item.path)
+        .map((item) => item.id)
         .toList());
   }
 
   _addArtist(Artist artist) async {
     //alle lieder in die warteschlange (unten)
     _addItems((await MyApp.db.songDao.findSongsByArtist(artist))
-        .map((item) => item.path)
+        .map((item) => item.id)
         .toList());
   }
 
-  _addItems(List<String> items) async {
+  _addItems(List<int> items) async {
     var lastItem = await MyApp.db.queueItemDao.getLastItem();
     int newPosition = 0;
     if (lastItem != null) {
       newPosition = lastItem.position + 1;
     }
-    var insertItems = items.map((path) =>
-        new QueueItem(id: null, position: newPosition, songPath: path));
+    var insertItems = items.map((id) =>
+        new QueueItem(id: null, position: newPosition, songId: id));
     MyApp.db.queueItemDao.insertAll(insertItems.toList());
   }
 
@@ -156,7 +156,7 @@ class MusicQueue {
     if (currentItem == null) {
       return;
     }
-    currentSong = await MyApp.db.songDao.findSongByPath(currentItem.songPath);
+    currentSong = await MyApp.db.songDao.findSongById(currentItem.songId);
     if (currentSong == null) {
       return;
     }
@@ -173,7 +173,7 @@ class MusicQueue {
     if (currentItem == null) {
       return;
     }
-    currentSong = await MyApp.db.songDao.findSongByPath(currentItem.songPath);
+    currentSong = await MyApp.db.songDao.findSongById(currentItem.songId);
     if (currentSong == null) {
       return;
     }

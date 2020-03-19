@@ -13,8 +13,10 @@ void main() async {
   if (await SharedPreferencesUtil.instance.getBool(PrefKey.FIRST_APP_START) !=
       false) {
     //first start: "Warteschlange" und "Alle lieder" playlist in Playlists
-    await db.playlistDao.insert(Playlist(id: 0, name: "Alle Lieder"));
-    await db.playlistDao.insert(Playlist(id: 1, name: "Warteschlange"));
+    await db.playlistDao
+        .insert(PlaylistsCompanion.insert(name: "Alle Lieder"));
+    await db.playlistDao
+        .insert(PlaylistsCompanion.insert(name: "Warteschlange"));
 
     //init settings
     await SharedPreferencesUtil.instance

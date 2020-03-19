@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 //TODO Exception: Could not instantiate image codec. -> placeholder (auch in datenbank)
 class ArtUtil {
   static Widget getArtFromSong(Song song, BuildContext context) {
-    if (song == null || song.artCrc == "0") {
+    if (song == null || song.artCrc == null) {
       return Image(image: AssetImage("asset/images/placeholder.jpg"));
     }
     return FutureBuilder<Art>(
@@ -22,7 +22,7 @@ class ArtUtil {
   }
 
   static Widget getArtFromAlbum(Album album, BuildContext context) {
-    if (album == null || album.artCrc == "0") {
+    if (album == null || album.artCrc == null) {
       return Image(image: AssetImage("asset/images/placeholder.jpg"));
     }
     return FutureBuilder<Art>(

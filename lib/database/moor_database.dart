@@ -49,10 +49,10 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
   // Called by the AppDatabase class
   SongDao(this.db) : super(db);
 
-  Future insert(Song song) =>
+  Future insert(Insertable<Song> song) =>
       into(songs).insert(song, mode: InsertMode.insertOrIgnore);
 
-  Future insertAll(List<Song> songList) => db.batch(
+  Future insertAll(List<Insertable<Song>> songList) => db.batch(
       (b) => b.insertAll(songs, songList, mode: InsertMode.insertOrIgnore));
 
   Stream<List<Song>> findAllSongs() => (select(songs)
@@ -83,7 +83,7 @@ class AlbumDao extends DatabaseAccessor<AppDatabase> with _$AlbumDaoMixin {
   // Called by the AppDatabase class
   AlbumDao(this.db) : super(db);
 
-  Future insert(Album album) =>
+  Future insert(Insertable<Album> album) =>
       into(albums).insert(album, mode: InsertMode.insertOrIgnore);
 
   Future updateAlbum(Album album) => update(albums).replace(album);
@@ -108,7 +108,7 @@ class ArtistDao extends DatabaseAccessor<AppDatabase> with _$ArtistDaoMixin {
   // Called by the AppDatabase class
   ArtistDao(this.db) : super(db);
 
-  Future insert(Artist artist) =>
+  Future insert(Insertable<Artist> artist) =>
       into(artists).insert(artist, mode: InsertMode.insertOrIgnore);
 
   Stream<List<Artist>> findAllArtists() => (select(artists)
@@ -131,7 +131,7 @@ class ArtDao extends DatabaseAccessor<AppDatabase> with _$ArtDaoMixin {
   // Called by the AppDatabase class
   ArtDao(this.db) : super(db);
 
-  Future insert(Art art) =>
+  Future insert(Insertable<Art> art) =>
       into(arts).insert(art, mode: InsertMode.insertOrIgnore);
 
   Future<Art> findArtByCrc(String crc) =>
@@ -146,10 +146,10 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
   // Called by the AppDatabase class
   QueueItemDao(this.db) : super(db);
 
-  Future insert(QueueItem queueItem) =>
+  Future insert(Insertable<QueueItem> queueItem) =>
       into(queueItems).insert(queueItem, mode: InsertMode.insertOrIgnore);
 
-  Future insertAll(List<QueueItem> queueItemList) => db.batch((b) =>
+  Future insertAll(List<Insertable<QueueItem>> queueItemList) => db.batch((b) =>
       b.insertAll(queueItems, queueItemList, mode: InsertMode.insertOrIgnore));
 
   Future deleteQueueItem(QueueItem queueItem) =>
@@ -208,17 +208,20 @@ class PlaylistDao extends DatabaseAccessor<AppDatabase>
   // Called by the AppDatabase class
   PlaylistDao(this.db) : super(db);
 
-  Future insert(Playlist playlist) =>
+  Future insert(Insertable<Playlist> playlist) =>
       into(playlists).insert(playlist, mode: InsertMode.insertOrIgnore);
 }
 
-@UseDao(tables: [QueueItems])
+@UseDao(tables: [PlaylistItems])
 class PlaylistItemDao extends DatabaseAccessor<AppDatabase>
     with _$PlaylistItemDaoMixin {
   final AppDatabase db;
 
   // Called by the AppDatabase class
   PlaylistItemDao(this.db) : super(db);
+
+  Future insertAll(List<Insertable<PlaylistItem>> itemsList) => db.batch(
+          (b) => b.insertAll(playlistItems, itemsList, mode: InsertMode.insertOrIgnore));
 }
 
 class Songs extends Table {
@@ -250,7 +253,7 @@ class Albums extends Table {
   //Album name ist unique, kommt nur einmal vor (deshalb primary key)
   TextColumn get name => text().withLength(min: 1)();
 
-  TextColumn get customName => text().withLength(min: 1).nullable()();
+  IntColumn get playlistId => integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
 
   TextColumn get artCrc =>
       text().nullable().customConstraint('NULL REFERENCES Art(crc)')();
@@ -263,7 +266,7 @@ class Artists extends Table {
   //Artist name ist unique, kommt nur einmal vor (deshalb primary key)
   TextColumn get name => text().withLength(min: 1)();
 
-  TextColumn get customName => text().withLength(min: 1).nullable()();
+  IntColumn get playlistId => integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
 }
 
 class Arts extends Table {
@@ -289,6 +292,7 @@ class QueueItems extends Table {
 class Playlists extends Table {
   IntColumn get id => integer().autoIncrement()();
 
+  //kann geändert werden
   TextColumn get name => text().withLength(min: 1)();
 }
 

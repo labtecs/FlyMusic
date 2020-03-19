@@ -60,6 +60,7 @@ class MusicFinder {
     List<Directory> directories = new List();
     List<File> songFiles = new List();
     List<Song> songs = new List();
+    List<Insertable<PlaylistItem>> playlistItems = new List();
     Art defaultArt;
 
     await Future.forEach(files, (f) async {
@@ -93,14 +94,28 @@ class MusicFinder {
     });
 
     await Future.forEach(songFiles, (f) async {
-      songs.add(await _readFile(defaultArt, folder, f));
+      var song = await _readFile(defaultArt, folder, f);
+      //insert song into "all songs" playlist
+      playlistItems.add(PlaylistItem(playlistId: 0, songPath: song.path));
+      //insert song into "album" playlist
+      playlistItems.add(PlaylistItem(
+          playlistId: currentAlbum.playlistId, songPath: song.path));
+      //insert song into "artist" playlist
+      playlistItems.add(PlaylistItem(
+          playlistId: currentArtist.playlistId, songPath: song.path));
+
+      songs.add(song);
       if (songs.length >= 100) {
         await database.songDao.insertAll(songs);
+        await database.playlistItemDao.insertAll(playlistItems);
+        playlistItems.clear();
         songs.clear();
       }
     });
 
     await database.songDao.insertAll(songs);
+    await database.playlistItemDao.insertAll(playlistItems);
+    playlistItems.clear();
     songs.clear();
 
     await Future.forEach(directories, (d) async {
@@ -181,12 +196,16 @@ class MusicFinder {
       currentAlbum = await database.albumDao.findAlbumByName(album);
 
       if (currentAlbum == null) {
+        //create playlist for album
+        var playlistId = await database.playlistDao
+            .insert(PlaylistsCompanion.insert(name: album));
         //create new album
-        currentAlbum = Album(name: album, artCrc: art?.crc ?? "0");
+        currentAlbum = Album(
+            name: album, artCrc: art?.crc ?? null, playlistId: playlistId);
         //insert album
         await database.albumDao.insert(currentAlbum);
       }
-      if (currentAlbum.artCrc == "0" && art != null && art.crc != "0") {
+      if (currentAlbum.artCrc == null && art != null && art.crc != null) {
         await database.albumDao
             .updateAlbum(currentAlbum.copyWith(artCrc: art.crc));
       }
@@ -201,8 +220,11 @@ class MusicFinder {
       currentArtist = await database.artistDao.findArtistByName(artist);
 
       if (currentArtist == null) {
+        //create playlist for artist
+        var playlistId = await database.playlistDao
+            .insert(PlaylistsCompanion.insert(name: artist));
         //create new album
-        currentArtist = Artist(name: artist);
+        currentArtist = Artist(name: artist, playlistId: playlistId);
         //insert album
         await database.artistDao.insert(currentArtist);
       }

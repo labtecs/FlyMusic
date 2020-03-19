@@ -94,16 +94,19 @@ class MusicFinder {
 
     insertSong(SongsCompanion song) async {
       var id = await database.songDao.insert(song);
-      //insert song into "all songs" playlist
-      playlistItems.add(PlaylistItem(playlistId: 0, songId: id));
-      //insert song into "album" playlist
-      playlistItems
-          .add(PlaylistItem(playlistId: currentAlbum.playlistId, songId: id));
-      //insert song into "artist" playlist
-      playlistItems
-          .add(PlaylistItem(playlistId: currentArtist.playlistId, songId: id));
-      await database.playlistItemDao.insertAll(playlistItems);
-      playlistItems.clear();
+      if(id != null) { //null if already exists
+        //insert song into "all songs" playlist
+        playlistItems.add(PlaylistItem(playlistId: 0, songId: id));
+        //insert song into "album" playlist
+        playlistItems
+            .add(PlaylistItem(playlistId: currentAlbum.playlistId, songId: id));
+        //insert song into "artist" playlist
+        playlistItems
+            .add(
+            PlaylistItem(playlistId: currentArtist.playlistId, songId: id));
+        await database.playlistItemDao.insertAll(playlistItems);
+        playlistItems.clear();
+      }
     }
 
     await Future.forEach(songFiles, (f) async {

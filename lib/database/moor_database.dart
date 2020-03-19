@@ -275,6 +275,8 @@ class Arts extends Table {
 class QueueItems extends Table {
   IntColumn get id => integer().autoIncrement()();
 
+  IntColumn get playlistId => integer().customConstraint('NULL REFERENCES Playlist(id)')();
+
   IntColumn get position => integer()();
 
   TextColumn get songPath =>

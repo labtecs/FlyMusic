@@ -852,9 +852,14 @@ class $ArtsTable extends Arts with TableInfo<$ArtsTable, Art> {
 
 class QueueItem extends DataClass implements Insertable<QueueItem> {
   final int id;
+  final int playlistId;
   final int position;
   final String songPath;
-  QueueItem({@required this.id, @required this.position, this.songPath});
+  QueueItem(
+      {@required this.id,
+      @required this.playlistId,
+      @required this.position,
+      this.songPath});
   factory QueueItem.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -862,6 +867,8 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
     final stringType = db.typeSystem.forDartType<String>();
     return QueueItem(
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      playlistId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}playlist_id']),
       position:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}position']),
       songPath: stringType
@@ -873,6 +880,7 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return QueueItem(
       id: serializer.fromJson<int>(json['id']),
+      playlistId: serializer.fromJson<int>(json['playlistId']),
       position: serializer.fromJson<int>(json['position']),
       songPath: serializer.fromJson<String>(json['songPath']),
     );
@@ -882,6 +890,7 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'playlistId': serializer.toJson<int>(playlistId),
       'position': serializer.toJson<int>(position),
       'songPath': serializer.toJson<String>(songPath),
     };
@@ -891,6 +900,9 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
   QueueItemsCompanion createCompanion(bool nullToAbsent) {
     return QueueItemsCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      playlistId: playlistId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(playlistId),
       position: position == null && nullToAbsent
           ? const Value.absent()
           : Value(position),
@@ -900,8 +912,10 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
     );
   }
 
-  QueueItem copyWith({int id, int position, String songPath}) => QueueItem(
+  QueueItem copyWith({int id, int playlistId, int position, String songPath}) =>
+      QueueItem(
         id: id ?? this.id,
+        playlistId: playlistId ?? this.playlistId,
         position: position ?? this.position,
         songPath: songPath ?? this.songPath,
       );
@@ -909,6 +923,7 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
   String toString() {
     return (StringBuffer('QueueItem(')
           ..write('id: $id, ')
+          ..write('playlistId: $playlistId, ')
           ..write('position: $position, ')
           ..write('songPath: $songPath')
           ..write(')'))
@@ -916,35 +931,44 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(position.hashCode, songPath.hashCode)));
+  int get hashCode => $mrjf($mrjc(id.hashCode,
+      $mrjc(playlistId.hashCode, $mrjc(position.hashCode, songPath.hashCode))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is QueueItem &&
           other.id == this.id &&
+          other.playlistId == this.playlistId &&
           other.position == this.position &&
           other.songPath == this.songPath);
 }
 
 class QueueItemsCompanion extends UpdateCompanion<QueueItem> {
   final Value<int> id;
+  final Value<int> playlistId;
   final Value<int> position;
   final Value<String> songPath;
   const QueueItemsCompanion({
     this.id = const Value.absent(),
+    this.playlistId = const Value.absent(),
     this.position = const Value.absent(),
     this.songPath = const Value.absent(),
   });
   QueueItemsCompanion.insert({
     this.id = const Value.absent(),
+    @required int playlistId,
     @required int position,
     this.songPath = const Value.absent(),
-  }) : position = Value(position);
+  })  : playlistId = Value(playlistId),
+        position = Value(position);
   QueueItemsCompanion copyWith(
-      {Value<int> id, Value<int> position, Value<String> songPath}) {
+      {Value<int> id,
+      Value<int> playlistId,
+      Value<int> position,
+      Value<String> songPath}) {
     return QueueItemsCompanion(
       id: id ?? this.id,
+      playlistId: playlistId ?? this.playlistId,
       position: position ?? this.position,
       songPath: songPath ?? this.songPath,
     );
@@ -963,6 +987,15 @@ class $QueueItemsTable extends QueueItems
   GeneratedIntColumn _constructId() {
     return GeneratedIntColumn('id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _playlistIdMeta = const VerificationMeta('playlistId');
+  GeneratedIntColumn _playlistId;
+  @override
+  GeneratedIntColumn get playlistId => _playlistId ??= _constructPlaylistId();
+  GeneratedIntColumn _constructPlaylistId() {
+    return GeneratedIntColumn('playlist_id', $tableName, false,
+        $customConstraints: 'NULL REFERENCES Playlist(id)');
   }
 
   final VerificationMeta _positionMeta = const VerificationMeta('position');
@@ -987,7 +1020,7 @@ class $QueueItemsTable extends QueueItems
   }
 
   @override
-  List<GeneratedColumn> get $columns => [id, position, songPath];
+  List<GeneratedColumn> get $columns => [id, playlistId, position, songPath];
   @override
   $QueueItemsTable get asDslTable => this;
   @override
@@ -1000,6 +1033,12 @@ class $QueueItemsTable extends QueueItems
     final context = VerificationContext();
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    }
+    if (d.playlistId.present) {
+      context.handle(_playlistIdMeta,
+          playlistId.isAcceptableValue(d.playlistId.value, _playlistIdMeta));
+    } else if (isInserting) {
+      context.missing(_playlistIdMeta);
     }
     if (d.position.present) {
       context.handle(_positionMeta,
@@ -1027,6 +1066,9 @@ class $QueueItemsTable extends QueueItems
     final map = <String, Variable>{};
     if (d.id.present) {
       map['id'] = Variable<int, IntType>(d.id.value);
+    }
+    if (d.playlistId.present) {
+      map['playlist_id'] = Variable<int, IntType>(d.playlistId.value);
     }
     if (d.position.present) {
       map['position'] = Variable<int, IntType>(d.position.value);

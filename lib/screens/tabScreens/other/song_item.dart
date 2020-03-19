@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/moor_database.dart';
-import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 import 'package:flymusic/util/click_helper.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 
 Widget buildSongItem(Song song, BuildContext context) {
+  String timestamp(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String hours(int n) {
+      if (n > 0) return "$n:";
+      return "";
+    }
+
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${hours(duration.inHours)}$twoDigitMinutes:$twoDigitSeconds";
+  }
+
   return Container(
       child: ListTile(
     leading: CircleAvatar(
@@ -18,20 +31,55 @@ Widget buildSongItem(Song song, BuildContext context) {
       song.title,
       style: TextStyle(color: Colors.black),
     ),
-    subtitle:
-        Text(song.duration.toString(), style: TextStyle(color: Colors.black)),
-    trailing: SongPopup(song),
+    subtitle: Text(timestamp(Duration(milliseconds: song.duration)),
+        style: TextStyle(color: Colors.black)),
+    trailing: getTrailingIcon(song),
     onTap: () {
-      if (SharedPreferencesUtil.instance.getBool(PrefKey.SHOW_POPUP)) {
-        Fluttertoast.showToast(
-          msg: "${song.title} zur Warteliste hinzugefügt",
-        );
-      }
-
-      MusicQueue.instance.playSong(song);
+      onSongShortClick(song);
     },
     onLongPress: () {
       onSongLongPress(song);
     },
   ));
+}
+
+Widget getTrailingIcon(Song song) {
+  Future<String> getFuture() async {
+    return await SharedPreferencesUtil().getString(PrefKey.SONG_ACTION_BUTTON);
+  }
+
+  return FutureBuilder<String>(
+      future: getFuture(),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData &&
+            snapshot.data != null &&
+            snapshot.data != '-1') {
+          IconData icon;
+          switch (snapshot.data) {
+            case '1':
+              //Sofort Abspielen und zur Playlist wechseln
+              icon = Icons.play_circle_filled;
+
+              break;
+            case '2':
+              //Abspielen ohne Wechsel
+              icon = Icons.play_circle_outline;
+              break;
+            case '3':
+              //An die Wiedergabeliste hinzufügen
+              icon = Icons.playlist_add;
+              break;
+          }
+          return IconButton(
+              icon: Icon(icon),
+              onPressed: () {
+                onSongActionButton(song);
+              });
+        } else {
+          return Container(
+            height: 0,
+            width: 0,
+          );
+        }
+      });
 }

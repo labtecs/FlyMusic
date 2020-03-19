@@ -38,28 +38,9 @@ onSongLongPress(Song song) async {
       break;
   }
 }
+onSongActionButton(Song song) async {
 
-onAlbumShortClick(Album album) async {
-  switch (await SharedPreferencesUtil.instance
-      .getString(PrefKey.SONG_SHORT_PRESS)) {
-    case '1':
-      //TODO settings for clear queue?
-      MusicQueue.instance.playAlbum(album);
-      break;
-    case '2':
-      MusicQueue.instance.addItem(album);
-      break;
-    case '3':
-      MusicQueue.instance.addItem(album);
-      break;
-  }
 }
-
-onAlbumLongPress(Album album) async {}
-
-onArtistShortClick(Artist artist) async {}
-
-onArtistLongPress(Artist artist) async {}
 
 showPopup() async {
   if (await SharedPreferencesUtil.instance.getBool(PrefKey.SHOW_POPUP)) {

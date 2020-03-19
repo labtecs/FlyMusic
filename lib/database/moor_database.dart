@@ -6,9 +6,23 @@ part 'moor_database.g.dart';
 //flutter packages pub run build_runner watch
 //TODO pagination
 // This annotation tells the code generator which tables this DB works with
-@UseMoor(
-    tables: [Songs, Albums, Artists, Arts, QueueItems],
-    daos: [SongDao, AlbumDao, ArtistDao, ArtDao, QueueItemDao])
+@UseMoor(tables: [
+  Songs,
+  Albums,
+  Artists,
+  Arts,
+  QueueItems,
+  Playlists,
+  PlaylistItems
+], daos: [
+  SongDao,
+  AlbumDao,
+  ArtistDao,
+  ArtDao,
+  QueueItemDao,
+  PlaylistDao,
+  PlaylistItemDao
+])
 // _$AppDatabase is the name of the generated class
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
@@ -186,6 +200,24 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
       customUpdate('UPDATE QueueItems SET position = position + $move');
 }
 
+@UseDao(tables: [PlaylistItems])
+class PlaylistDao extends DatabaseAccessor<AppDatabase>
+    with _$PlaylistDaoMixin {
+  final AppDatabase db;
+
+  // Called by the AppDatabase class
+  PlaylistDao(this.db) : super(db);
+}
+
+@UseDao(tables: [QueueItems])
+class PlaylistItemDao extends DatabaseAccessor<AppDatabase>
+    with _$PlaylistItemDaoMixin {
+  final AppDatabase db;
+
+  // Called by the AppDatabase class
+  PlaylistItemDao(this.db) : super(db);
+}
+
 class Songs extends Table {
   @override
   Set<Column> get primaryKey => {path};
@@ -215,6 +247,8 @@ class Albums extends Table {
   //Album name ist unique, kommt nur einmal vor (deshalb primary key)
   TextColumn get name => text().withLength(min: 1)();
 
+  TextColumn get customName => text().withLength(min: 1).nullable()();
+
   TextColumn get artCrc =>
       text().nullable().customConstraint('NULL REFERENCES Art(crc)')();
 }
@@ -225,6 +259,8 @@ class Artists extends Table {
 
   //Artist name ist unique, kommt nur einmal vor (deshalb primary key)
   TextColumn get name => text().withLength(min: 1)();
+
+  TextColumn get customName => text().withLength(min: 1).nullable()();
 }
 
 class Arts extends Table {
@@ -240,6 +276,23 @@ class QueueItems extends Table {
   IntColumn get id => integer().autoIncrement()();
 
   IntColumn get position => integer()();
+
+  TextColumn get songPath =>
+      text().nullable().customConstraint('NULL REFERENCES Song(id)')();
+}
+
+class Playlists extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  TextColumn get name => text().withLength(min: 1)();
+}
+
+//relation zwischen playlist und song
+class PlaylistItems extends Table {
+  @override
+  Set<Column> get primaryKey => {playlistId, songPath};
+
+  IntColumn get playlistId => integer()();
 
   TextColumn get songPath =>
       text().nullable().customConstraint('NULL REFERENCES Song(id)')();

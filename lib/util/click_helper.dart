@@ -3,23 +3,21 @@ import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 
-/*
-              '1': 'Sofort Abspielen',
-              '2': 'Als nächstes Abspielen',
-              '3': 'An die Wiedergabeliste hinzufügen',
-              '-1': 'Keine Aktion'
- */
 onSongShortClick(Song song) async {
   switch (await SharedPreferencesUtil.instance
       .getString(PrefKey.SONG_SHORT_PRESS)) {
     case '1':
-      MusicQueue.instance.playSong(song);
+      await MusicQueue.instance.playSongSwitchPlaylist(song);
       break;
     case '2':
-      MusicQueue.instance.addSongNext(song);
+      await MusicQueue.instance.playSong(song);
       break;
     case '3':
-      MusicQueue.instance.addItem(song);
+      await MusicQueue.instance.addSong(song);
+
+      Fluttertoast.showToast(
+        msg: "${song.title} zur Warteliste hinzugefügt",
+      );
       break;
   }
 }
@@ -28,24 +26,36 @@ onSongLongPress(Song song) async {
   switch (
       await SharedPreferencesUtil.instance.getString(PrefKey.SONG_LONG_PRESS)) {
     case '1':
-      MusicQueue.instance.playSong(song);
+      await MusicQueue.instance.playSongSwitchPlaylist(song);
       break;
     case '2':
-      MusicQueue.instance.addSongNext(song);
+      await MusicQueue.instance.playSong(song);
       break;
     case '3':
-      MusicQueue.instance.addItem(song);
+      await MusicQueue.instance.addSong(song);
+
+      Fluttertoast.showToast(
+        msg: "${song.title} zur Warteliste hinzugefügt",
+      );
       break;
   }
 }
+
 onSongActionButton(Song song) async {
+  switch (await SharedPreferencesUtil.instance
+      .getString(PrefKey.SONG_ACTION_BUTTON)) {
+    case '1':
+      await MusicQueue.instance.playSongSwitchPlaylist(song);
+      break;
+    case '2':
+      await MusicQueue.instance.playSong(song);
+      break;
+    case '3':
+      await MusicQueue.instance.addSong(song);
 
-}
-
-showPopup() async {
-  if (await SharedPreferencesUtil.instance.getBool(PrefKey.SHOW_POPUP)) {
-    Fluttertoast.showToast(
-      msg: "zur Warteliste hinzugefügt",
-    );
+      Fluttertoast.showToast(
+        msg: "${song.title} zur Warteliste hinzugefügt",
+      );
+      break;
   }
 }

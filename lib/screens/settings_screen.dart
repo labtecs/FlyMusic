@@ -30,13 +30,6 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
       SettingsTileGroup(
         title: 'Lieder',
         children: [
-          SwitchSettingsTile(
-            icon: Icon(Icons.short_text),
-            settingKey: PrefKey.SHOW_POPUP.index.toString(),
-            title: 'Popup',
-            subtitle: 'Bei Liedaktion Popup anzeigen',
-            defaultValue: true
-          ),
           RadioPickerSettingsTile(
             settingKey: PrefKey.SONG_SHORT_PRESS.index.toString(),
             title: 'Kurz drücken',

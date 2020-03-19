@@ -21,6 +21,18 @@ class MusicQueue {
     });
   }
 
+  void playSongSwitchPlaylist(Song song) async {
+    // 'Sofort Abspielen und zur Playlist wechseln'
+  }
+
+  void playSong(Song song) async {
+    // 'Abspielen ohne Wechsel'
+  }
+
+  void addSong(Song song) async {
+    //'An die Wiedergabeliste hinzufügen'
+  }
+
   playItem(Object item) async {
     if (item is Song) {
       playSong(item);

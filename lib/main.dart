@@ -14,9 +14,9 @@ void main() async {
       false) {
     //first start: "Warteschlange" und "Alle lieder" playlist in Playlists
     await db.playlistDao
-        .insert(PlaylistsCompanion.insert(name: "Alle Lieder"));
+        .insert(PlaylistsCompanion.insert(name: "Alle Lieder", type: -1));
     await db.playlistDao
-        .insert(PlaylistsCompanion.insert(name: "Warteschlange"));
+        .insert(PlaylistsCompanion.insert(name: "Warteschlange", type: -1));
 
     //init settings
     await SharedPreferencesUtil.instance

@@ -1,14 +1,18 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/main.dart';
+import 'package:flymusic/util/shared_prefrences_util.dart';
 
 class MusicQueue {
+  //TODO saved currently played song in shared prefs to reget it (position in qitems)
+  //TODO save
   static final MusicQueue instance = MusicQueue._internal();
 
   factory MusicQueue() => instance;
   final AudioPlayer audioPlayer = AudioPlayer();
 
   QueueItem currentItem;
+  int currentPlaylistId;
   Song currentSong;
 
   MusicQueue._internal() {
@@ -31,6 +35,30 @@ class MusicQueue {
 
   void addSong(Song song) async {
     //'An die Wiedergabeliste hinzufügen'
+    var insertTop = await SharedPreferencesUtil.instance
+            .getString(PrefKey.QUEUE_INSERT_OPTION) ==
+        '1';
+    //default oben
+    int newPosition = 0;
+
+    if (insertTop) {
+      //kommt oben in die warteliste aber nach aktuellem song
+      if (currentItem != null) {
+        //einfach nach diesem item
+        newPosition = currentItem.position + 1;
+      }
+    } else {
+      //kommt unten in die Warteliste
+      QueueItem lastItem = await MyApp.db.queueItemDao.getLastItemManually();
+      if (lastItem != null) {
+        newPosition = lastItem.position + 1;
+      }
+    }
+    //position frei schieben
+    await MyApp.db.queueItemDao.moveItemsDownFrom(newPosition);
+    //einfügen
+    await MyApp.db.queueItemDao.insert(QueueItemsCompanion.insert(
+        position: newPosition, isManuallyAdded: true, songId: song.id));
   }
 
   playItem(Object item) async {
@@ -59,7 +87,7 @@ class MusicQueue {
     }
   }
 
-    /*
+  /*
     //kommt oben in die warteschlange die anderen lieder werden nach unten verschoben
     MyApp.db.queueItemDao.moveItemsDownBy(1);
     MyApp.db.queueItemDao
@@ -68,7 +96,6 @@ class MusicQueue {
       await audioPlayer.stop();
     }
     await playPause();*/
-
 
   playAlbum(Album album) async {
     await clear();
@@ -90,8 +117,8 @@ class MusicQueue {
       newPosition = lastItem.position + 1;
     }
 
-    MyApp.db.queueItemDao.insert(
-        QueueItem(id: null, position: newPosition, songId: song.id));
+    MyApp.db.queueItemDao
+        .insert(QueueItem(id: null, position: newPosition, songId: song.id));
   }
 
   addSongNext(Song song) async {
@@ -130,8 +157,8 @@ class MusicQueue {
     if (lastItem != null) {
       newPosition = lastItem.position + 1;
     }
-    var insertItems = items.map((id) =>
-        new QueueItem(id: null, position: newPosition, songId: id));
+    var insertItems = items.map(
+        (id) => new QueueItem(id: null, position: newPosition, songId: id));
     MyApp.db.queueItemDao.insertAll(insertItems.toList());
   }
 

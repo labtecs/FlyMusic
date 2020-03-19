@@ -26,6 +26,23 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
             title: 'Impressum',
             screen: ImpressScreen()),
       ]),
+      SettingsTileGroup(title: 'Warteliste', children: [
+        RadioPickerSettingsTile(
+            settingKey: PrefKey.QUEUE_CLEAR_OPTION.index.toString(),
+            title: 'Verhalten bei wechsel zu einer anderen Playlist',
+            values: {'1': 'Warteliste nie verwerfen', '2': 'Warteliste leeren'},
+            defaultKey: '1'),
+        SwitchSettingsTile(
+            settingKey: PrefKey.QUEUE_WARNING_ON_CLEAR.index.toString(),
+            title: 'Nachfragen bevor die Warteliste geleert wird',
+            subtitle: 'Falls die Warteliste nicht leer ist',
+            defaultValue: true),
+        RadioPickerSettingsTile(
+            settingKey: PrefKey.QUEUE_INSERT_OPTION.index.toString(),
+            title: 'Einfügen in die Warteliste',
+            values: {'1': 'Oben (Als nächtes Lied)', '2': 'Unten (Am Ende)'},
+            defaultKey: '2'),
+      ]),
       SettingsTileGroup(
         title: 'Lieder',
         children: [
@@ -60,24 +77,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
               },
               defaultKey: '3'),
         ],
-      ),
-      SettingsTileGroup(title: 'Warteliste', children: [
-        RadioPickerSettingsTile(
-            settingKey: PrefKey.QUEUE_CLEAR_OPTION.index.toString(),
-            title: 'Verhalten bei wechsel zu einer anderen Playlist',
-            values: {'1': 'Warteliste nie verwerfen', '2': 'Warteliste leeren'},
-            defaultKey: '1'),
-        SwitchSettingsTile(
-            settingKey: PrefKey.QUEUE_WARNING_ON_CLEAR.index.toString(),
-            title: 'Nachfragen bevor die Warteliste geleert wird',
-            subtitle: 'Falls die Warteliste nicht leer ist',
-            defaultValue: true),
-        RadioPickerSettingsTile(
-            settingKey: PrefKey.QUEUE_INSERT_OPTION.index.toString(),
-            title: 'Einfügen in die Warteliste',
-            values: {'1': 'Oben (Als nächtes Lied)', '2': 'Unten (Am Ende)'},
-            defaultKey: '2'),
-      ])
+      )
     ]);
   }
 

@@ -196,8 +196,19 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
         ..limit(1))
       .getSingle();
 
-  Future<void> moveItemsDownBy(int move) =>
-      customUpdate('UPDATE QueueItems SET position = position + $move');
+  Future<QueueItem> getLastItemManually() => (select(queueItems)
+        ..orderBy(
+          ([
+            // Primary sorting by due date
+            (a) => OrderingTerm(expression: a.position, mode: OrderingMode.desc)
+          ]),
+        )
+        ..where((q) => q.isManuallyAdded)
+        ..limit(1))
+      .getSingle();
+
+  Future<void> moveItemsDownFrom(int startPosition) => customUpdate(
+      'UPDATE queue_items SET position = (position + 1) WHERE position >= $startPosition');
 }
 
 @UseDao(tables: [Playlists])
@@ -286,10 +297,10 @@ class Arts extends Table {
 class QueueItems extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  IntColumn get playlistId =>
-      integer().customConstraint('NULL REFERENCES Playlist(id)')();
-
+  //.customConstraint('UNIQUE') would kill the update statement to move items
   IntColumn get position => integer()();
+
+  BoolColumn get isManuallyAdded => boolean()();
 
   IntColumn get songId =>
       integer().customConstraint('NOT NULL REFERENCES Song(id)')();
@@ -300,6 +311,8 @@ class Playlists extends Table {
 
   //kann geändert werden
   TextColumn get name => text().withLength(min: 1)();
+
+  IntColumn get type => integer()(); //-1: app (allsong, queue), 0: custom, 1: album, 2: artist
 }
 
 //relation zwischen playlist und song
@@ -307,7 +320,8 @@ class PlaylistItems extends Table {
   @override
   Set<Column> get primaryKey => {playlistId, songId};
 
-  IntColumn get playlistId => integer()();
+  IntColumn get playlistId =>
+      integer().customConstraint('NOT NULL REFERENCES Playlists(id)')();
 
   IntColumn get songId =>
       integer().customConstraint('NOT NULL REFERENCES Song(id)')();

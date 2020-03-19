@@ -893,24 +893,25 @@ class $ArtsTable extends Arts with TableInfo<$ArtsTable, Art> {
 
 class QueueItem extends DataClass implements Insertable<QueueItem> {
   final int id;
-  final int playlistId;
   final int position;
+  final bool isManuallyAdded;
   final int songId;
   QueueItem(
       {@required this.id,
-      @required this.playlistId,
       @required this.position,
+      @required this.isManuallyAdded,
       @required this.songId});
   factory QueueItem.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
+    final boolType = db.typeSystem.forDartType<bool>();
     return QueueItem(
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      playlistId: intType
-          .mapFromDatabaseResponse(data['${effectivePrefix}playlist_id']),
       position:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}position']),
+      isManuallyAdded: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_manually_added']),
       songId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}song_id']),
     );
@@ -920,8 +921,8 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return QueueItem(
       id: serializer.fromJson<int>(json['id']),
-      playlistId: serializer.fromJson<int>(json['playlistId']),
       position: serializer.fromJson<int>(json['position']),
+      isManuallyAdded: serializer.fromJson<bool>(json['isManuallyAdded']),
       songId: serializer.fromJson<int>(json['songId']),
     );
   }
@@ -930,8 +931,8 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'playlistId': serializer.toJson<int>(playlistId),
       'position': serializer.toJson<int>(position),
+      'isManuallyAdded': serializer.toJson<bool>(isManuallyAdded),
       'songId': serializer.toJson<int>(songId),
     };
   }
@@ -940,76 +941,79 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
   QueueItemsCompanion createCompanion(bool nullToAbsent) {
     return QueueItemsCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      playlistId: playlistId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(playlistId),
       position: position == null && nullToAbsent
           ? const Value.absent()
           : Value(position),
+      isManuallyAdded: isManuallyAdded == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isManuallyAdded),
       songId:
           songId == null && nullToAbsent ? const Value.absent() : Value(songId),
     );
   }
 
-  QueueItem copyWith({int id, int playlistId, int position, int songId}) =>
+  QueueItem copyWith(
+          {int id, int position, bool isManuallyAdded, int songId}) =>
       QueueItem(
         id: id ?? this.id,
-        playlistId: playlistId ?? this.playlistId,
         position: position ?? this.position,
+        isManuallyAdded: isManuallyAdded ?? this.isManuallyAdded,
         songId: songId ?? this.songId,
       );
   @override
   String toString() {
     return (StringBuffer('QueueItem(')
           ..write('id: $id, ')
-          ..write('playlistId: $playlistId, ')
           ..write('position: $position, ')
+          ..write('isManuallyAdded: $isManuallyAdded, ')
           ..write('songId: $songId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode,
-      $mrjc(playlistId.hashCode, $mrjc(position.hashCode, songId.hashCode))));
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode,
+      $mrjc(position.hashCode,
+          $mrjc(isManuallyAdded.hashCode, songId.hashCode))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is QueueItem &&
           other.id == this.id &&
-          other.playlistId == this.playlistId &&
           other.position == this.position &&
+          other.isManuallyAdded == this.isManuallyAdded &&
           other.songId == this.songId);
 }
 
 class QueueItemsCompanion extends UpdateCompanion<QueueItem> {
   final Value<int> id;
-  final Value<int> playlistId;
   final Value<int> position;
+  final Value<bool> isManuallyAdded;
   final Value<int> songId;
   const QueueItemsCompanion({
     this.id = const Value.absent(),
-    this.playlistId = const Value.absent(),
     this.position = const Value.absent(),
+    this.isManuallyAdded = const Value.absent(),
     this.songId = const Value.absent(),
   });
   QueueItemsCompanion.insert({
     this.id = const Value.absent(),
-    @required int playlistId,
     @required int position,
+    @required bool isManuallyAdded,
     @required int songId,
-  })  : playlistId = Value(playlistId),
-        position = Value(position),
+  })  : position = Value(position),
+        isManuallyAdded = Value(isManuallyAdded),
         songId = Value(songId);
   QueueItemsCompanion copyWith(
       {Value<int> id,
-      Value<int> playlistId,
       Value<int> position,
+      Value<bool> isManuallyAdded,
       Value<int> songId}) {
     return QueueItemsCompanion(
       id: id ?? this.id,
-      playlistId: playlistId ?? this.playlistId,
       position: position ?? this.position,
+      isManuallyAdded: isManuallyAdded ?? this.isManuallyAdded,
       songId: songId ?? this.songId,
     );
   }
@@ -1029,15 +1033,6 @@ class $QueueItemsTable extends QueueItems
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
-  final VerificationMeta _playlistIdMeta = const VerificationMeta('playlistId');
-  GeneratedIntColumn _playlistId;
-  @override
-  GeneratedIntColumn get playlistId => _playlistId ??= _constructPlaylistId();
-  GeneratedIntColumn _constructPlaylistId() {
-    return GeneratedIntColumn('playlist_id', $tableName, false,
-        $customConstraints: 'NULL REFERENCES Playlist(id)');
-  }
-
   final VerificationMeta _positionMeta = const VerificationMeta('position');
   GeneratedIntColumn _position;
   @override
@@ -1045,6 +1040,20 @@ class $QueueItemsTable extends QueueItems
   GeneratedIntColumn _constructPosition() {
     return GeneratedIntColumn(
       'position',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _isManuallyAddedMeta =
+      const VerificationMeta('isManuallyAdded');
+  GeneratedBoolColumn _isManuallyAdded;
+  @override
+  GeneratedBoolColumn get isManuallyAdded =>
+      _isManuallyAdded ??= _constructIsManuallyAdded();
+  GeneratedBoolColumn _constructIsManuallyAdded() {
+    return GeneratedBoolColumn(
+      'is_manually_added',
       $tableName,
       false,
     );
@@ -1060,7 +1069,7 @@ class $QueueItemsTable extends QueueItems
   }
 
   @override
-  List<GeneratedColumn> get $columns => [id, playlistId, position, songId];
+  List<GeneratedColumn> get $columns => [id, position, isManuallyAdded, songId];
   @override
   $QueueItemsTable get asDslTable => this;
   @override
@@ -1074,17 +1083,19 @@ class $QueueItemsTable extends QueueItems
     if (d.id.present) {
       context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
     }
-    if (d.playlistId.present) {
-      context.handle(_playlistIdMeta,
-          playlistId.isAcceptableValue(d.playlistId.value, _playlistIdMeta));
-    } else if (isInserting) {
-      context.missing(_playlistIdMeta);
-    }
     if (d.position.present) {
       context.handle(_positionMeta,
           position.isAcceptableValue(d.position.value, _positionMeta));
     } else if (isInserting) {
       context.missing(_positionMeta);
+    }
+    if (d.isManuallyAdded.present) {
+      context.handle(
+          _isManuallyAddedMeta,
+          isManuallyAdded.isAcceptableValue(
+              d.isManuallyAdded.value, _isManuallyAddedMeta));
+    } else if (isInserting) {
+      context.missing(_isManuallyAddedMeta);
     }
     if (d.songId.present) {
       context.handle(
@@ -1109,11 +1120,12 @@ class $QueueItemsTable extends QueueItems
     if (d.id.present) {
       map['id'] = Variable<int, IntType>(d.id.value);
     }
-    if (d.playlistId.present) {
-      map['playlist_id'] = Variable<int, IntType>(d.playlistId.value);
-    }
     if (d.position.present) {
       map['position'] = Variable<int, IntType>(d.position.value);
+    }
+    if (d.isManuallyAdded.present) {
+      map['is_manually_added'] =
+          Variable<bool, BoolType>(d.isManuallyAdded.value);
     }
     if (d.songId.present) {
       map['song_id'] = Variable<int, IntType>(d.songId.value);
@@ -1130,7 +1142,8 @@ class $QueueItemsTable extends QueueItems
 class Playlist extends DataClass implements Insertable<Playlist> {
   final int id;
   final String name;
-  Playlist({@required this.id, @required this.name});
+  final int type;
+  Playlist({@required this.id, @required this.name, @required this.type});
   factory Playlist.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -1139,6 +1152,7 @@ class Playlist extends DataClass implements Insertable<Playlist> {
     return Playlist(
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
+      type: intType.mapFromDatabaseResponse(data['${effectivePrefix}type']),
     );
   }
   factory Playlist.fromJson(Map<String, dynamic> json,
@@ -1147,6 +1161,7 @@ class Playlist extends DataClass implements Insertable<Playlist> {
     return Playlist(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      type: serializer.fromJson<int>(json['type']),
     );
   }
   @override
@@ -1155,6 +1170,7 @@ class Playlist extends DataClass implements Insertable<Playlist> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
+      'type': serializer.toJson<int>(type),
     };
   }
 
@@ -1163,45 +1179,58 @@ class Playlist extends DataClass implements Insertable<Playlist> {
     return PlaylistsCompanion(
       id: id == null && nullToAbsent ? const Value.absent() : Value(id),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
     );
   }
 
-  Playlist copyWith({int id, String name}) => Playlist(
+  Playlist copyWith({int id, String name, int type}) => Playlist(
         id: id ?? this.id,
         name: name ?? this.name,
+        type: type ?? this.type,
       );
   @override
   String toString() {
     return (StringBuffer('Playlist(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('type: $type')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode, name.hashCode));
+  int get hashCode =>
+      $mrjf($mrjc(id.hashCode, $mrjc(name.hashCode, type.hashCode)));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is Playlist && other.id == this.id && other.name == this.name);
+      (other is Playlist &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.type == this.type);
 }
 
 class PlaylistsCompanion extends UpdateCompanion<Playlist> {
   final Value<int> id;
   final Value<String> name;
+  final Value<int> type;
   const PlaylistsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.type = const Value.absent(),
   });
   PlaylistsCompanion.insert({
     this.id = const Value.absent(),
     @required String name,
-  }) : name = Value(name);
-  PlaylistsCompanion copyWith({Value<int> id, Value<String> name}) {
+    @required int type,
+  })  : name = Value(name),
+        type = Value(type);
+  PlaylistsCompanion copyWith(
+      {Value<int> id, Value<String> name, Value<int> type}) {
     return PlaylistsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      type: type ?? this.type,
     );
   }
 }
@@ -1228,8 +1257,20 @@ class $PlaylistsTable extends Playlists
     return GeneratedTextColumn('name', $tableName, false, minTextLength: 1);
   }
 
+  final VerificationMeta _typeMeta = const VerificationMeta('type');
+  GeneratedIntColumn _type;
   @override
-  List<GeneratedColumn> get $columns => [id, name];
+  GeneratedIntColumn get type => _type ??= _constructType();
+  GeneratedIntColumn _constructType() {
+    return GeneratedIntColumn(
+      'type',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [id, name, type];
   @override
   $PlaylistsTable get asDslTable => this;
   @override
@@ -1248,6 +1289,12 @@ class $PlaylistsTable extends Playlists
           _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (d.type.present) {
+      context.handle(
+          _typeMeta, type.isAcceptableValue(d.type.value, _typeMeta));
+    } else if (isInserting) {
+      context.missing(_typeMeta);
     }
     return context;
   }
@@ -1268,6 +1315,9 @@ class $PlaylistsTable extends Playlists
     }
     if (d.name.present) {
       map['name'] = Variable<String, StringType>(d.name.value);
+    }
+    if (d.type.present) {
+      map['type'] = Variable<int, IntType>(d.type.value);
     }
     return map;
   }
@@ -1374,11 +1424,8 @@ class $PlaylistItemsTable extends PlaylistItems
   @override
   GeneratedIntColumn get playlistId => _playlistId ??= _constructPlaylistId();
   GeneratedIntColumn _constructPlaylistId() {
-    return GeneratedIntColumn(
-      'playlist_id',
-      $tableName,
-      false,
-    );
+    return GeneratedIntColumn('playlist_id', $tableName, false,
+        $customConstraints: 'NOT NULL REFERENCES Playlists(id)');
   }
 
   final VerificationMeta _songIdMeta = const VerificationMeta('songId');

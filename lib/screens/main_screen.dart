@@ -32,12 +32,12 @@ class StartScreenState extends State<StartScreen>
     );
     onPlayerStateChanged =
         MusicQueue.instance.audioPlayer.onPlayerStateChanged.listen((state) {
-      if (MusicQueue.instance.currentSong != null &&
-          _bottomPlayerVisible == false) {
-        //make bottom player visible
-        setState(() {});
-      }
-    });
+          if (MusicQueue.instance.currentSong != null &&
+              _bottomPlayerVisible == false) {
+            //make bottom player visible
+            setState(() {});
+          }
+        });
     super.initState();
   }
 
@@ -78,7 +78,7 @@ class StartScreenState extends State<StartScreen>
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
           this._c.animateToPage(index,
-              duration: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 100),
               curve: Curves.easeInOut);
         },
         items: <BottomNavigationBarItem>[

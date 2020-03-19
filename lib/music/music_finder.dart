@@ -96,7 +96,7 @@ class MusicFinder {
       var id = await database.songDao.insert(song);
       if(id != null) { //null if already exists
         //insert song into "all songs" playlist
-        playlistItems.add(PlaylistItem(playlistId: 0, songId: id));
+        playlistItems.add(PlaylistItem(playlistId: 1, songId: id));
         //insert song into "album" playlist
         playlistItems
             .add(PlaylistItem(playlistId: currentAlbum.playlistId, songId: id));
@@ -196,7 +196,7 @@ class MusicFinder {
       if (currentAlbum == null) {
         //create playlist for album
         var playlistId = await database.playlistDao
-            .insert(PlaylistsCompanion.insert(name: album));
+            .insert(PlaylistsCompanion.insert(name: album, type: 1));
         //create new album
         currentAlbum = Album(
             name: album, artCrc: art?.crc ?? null, playlistId: playlistId);
@@ -220,7 +220,7 @@ class MusicFinder {
       if (currentArtist == null) {
         //create playlist for artist
         var playlistId = await database.playlistDao
-            .insert(PlaylistsCompanion.insert(name: artist));
+            .insert(PlaylistsCompanion.insert(name: artist, type: 2));
         //create new album
         currentArtist = Artist(name: artist, playlistId: playlistId);
         //insert album

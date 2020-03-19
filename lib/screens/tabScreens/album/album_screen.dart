@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flymusic/database/moor_database.dart';
-import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/screens/tabScreens/album/album_track_list_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 import 'package:provider/provider.dart';
@@ -20,10 +18,6 @@ class _AlbumListState extends State<AlbumList> {
         backgroundColor: Colors.transparent,
       ),
       title: Text(album.name),
-      trailing: SongPopup(album),
-      onLongPress: () {
-        Fluttertoast.showToast(msg: "${album.name}");
-      },
       onTap: () {
         Navigator.push(
           context,

@@ -133,7 +133,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
 
   double getTop(double expandedHeight, double shrinkOffset) {
     double num = expandedHeight - 50 - shrinkOffset;
-    print("num $num shrink $shrinkOffset");
+
     if (num < kToolbarHeight) {
       num = kToolbarHeight;
     }

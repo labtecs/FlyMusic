@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
-import 'package:flymusic/screens/popupScreens/song_popup_screen.dart';
 import 'package:flymusic/screens/tabScreens/artist/artist_track_list_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +16,6 @@ class _ArtistScreenState extends State<ArtistScreen> {
         backgroundColor: Colors.transparent,
       ),
       title: Text(artist.name),
-      trailing: SongPopup(artist),
       onTap: () {
         Navigator.push(
           context,
@@ -51,18 +49,5 @@ class _ArtistScreenState extends State<ArtistScreen> {
         },
       ),
     );
-  }
-
-  /*
-  Überprüft ob ein Cover für das Lied vorhanden ist.
-  Gibt andernfalls einen platzhalter zurück
-   */
-  String checkCover(String coverPath) {
-    String testCover = "asset/images/artist_placeholder.jpg";
-    if (coverPath == null) {
-      return testCover;
-    } else {
-      return coverPath;
-    }
   }
 }

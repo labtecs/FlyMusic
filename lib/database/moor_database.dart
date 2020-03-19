@@ -157,7 +157,8 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
             (a) => OrderingTerm(expression: a.position, mode: OrderingMode.asc)
           ]),
         )
-        ..where((q) => q.position.isBiggerThanValue(currentPosition)))
+        ..where((q) => q.position.isBiggerThanValue(currentPosition))
+        ..limit(1))
       .getSingle();
 
   Future<QueueItem> getPreviousItem(int currentPosition) => (select(queueItems)
@@ -167,7 +168,8 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
             (a) => OrderingTerm(expression: a.position, mode: OrderingMode.asc)
           ]),
         )
-        ..where((q) => q.position.isSmallerThanValue(currentPosition)))
+        ..where((q) => q.position.isSmallerThanValue(currentPosition))
+        ..limit(1))
       .getSingle();
 
   Future<QueueItem> getLastItem() => (select(queueItems)
@@ -176,7 +178,8 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
             // Primary sorting by due date
             (a) => OrderingTerm(expression: a.position, mode: OrderingMode.desc)
           ]),
-        ))
+        )
+        ..limit(1))
       .getSingle();
 
   Future<void> moveItemsDownBy(int move) =>

@@ -21,95 +21,78 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
     return SettingsScreen(title: "Application Settings", children: [
       getFolders(),
       SettingsTileGroup(title: 'Allgemein', children: [
-        SwitchSettingsTile(
-          icon: Icon(Icons.short_text),
-          settingKey: PrefKey.SHOW_POPUP.index.toString(),
-          title: 'Popup',
-          subtitle: 'Bei Lied/Album Aktionen Popup anzeigen',
-          defaultValue: true,
-        ),
         SimpleSettingsTile(
           icon: Icon(Icons.info_outline),
           title: 'Impressum',
-          screen: ImpressScreen(),
+          screen: ImpressScreen()
         ),
       ]),
       SettingsTileGroup(
         title: 'Lieder',
         children: [
+          SwitchSettingsTile(
+            icon: Icon(Icons.short_text),
+            settingKey: PrefKey.SHOW_POPUP.index.toString(),
+            title: 'Popup',
+            subtitle: 'Bei Liedaktion Popup anzeigen',
+            defaultValue: true
+          ),
           RadioPickerSettingsTile(
             settingKey: PrefKey.SONG_SHORT_PRESS.index.toString(),
             title: 'Kurz drücken',
             values: {
-              '1': 'Sofort Abspielen',
-              '2': 'Als nächstes Abspielen',
+              '1': 'Sofort Abspielen und zur Playlist wechseln',
+              '2': 'Abspielen ohne Wechsel',
               '3': 'An die Wiedergabeliste hinzufügen',
               '-1': 'Keine Aktion'
             },
-            defaultKey: '1',
+            defaultKey: '1'
           ),
           RadioPickerSettingsTile(
             settingKey: PrefKey.SONG_LONG_PRESS.index.toString(),
             title: 'Lange drücken',
             values: {
-              '1': 'Sofort Abspielen',
-              '2': 'Als nächstes Abspielen',
+              '1': 'Sofort Abspielen und Playlist wechseln',
+              '2': 'Abspielen ohne Wechsel',
               '3': 'An die Wiedergabeliste hinzufügen',
               '-1': 'Keine Aktion'
             },
-            defaultKey: '2',
+            defaultKey: '2'
           ),
           RadioPickerSettingsTile(
             settingKey: PrefKey.SONG_ACTION_BUTTON.index.toString(),
             title: 'Aktions Button',
             values: {
-              '1': 'Sofort Abspielen',
-              '2': 'Als nächstes Abspielen',
+              '1': 'Sofort Abspielen und zur Playlist wechseln',
+              '2': 'Abspielen ohne Wechsel',
               '3': 'An die Wiedergabeliste hinzufügen',
               '-1': 'Keine Aktion'
             },
-            defaultKey: '3',
+            defaultKey: '3'
           ),
         ],
       ),
-      SettingsTileGroup(
-        title: 'Alben',
-        children: [
-          RadioPickerSettingsTile(
-            settingKey: PrefKey.ALBUM_SHORT_PRESS.index.toString(),
-            title: 'Kurz drücken',
-            values: {
-              '1': 'Sofort Abspielen',
-              '2': 'Als nächstes Abspielen',
-              '3': 'An die Wiedergabeliste hinzufügen',
-              '-1': 'Keine Aktion'
-            },
-            defaultKey: '1',
-          ),
-          RadioPickerSettingsTile(
-            settingKey: PrefKey.ALBUM_LONG_PRESS.index.toString(),
-            title: 'Lange drücken',
-            values: {
-              '1': 'Sofort Abspielen',
-              '2': 'Als nächstes Abspielen',
-              '3': 'An die Wiedergabeliste hinzufügen',
-              '-1': 'Keine Aktion'
-            },
-            defaultKey: '2',
-          ),
-          RadioPickerSettingsTile(
-            settingKey: PrefKey.ALBUM_ACTION_BUTTON.index.toString(),
-            title: 'Aktions Button',
-            values: {
-              '1': 'Sofort Abspielen',
-              '2': 'Als nächstes Abspielen',
-              '3': 'An die Wiedergabeliste hinzufügen',
-              '-1': 'Keine Aktion'
-            },
-            defaultKey: '3',
-          ),
-        ],
-      ),
+      SettingsTileGroup(title: 'Warteliste', children: [
+        RadioPickerSettingsTile(
+          settingKey: PrefKey.QUEUE_CLEAR_OPTION.index.toString(),
+          title: 'Verhalten bei wechsel zu einer anderen Playlist',
+          values: {'1': 'Warteliste nie verwerfen', '2': 'Warteliste leeren'},
+          defaultKey: '1'
+        ),
+        SwitchSettingsTile(
+          settingKey: PrefKey.QUEUE_WARNING_ON_CLEAR.index.toString(),
+          title: 'Nachfragen bevor die Warteliste geleert wird',
+          subtitle: 'Falls die Warteliste nicht leer ist',
+          visibleIfKey: PrefKey.QUEUE_CLEAR_OPTION.index.toString(),
+          defaultValue: true
+        ),
+        RadioPickerSettingsTile(
+          settingKey: PrefKey.QUEUE_INSERT_OPTION.index.toString(),
+          title: 'Einfügen in die Warteliste',
+          values: {'1': 'Oben (Als nächtes Lied)', '2': 'Unten (Am Ende)'},
+          defaultKey: '2'
+        ),
+      ])
     ]);
   }
 

@@ -1,24 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil {
-  static SharedPreferencesUtil _storageUtil;
-  static SharedPreferences _preferences;
+  static final SharedPreferencesUtil instance =
+      SharedPreferencesUtil._internal();
 
-  static Future getInstance() async {
-    if (_storageUtil == null) {
-      // keep local instance till it is fully initialized.
-      var secureStorage = SharedPreferencesUtil._();
-      await secureStorage._init();
-      _storageUtil = secureStorage;
-    }
-    return _storageUtil;
-  }
+  factory SharedPreferencesUtil() => instance;
 
-  SharedPreferencesUtil._();
-
-  Future _init() async {
-    _preferences = await SharedPreferences.getInstance();
-  }
+  SharedPreferencesUtil._internal();
 
   getString(PrefKey prefKey) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -41,7 +29,8 @@ class SharedPreferencesUtil {
   static Future<List<String>> getList(PrefKey prefKey) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
-    return prefs.getString(prefKey.index.toString())?.split("##") ?? List<String>();
+    return prefs.getString(prefKey.index.toString())?.split("##") ??
+        List<String>();
   }
 
   setBool(PrefKey prefKey, bool value) async {
@@ -81,9 +70,13 @@ class SharedPreferencesUtil {
   }
 }
 
-
-enum PrefKey{
-  SONG_SHORT_PRESS, SONG_LONG_PRESS, SONG_ACTION_BUTTON,
-  ALBUM_SHORT_PRESS, ALBUM_LONG_PRESS, ALBUM_ACTION_BUTTON,
-  SHOW_POPUP, PATH_LIST
+enum PrefKey {
+  PATH_LIST,
+  SONG_SHORT_PRESS,
+  SONG_LONG_PRESS,
+  SONG_ACTION_BUTTON,
+  SHOW_POPUP,
+  QUEUE_CLEAR_OPTION,
+  QUEUE_WARNING_ON_CLEAR,
+  QUEUE_INSERT_OPTION
 }

@@ -12,8 +12,6 @@ class MusicQueue {
   final AudioPlayer audioPlayer = AudioPlayer();
 
   QueueItem currentItem;
-  int currentPlaylistId;
-  Song currentSong;
 
   MusicQueue._internal() {
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
@@ -25,15 +23,68 @@ class MusicQueue {
     });
   }
 
-  void playSongSwitchPlaylist(Song song) async {
+  void playSongSwitchPlaylist(int songId, int playlistId) async {
     // 'Sofort Abspielen und zur Playlist wechseln'
+    var clear = await SharedPreferencesUtil.instance
+            .getString(PrefKey.QUEUE_CLEAR_OPTION) ==
+        '2';
+
+    if (clear) {
+      var popup = await SharedPreferencesUtil.instance
+          .getBool(PrefKey.QUEUE_WARNING_ON_CLEAR);
+      if (popup) {
+        var manuallyNotEmpty =
+            await MyApp.db.queueItemDao.getAnyManuallyAddedItem() != null;
+        if (manuallyNotEmpty) {
+          //TODO ask and wait
+        } else {
+          await MyApp.db.queueItemDao.clearQueue();
+        }
+      } else {
+        await MyApp.db.queueItemDao.clearQueue();
+      }
+    }
+
+    //remove old album (not manually added) and not current song (possible to click back if it is not removed)
+    await MyApp.db.queueItemDao.clearNotManuallyQueue(currentItem?.id ?? -1);
+
+    var items = await MyApp.db.playlistItemDao.findAllByPlaylist(playlistId);
+
+    QueueItem lastItem = await MyApp.db.queueItemDao.getLastItemManually();
+
+    var queueItemList = List<QueueItemsCompanion>();
+    int position = lastItem?.position ?? 0;
+    items.forEach((i) {
+      if (!(i.playlistId == playlistId && i.songId == songId))
+        queueItemList.add(QueueItemsCompanion.insert(
+            position: position++, isManuallyAdded: false, songId: i.songId));
+    });
+    await MyApp.db.queueItemDao.insertAll(queueItemList);
+
+    //added items now directly play song
+    playSong(songId);
   }
 
-  void playSong(Song song) async {
+  void playSong(int songId) async {
     // 'Abspielen ohne Wechsel'
+    int newPosition = 0;
+    if (currentItem != null) {
+      //einfach nach diesem item
+      newPosition = currentItem.position + 1;
+    }
+    //position frei schieben (nächsten songs nach unten)
+    await MyApp.db.queueItemDao.moveItemsDownFrom(newPosition);
+    //einfügen
+    await MyApp.db.queueItemDao.insert(QueueItemsCompanion.insert(
+        position: newPosition, isManuallyAdded: true, songId: songId));
+    //abspielen
+    //TODO current Item and currentSong
+
+    var song = await MyApp.db.songDao.findSongById(songId);
+    await audioPlayer.play(song.path, isLocal: true);
   }
 
-  void addSong(Song song) async {
+  void addSong(int songId, int playlistId) async {
     //'An die Wiedergabeliste hinzufügen'
     var insertTop = await SharedPreferencesUtil.instance
             .getString(PrefKey.QUEUE_INSERT_OPTION) ==
@@ -58,12 +109,12 @@ class MusicQueue {
     await MyApp.db.queueItemDao.moveItemsDownFrom(newPosition);
     //einfügen
     await MyApp.db.queueItemDao.insert(QueueItemsCompanion.insert(
-        position: newPosition, isManuallyAdded: true, songId: song.id));
+        position: newPosition, isManuallyAdded: true, songId: songId));
   }
 
   playItem(Object item) async {
     if (item is Song) {
-      playSong(item);
+      // playSong(item);
     } else if (item is Album) {
       playAlbum(item);
     } else if (item is Artist) {
@@ -177,7 +228,7 @@ class MusicQueue {
   }
 
   //20 lieder vor dem aktuellen - davor löschen TODO
-  playNext() async {
+  playNext() async {/*
     currentItem =
         await MyApp.db.queueItemDao.getNextItem(currentItem?.position ?? -1);
     if (currentItem == null) {
@@ -190,11 +241,11 @@ class MusicQueue {
     int result = await audioPlayer.play(currentSong.path, isLocal: true);
     if (result != 1) {
       await playNext();
-    }
+    }*/
   }
 
   //warteschlange leer -> nächstes lied in "alle lieder"
-  playPrevious() async {
+  playPrevious() async {/*
     currentItem =
         await MyApp.db.queueItemDao.getPreviousItem(currentItem?.position ?? 1);
     if (currentItem == null) {
@@ -207,7 +258,7 @@ class MusicQueue {
     int result = await audioPlayer.play(currentSong.path, isLocal: true);
     if (result != 1) {
       await playPrevious();
-    }
+    }*/
   }
 
   repeat() {}

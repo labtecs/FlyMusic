@@ -207,8 +207,20 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
         ..limit(1))
       .getSingle();
 
+  Future<QueueItem> getAnyManuallyAddedItem() => (select(queueItems)
+        ..where((q) => q.isManuallyAdded)
+        ..limit(1))
+      .getSingle();
+
   Future<void> moveItemsDownFrom(int startPosition) => customUpdate(
       'UPDATE queue_items SET position = (position + 1) WHERE position >= $startPosition');
+
+  Future<void> clearQueue() => delete(queueItems).go();
+
+  Future<void> clearNotManuallyQueue(int currentItemId) => (delete(queueItems)
+        ..where((q) => q.isManuallyAdded.equals(false))
+        ..where((q) => q.id.isNotIn([currentItemId])))
+      .go();
 }
 
 @UseDao(tables: [Playlists])
@@ -233,6 +245,10 @@ class PlaylistItemDao extends DatabaseAccessor<AppDatabase>
 
   Future insertAll(List<Insertable<PlaylistItem>> itemsList) => db.batch((b) =>
       b.insertAll(playlistItems, itemsList, mode: InsertMode.insertOrIgnore));
+
+  Future<List<PlaylistItem>> findAllByPlaylist(int playlistId) =>
+      (select(playlistItems)..where((q) => q.playlistId.equals(playlistId)))
+          .get();
 }
 
 class Songs extends Table {
@@ -295,6 +311,9 @@ class Arts extends Table {
 }
 
 class QueueItems extends Table {
+  @override
+  Set<Column> get primaryKey => {id};
+
   IntColumn get id => integer().autoIncrement()();
 
   //.customConstraint('UNIQUE') would kill the update statement to move items
@@ -312,7 +331,8 @@ class Playlists extends Table {
   //kann geändert werden
   TextColumn get name => text().withLength(min: 1)();
 
-  IntColumn get type => integer()(); //-1: app (allsong, queue), 0: custom, 1: album, 2: artist
+  IntColumn get type =>
+      integer()(); //-1: app (allsong, queue), 0: custom, 1: album, 2: artist
 }
 
 //relation zwischen playlist und song
@@ -321,7 +341,7 @@ class PlaylistItems extends Table {
   Set<Column> get primaryKey => {playlistId, songId};
 
   IntColumn get playlistId =>
-      integer().customConstraint('NOT NULL REFERENCES Playlists(id)')();
+      integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
 
   IntColumn get songId =>
       integer().customConstraint('NOT NULL REFERENCES Song(id)')();

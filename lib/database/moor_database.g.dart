@@ -1425,7 +1425,7 @@ class $PlaylistItemsTable extends PlaylistItems
   GeneratedIntColumn get playlistId => _playlistId ??= _constructPlaylistId();
   GeneratedIntColumn _constructPlaylistId() {
     return GeneratedIntColumn('playlist_id', $tableName, false,
-        $customConstraints: 'NOT NULL REFERENCES Playlists(id)');
+        $customConstraints: 'NOT NULL REFERENCES Playlist(id)');
   }
 
   final VerificationMeta _songIdMeta = const VerificationMeta('songId');

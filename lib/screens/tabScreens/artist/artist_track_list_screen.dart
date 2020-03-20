@@ -26,7 +26,7 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                return buildSongItem(snapshot.data[index], context);
+                return buildSongItem(snapshot.data[index], widget.artist.playlistId, context);
               },
             );
           } else {

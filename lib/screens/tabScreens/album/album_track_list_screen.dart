@@ -45,7 +45,8 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
           newsListSliver = SliverList(
               delegate: SliverChildBuilderDelegate(
             (context, index) {
-              return buildSongItem(snapshot.data[index], context);
+              return buildSongItem(
+                  snapshot.data[index], widget.album.playlistId, context);
             },
             childCount: snapshot.data.length,
           ));

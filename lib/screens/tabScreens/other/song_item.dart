@@ -4,7 +4,7 @@ import 'package:flymusic/util/art_util.dart';
 import 'package:flymusic/util/click_helper.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 
-Widget buildSongItem(Song song, BuildContext context) {
+Widget buildSongItem(Song song, int playlistId, BuildContext context) {
   String timestamp(Duration duration) {
     String twoDigits(int n) {
       if (n >= 10) return "$n";
@@ -33,17 +33,17 @@ Widget buildSongItem(Song song, BuildContext context) {
     ),
     subtitle: Text(timestamp(Duration(milliseconds: song.duration)),
         style: TextStyle(color: Colors.black)),
-    trailing: getTrailingIcon(song),
+    trailing: getTrailingIcon(song, playlistId),
     onTap: () {
-      onSongShortClick(song);
+      onSongShortClick(song, playlistId);
     },
     onLongPress: () {
-      onSongLongPress(song);
+      onSongLongPress(song, playlistId);
     },
   ));
 }
 
-Widget getTrailingIcon(Song song) {
+Widget getTrailingIcon(Song song, int playlistId) {
   Future<String> getFuture() async {
     return await SharedPreferencesUtil().getString(PrefKey.SONG_ACTION_BUTTON);
   }
@@ -73,7 +73,7 @@ Widget getTrailingIcon(Song song) {
           return IconButton(
               icon: Icon(icon),
               onPressed: () {
-                onSongActionButton(song);
+                onSongActionButton(song, playlistId);
               });
         } else {
           return Container(

@@ -19,7 +19,7 @@ class _TrackListState extends State<TrackList> {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
-                return buildSongItem(snapshot.data[index], context);
+                return buildSongItem(snapshot.data[index], 1, context);
               },
             );
           } else {

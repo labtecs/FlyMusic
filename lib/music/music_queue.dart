@@ -5,13 +5,13 @@ import 'package:flymusic/util/shared_prefrences_util.dart';
 
 class MusicQueue {
   //TODO saved currently played song in shared prefs to reget it (position in qitems)
-  //TODO save
   static final MusicQueue instance = MusicQueue._internal();
 
   factory MusicQueue() => instance;
   final AudioPlayer audioPlayer = AudioPlayer();
 
   QueueItem currentItem;
+  Song currentSong;
 
   MusicQueue._internal() {
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
@@ -53,21 +53,25 @@ class MusicQueue {
     QueueItem lastItem = await MyApp.db.queueItemDao.getLastItemManually();
 
     var queueItemList = List<QueueItemsCompanion>();
-    int position = lastItem?.position ?? 0;
+    int position = lastItem?.position ?? 1;
+
     items.forEach((i) {
       if (!(i.playlistId == playlistId && i.songId == songId))
         queueItemList.add(QueueItemsCompanion.insert(
-            position: position++, isManuallyAdded: false, songId: i.songId));
+            position: ++position,
+            isManuallyAdded: false,
+            songId: i.songId,
+            playlistId: i.playlistId));
     });
     await MyApp.db.queueItemDao.insertAll(queueItemList);
 
     //added items now directly play song
-    playSong(songId);
+    playSong(songId, playlistId);
   }
 
-  void playSong(int songId) async {
+  void playSong(int songId, int playlistId) async {
     // 'Abspielen ohne Wechsel'
-    int newPosition = 0;
+    int newPosition = 1;
     if (currentItem != null) {
       //einfach nach diesem item
       newPosition = currentItem.position + 1;
@@ -75,12 +79,26 @@ class MusicQueue {
     //position frei schieben (nächsten songs nach unten)
     await MyApp.db.queueItemDao.moveItemsDownFrom(newPosition);
     //einfügen
-    await MyApp.db.queueItemDao.insert(QueueItemsCompanion.insert(
-        position: newPosition, isManuallyAdded: true, songId: songId));
-    //abspielen
-    //TODO current Item and currentSong
+    var insertItem = QueueItemsCompanion.insert(
+        position: newPosition,
+        isManuallyAdded: true,
+        songId: songId,
+        playlistId: playlistId);
+    var insertId = await MyApp.db.queueItemDao.insert(insertItem);
+    var item = QueueItem(
+        id: insertId,
+        position: newPosition,
+        isManuallyAdded: true,
+        songId: songId,
+        playlistId: playlistId);
 
+    //abspielen
     var song = await MyApp.db.songDao.findSongById(songId);
+
+    //update current item and song
+    currentItem = item;
+    currentSong = song;
+
     await audioPlayer.play(song.path, isLocal: true);
   }
 
@@ -90,7 +108,7 @@ class MusicQueue {
             .getString(PrefKey.QUEUE_INSERT_OPTION) ==
         '1';
     //default oben
-    int newPosition = 0;
+    int newPosition = 1;
 
     if (insertTop) {
       //kommt oben in die warteliste aber nach aktuellem song
@@ -109,7 +127,7 @@ class MusicQueue {
     await MyApp.db.queueItemDao.moveItemsDownFrom(newPosition);
     //einfügen
     await MyApp.db.queueItemDao.insert(QueueItemsCompanion.insert(
-        position: newPosition, isManuallyAdded: true, songId: songId));
+        position: newPosition, isManuallyAdded: true, songId: songId, playlistId: playlistId));
   }
 
   playItem(Object item) async {
@@ -228,7 +246,8 @@ class MusicQueue {
   }
 
   //20 lieder vor dem aktuellen - davor löschen TODO
-  playNext() async {/*
+  playNext() async {
+    /*
     currentItem =
         await MyApp.db.queueItemDao.getNextItem(currentItem?.position ?? -1);
     if (currentItem == null) {
@@ -245,7 +264,8 @@ class MusicQueue {
   }
 
   //warteschlange leer -> nächstes lied in "alle lieder"
-  playPrevious() async {/*
+  playPrevious() async {
+    /*
     currentItem =
         await MyApp.db.queueItemDao.getPreviousItem(currentItem?.position ?? 1);
     if (currentItem == null) {

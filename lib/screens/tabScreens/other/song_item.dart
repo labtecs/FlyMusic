@@ -5,21 +5,6 @@ import 'package:flymusic/util/click_helper.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 
 Widget buildSongItem(Song song, int playlistId, BuildContext context) {
-  String timestamp(Duration duration) {
-    String twoDigits(int n) {
-      if (n >= 10) return "$n";
-      return "0$n";
-    }
-
-    String hours(int n) {
-      if (n > 0) return "$n:";
-      return "";
-    }
-
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${hours(duration.inHours)}$twoDigitMinutes:$twoDigitSeconds";
-  }
 
   return Container(
       child: ListTile(
@@ -41,6 +26,23 @@ Widget buildSongItem(Song song, int playlistId, BuildContext context) {
       onSongLongPress(song, playlistId);
     },
   ));
+}
+
+
+String timestamp(Duration duration) {
+  String twoDigits(int n) {
+    if (n >= 10) return "$n";
+    return "0$n";
+  }
+
+  String hours(int n) {
+    if (n > 0) return "$n:";
+    return "";
+  }
+
+  String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+  String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+  return "${hours(duration.inHours)}$twoDigitMinutes:$twoDigitSeconds";
 }
 
 Widget getTrailingIcon(Song song, int playlistId) {

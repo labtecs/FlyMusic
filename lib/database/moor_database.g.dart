@@ -896,11 +896,13 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
   final int position;
   final bool isManuallyAdded;
   final int songId;
+  final int playlistId;
   QueueItem(
       {@required this.id,
       @required this.position,
       @required this.isManuallyAdded,
-      @required this.songId});
+      @required this.songId,
+      @required this.playlistId});
   factory QueueItem.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -914,6 +916,8 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
           .mapFromDatabaseResponse(data['${effectivePrefix}is_manually_added']),
       songId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}song_id']),
+      playlistId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}playlist_id']),
     );
   }
   factory QueueItem.fromJson(Map<String, dynamic> json,
@@ -924,6 +928,7 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
       position: serializer.fromJson<int>(json['position']),
       isManuallyAdded: serializer.fromJson<bool>(json['isManuallyAdded']),
       songId: serializer.fromJson<int>(json['songId']),
+      playlistId: serializer.fromJson<int>(json['playlistId']),
     );
   }
   @override
@@ -934,6 +939,7 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
       'position': serializer.toJson<int>(position),
       'isManuallyAdded': serializer.toJson<bool>(isManuallyAdded),
       'songId': serializer.toJson<int>(songId),
+      'playlistId': serializer.toJson<int>(playlistId),
     };
   }
 
@@ -949,16 +955,24 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
           : Value(isManuallyAdded),
       songId:
           songId == null && nullToAbsent ? const Value.absent() : Value(songId),
+      playlistId: playlistId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(playlistId),
     );
   }
 
   QueueItem copyWith(
-          {int id, int position, bool isManuallyAdded, int songId}) =>
+          {int id,
+          int position,
+          bool isManuallyAdded,
+          int songId,
+          int playlistId}) =>
       QueueItem(
         id: id ?? this.id,
         position: position ?? this.position,
         isManuallyAdded: isManuallyAdded ?? this.isManuallyAdded,
         songId: songId ?? this.songId,
+        playlistId: playlistId ?? this.playlistId,
       );
   @override
   String toString() {
@@ -966,7 +980,8 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
           ..write('id: $id, ')
           ..write('position: $position, ')
           ..write('isManuallyAdded: $isManuallyAdded, ')
-          ..write('songId: $songId')
+          ..write('songId: $songId, ')
+          ..write('playlistId: $playlistId')
           ..write(')'))
         .toString();
   }
@@ -974,8 +989,10 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
   @override
   int get hashCode => $mrjf($mrjc(
       id.hashCode,
-      $mrjc(position.hashCode,
-          $mrjc(isManuallyAdded.hashCode, songId.hashCode))));
+      $mrjc(
+          position.hashCode,
+          $mrjc(isManuallyAdded.hashCode,
+              $mrjc(songId.hashCode, playlistId.hashCode)))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -983,7 +1000,8 @@ class QueueItem extends DataClass implements Insertable<QueueItem> {
           other.id == this.id &&
           other.position == this.position &&
           other.isManuallyAdded == this.isManuallyAdded &&
-          other.songId == this.songId);
+          other.songId == this.songId &&
+          other.playlistId == this.playlistId);
 }
 
 class QueueItemsCompanion extends UpdateCompanion<QueueItem> {
@@ -991,30 +1009,36 @@ class QueueItemsCompanion extends UpdateCompanion<QueueItem> {
   final Value<int> position;
   final Value<bool> isManuallyAdded;
   final Value<int> songId;
+  final Value<int> playlistId;
   const QueueItemsCompanion({
     this.id = const Value.absent(),
     this.position = const Value.absent(),
     this.isManuallyAdded = const Value.absent(),
     this.songId = const Value.absent(),
+    this.playlistId = const Value.absent(),
   });
   QueueItemsCompanion.insert({
     this.id = const Value.absent(),
     @required int position,
     @required bool isManuallyAdded,
     @required int songId,
+    @required int playlistId,
   })  : position = Value(position),
         isManuallyAdded = Value(isManuallyAdded),
-        songId = Value(songId);
+        songId = Value(songId),
+        playlistId = Value(playlistId);
   QueueItemsCompanion copyWith(
       {Value<int> id,
       Value<int> position,
       Value<bool> isManuallyAdded,
-      Value<int> songId}) {
+      Value<int> songId,
+      Value<int> playlistId}) {
     return QueueItemsCompanion(
       id: id ?? this.id,
       position: position ?? this.position,
       isManuallyAdded: isManuallyAdded ?? this.isManuallyAdded,
       songId: songId ?? this.songId,
+      playlistId: playlistId ?? this.playlistId,
     );
   }
 }
@@ -1068,8 +1092,18 @@ class $QueueItemsTable extends QueueItems
         $customConstraints: 'NOT NULL REFERENCES Song(id)');
   }
 
+  final VerificationMeta _playlistIdMeta = const VerificationMeta('playlistId');
+  GeneratedIntColumn _playlistId;
   @override
-  List<GeneratedColumn> get $columns => [id, position, isManuallyAdded, songId];
+  GeneratedIntColumn get playlistId => _playlistId ??= _constructPlaylistId();
+  GeneratedIntColumn _constructPlaylistId() {
+    return GeneratedIntColumn('playlist_id', $tableName, false,
+        $customConstraints: 'NOT NULL REFERENCES Playlist(id)');
+  }
+
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, position, isManuallyAdded, songId, playlistId];
   @override
   $QueueItemsTable get asDslTable => this;
   @override
@@ -1103,6 +1137,12 @@ class $QueueItemsTable extends QueueItems
     } else if (isInserting) {
       context.missing(_songIdMeta);
     }
+    if (d.playlistId.present) {
+      context.handle(_playlistIdMeta,
+          playlistId.isAcceptableValue(d.playlistId.value, _playlistIdMeta));
+    } else if (isInserting) {
+      context.missing(_playlistIdMeta);
+    }
     return context;
   }
 
@@ -1129,6 +1169,9 @@ class $QueueItemsTable extends QueueItems
     }
     if (d.songId.present) {
       map['song_id'] = Variable<int, IntType>(d.songId.value);
+    }
+    if (d.playlistId.present) {
+      map['playlist_id'] = Variable<int, IntType>(d.playlistId.value);
     }
     return map;
   }

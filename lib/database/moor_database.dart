@@ -146,7 +146,7 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
   // Called by the AppDatabase class
   QueueItemDao(this.db) : super(db);
 
-  Future insert(Insertable<QueueItem> queueItem) =>
+  Future<int> insert(Insertable<QueueItem> queueItem) =>
       into(queueItems).insert(queueItem, mode: InsertMode.insertOrIgnore);
 
   Future insertAll(List<Insertable<QueueItem>> queueItemList) => db.batch((b) =>
@@ -221,6 +221,20 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
         ..where((q) => q.isManuallyAdded.equals(false))
         ..where((q) => q.id.isNotIn([currentItemId])))
       .go();
+
+  Stream<List<QueryRow>> getGroupedItems() => customSelectQuery(
+          'SELECT *, 1 as header FROM queue_items where position IN (Select min(position) FROM queue_items WHERE is_manually_added = 0  UNION Select min(position) FROM queue_items WHERE is_manually_added = 1 LIMIT 2) group by is_manually_added UNION Select *, 0 as header FROM queue_items order by position asc, header desc')
+      .watch();
+
+  Stream<List<QueryRow>> getGroupedItems2() => customSelectQuery(
+          'Select min(position) as position FROM queue_items WHERE is_manually_added = 0  UNION Select min(position) as position FROM queue_items WHERE is_manually_added = 1 LIMIT 2')
+      .watch();
+
+  findPlaylistName(int songId) {}
+
+  getGroupedItemsAfterCurrent(int currentPosition) => customSelectQuery(
+      'SELECT *, 1 as header FROM queue_items where position IN (Select min(position) FROM queue_items WHERE is_manually_added = 0  UNION Select min(position) FROM queue_items WHERE is_manually_added = 1 LIMIT 2) group by is_manually_added UNION Select *, 0 as header FROM queue_items WHERE position > $currentPosition order by position asc, header desc')
+      .watch();
 }
 
 @UseDao(tables: [Playlists])
@@ -233,6 +247,9 @@ class PlaylistDao extends DatabaseAccessor<AppDatabase>
 
   Future insert(Insertable<Playlist> playlist) =>
       into(playlists).insert(playlist, mode: InsertMode.insertOrIgnore);
+
+  Future<Playlist> findPlaylistById(int id) =>
+      (select(playlists)..where((a) => a.id.equals(id))).getSingle();
 }
 
 @UseDao(tables: [PlaylistItems])
@@ -323,6 +340,10 @@ class QueueItems extends Table {
 
   IntColumn get songId =>
       integer().customConstraint('NOT NULL REFERENCES Song(id)')();
+
+  //where this song comes from
+  IntColumn get playlistId =>
+      integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
 }
 
 class Playlists extends Table {

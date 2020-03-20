@@ -10,7 +10,7 @@ onSongShortClick(Song song, int playlistId) async {
       await MusicQueue.instance.playSongSwitchPlaylist(song.id, playlistId);
       break;
     case '2':
-      await MusicQueue.instance.playSong(song.id);
+      await MusicQueue.instance.playSong(song.id, playlistId);
       break;
     case '3':
       await MusicQueue.instance.addSong(song.id, playlistId);
@@ -29,7 +29,7 @@ onSongLongPress(Song song, int playlistId) async {
       await MusicQueue.instance.playSongSwitchPlaylist(song.id, playlistId);
       break;
     case '2':
-      await MusicQueue.instance.playSong(song.id);
+      await MusicQueue.instance.playSong(song.id, playlistId);
       break;
     case '3':
       await MusicQueue.instance.addSong(song.id, playlistId);
@@ -48,7 +48,7 @@ onSongActionButton(Song song, int playlistId) async {
       //TODO    await MusicQueue.instance.playSongSwitchPlaylist(song);
       break;
     case '2':
-      await MusicQueue.instance.playSong(song.id);
+      await MusicQueue.instance.playSong(song.id, playlistId);
       break;
     case '3':
       await MusicQueue.instance.addSong(song.id, playlistId);

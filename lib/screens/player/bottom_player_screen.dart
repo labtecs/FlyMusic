@@ -150,6 +150,13 @@ class _BottomPlayerProgressState extends State<BottomPlayerProgress> {
   }
 
   @override
+  void dispose() {
+    onAudioPositionChanged.cancel();
+    onDurationChanged.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return LinearProgressIndicator(
       value: audioPosition.inMilliseconds / duration.inMilliseconds,

@@ -47,11 +47,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: web
-      resolved-ref: f4a064d73fb7d4e0123d1f6a52a3109245104480
+      ref: go-flutter-desktop
+      resolved-ref: fca5c3205eeb482aea44bdccad14947871155c9e
       url: "https://github.com/luanpotter/audioplayers.git"
     source: git
-    version: "0.13.7"
+    version: "0.12.1"
   bazel_worker:
     dependency: transitive
     description:
@@ -717,7 +717,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.11"
+    version: "0.2.15"
   timing:
     dependency: transitive
     description:

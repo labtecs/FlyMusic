@@ -22,14 +22,13 @@ dependencies:
 
   dart_tags: #forked because of some issues about slow tag reading
     git: git://github.com/Nailik/dart-tags.git
-  shared_preferences_settings: ^1.0.0
+  shared_preferences_settings: ^1.0.0+1
   folder_picker: ^0.3.0
 
   flutter_isolate: ^1.0.0+11
 
-  audioplayers: ^0.14.0
+  audioplayers: ^0.14.1
   permission_handler: ^4.2.0+hotfix.3
-  #shared_preferences: ^0.5.6+2
   archive: ^2.0.13
   flutter_ffmpeg: ^0.2.10
 
@@ -44,6 +43,7 @@ dependencies:
 
 dependency_overrides: #sonst wären folder_picker und shared_preferences_settings inkompatibel
   rxdart: ^0.22.2
+  shared_preferences: ^0.5.6+3
 
 dev_dependencies:
   moor_generator: ^2.4.0

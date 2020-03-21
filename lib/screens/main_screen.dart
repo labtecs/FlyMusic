@@ -17,7 +17,7 @@ class StartScreen extends StatefulWidget {
 }
 
 class StartScreenState extends State<StartScreen>
-    with SingleTickerProviderStateMixin {
+    with AutomaticKeepAliveClientMixin {
   Directory externalDirectory;
   StreamSubscription onPlayerStateChanged;
 
@@ -32,12 +32,12 @@ class StartScreenState extends State<StartScreen>
     );
     onPlayerStateChanged =
         MusicQueue.instance.audioPlayer.onPlayerStateChanged.listen((state) {
-          if (MusicQueue.instance.currentSong != null &&
-              _bottomPlayerVisible == false) {
-            //make bottom player visible
-            setState(() {});
-          }
-        });
+      if (MusicQueue.instance.currentSong != null &&
+          _bottomPlayerVisible == false) {
+        //make bottom player visible
+        setState(() {});
+      }
+    });
     super.initState();
   }
 
@@ -49,6 +49,7 @@ class StartScreenState extends State<StartScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return new Scaffold(
       appBar: AppBar(
         bottom: getAppBarBottom(),
@@ -77,9 +78,9 @@ class StartScreenState extends State<StartScreen>
         //Add this line will fix the issue.
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
-          this._c.animateToPage(index,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.easeInOut);
+          this._c.jumpToPage(index);
+              //duration: const Duration(milliseconds: 100),
+          //    curve: Curves.easeInOut);
         },
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
@@ -132,4 +133,7 @@ class StartScreenState extends State<StartScreen>
         return '';
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

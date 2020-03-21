@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
@@ -14,7 +15,9 @@ class MusicQueue {
   Song currentSong;
 
   MusicQueue._internal() {
-    audioPlayer.setReleaseMode(ReleaseMode.STOP);
+    if(!kIsWeb){
+      audioPlayer.setReleaseMode(ReleaseMode.STOP);
+    }
     audioPlayer.onPlayerStateChanged.listen((state) {
       if (state == AudioPlayerState.COMPLETED) {
         //TODO crossfade possible here

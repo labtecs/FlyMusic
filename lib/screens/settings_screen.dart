@@ -1,7 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flymusic/music/music_finder.dart';
+import 'package:flymusic/music/finder/shared.dart';
 import 'package:flymusic/screens/impress_screen.dart';
 import 'package:flymusic/util/shared_preferences_settings.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
@@ -82,56 +83,67 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
   }
 
   Future<void> chooseFolder() async {
-    var result =
-        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-    if (result[PermissionGroup.storage] == PermissionStatus.granted) {
-      //  await getStorage();
-      Navigator.of(context).push<FolderPickerPage>(
-          MaterialPageRoute(builder: (BuildContext context) {
-        return FolderPickerPage(
-            rootDirectory: Directory("/storage/emulated/0/"),
+    if (kIsWeb) {
+      var folder = Directory("C:/Users/kilia/Music");
+      readMusicFolder(folder.path);
+      await SharedPreferencesUtil.getList(PrefKey.PATH_LIST).then((list) async {
+        list.add(folder.toString());
+        await SharedPreferencesUtil.setList(PrefKey.PATH_LIST, list);
+      });
+      setState(() {});
+    } else {
+      var result = await PermissionHandler()
+          .requestPermissions([PermissionGroup.storage]);
+      if (result[PermissionGroup.storage] == PermissionStatus.granted) {
+        //  await getStorage();
 
-            /// a [Directory] object
-            action: (BuildContext context, Directory folder) async {
-              Navigator.of(context).pop();
+        Navigator.of(context).push<FolderPickerPage>(
+            MaterialPageRoute(builder: (BuildContext context) {
+          return FolderPickerPage(
+              rootDirectory: Directory("/storage/emulated/0/"),
 
-              doIsolated(folder);
+              /// a [Directory] object
+              action: (BuildContext context, Directory folder) async {
+                Navigator.of(context).pop();
 
-              await SharedPreferencesUtil.getList(PrefKey.PATH_LIST)
-                  .then((list) async {
-                list.add(folder.toString());
-                await SharedPreferencesUtil.setList(PrefKey.PATH_LIST, list);
+                readMusicFolder(folder.path);
+
+                await SharedPreferencesUtil.getList(PrefKey.PATH_LIST)
+                    .then((list) async {
+                  list.add(folder.toString());
+                  await SharedPreferencesUtil.setList(PrefKey.PATH_LIST, list);
+                });
+
+                setState(() {});
+
+                showDialog<void>(
+                  context: context,
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Import von Musik'),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text('Das Importieren der Musik'),
+                            Text('dauert einen Moment')
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('Ok'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               });
-
-              setState(() {});
-
-              showDialog<void>(
-                context: context,
-                barrierDismissible: false, // user must tap button!
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Import von Musik'),
-                    content: SingleChildScrollView(
-                      child: ListBody(
-                        children: <Widget>[
-                          Text('Das Importieren der Musik'),
-                          Text('dauert einen Moment')
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text('Ok'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            });
-      }));
+        }));
+      }
     }
   }
 

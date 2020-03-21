@@ -11,16 +11,8 @@ import 'package:moor/moor.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-doIsolated(Directory list) async {
-  Directory docs = await getApplicationDocumentsDirectory();
-  Directory thumbs = Directory(docs.path + "/thumbs");
-  await thumbs.create();
-  final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
-  _flutterFFmpegConfig.disableLogs();
- // _flutterFFmpegConfig.disableStatistics();
-//  _flutterFFmpegConfig.disableRedirection();
-  await MusicFinder().readFolderIntoDatabase([list, docs, thumbs]);
-  //compute(main, [list, docs, thumbs]);
+readMusicFolder(String folder) async {
+  await MusicFinder().readFolderIntoDatabase(folder);
 }
 
 readTags(File file) async {
@@ -30,19 +22,28 @@ readTags(File file) async {
 
 class MusicFinder {
   final FlutterFFprobe _flutterFFprobe = new FlutterFFprobe();
+
   TagProcessor tp = new TagProcessor();
   List<Song> songs = new List();
   Album currentAlbum;
   Artist currentArtist;
   Directory thumbs;
-  Directory docs;
   AppDatabase database;
 
-  readFolderIntoDatabase(List<Directory> folder) async {
+  readFolderIntoDatabase(String folder) async {
     database = MyApp.db;
-    docs = folder[1];
-    thumbs = folder[2];
-    await _readFolder(folder[0]);
+
+    Directory thumbs;
+    Directory docs = await getApplicationDocumentsDirectory();
+    thumbs = Directory(docs.path + "/thumbs");
+    await thumbs.create();
+
+    final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
+    _flutterFFmpegConfig.disableLogs();
+    // _flutterFFmpegConfig.disableStatistics();
+//  _flutterFFmpegConfig.disableRedirection();
+
+    await _readFolder(Directory(folder));
   }
 
   Future<void> _readFolder(FileSystemEntity folder) async {
@@ -56,10 +57,7 @@ class MusicFinder {
 
     await Future.forEach(files, (f) async {
       if (f is File) {
-        String ending = "." + f.uri
-            .toString()
-            .split(".")
-            .last;
+        String ending = "." + f.uri.toString().split(".").last;
         switch (ending) {
           case ".mp3":
             songFiles.add(f);
@@ -89,15 +87,15 @@ class MusicFinder {
 
     insertSong(SongsCompanion song) async {
       var id = await database.songDao.insert(song);
-      if(id != null) { //null if already exists
+      if (id != null) {
+        //null if already exists
         //insert song into "all songs" playlist
         playlistItems.add(PlaylistItem(playlistId: 1, songId: id));
         //insert song into "album" playlist
         playlistItems
             .add(PlaylistItem(playlistId: currentAlbum.playlistId, songId: id));
         //insert song into "artist" playlist
-        playlistItems
-            .add(
+        playlistItems.add(
             PlaylistItem(playlistId: currentArtist.playlistId, songId: id));
         await database.playlistItemDao.insertAll(playlistItems);
         playlistItems.clear();
@@ -113,8 +111,8 @@ class MusicFinder {
     });
   }
 
-  Future<SongsCompanion> _readFile(Art defaultArt, Directory folder,
-      File file) async {
+  Future<SongsCompanion> _readFile(
+      Art defaultArt, Directory folder, File file) async {
     String songTitle;
     String songArtist;
     String songAlbum;
@@ -156,9 +154,7 @@ class MusicFinder {
     }
 
     if (songAlbum == null || songAlbum.isEmpty) {
-      songAlbum = folder.path
-          .split("/")
-          .last;
+      songAlbum = folder.path.split("/").last;
     }
 
     if (songArtist == null || songArtist.isEmpty) {
@@ -225,8 +221,8 @@ class MusicFinder {
     return currentArtist;
   }
 
-  Future<Art> _findArt(List<int> imageData, Directory thumbs,
-      int crcText) async {
+  Future<Art> _findArt(
+      List<int> imageData, Directory thumbs, int crcText) async {
     Art art = await database.artDao.findArtByCrc(crcText.toString());
     if (art == null) {
       File file = File('${thumbs.path}/$crcText.jpg');

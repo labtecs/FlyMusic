@@ -27,7 +27,11 @@ dependencies:
 
   flutter_isolate: ^1.0.0+11
 
-  audioplayers: ^0.14.1
+  audioplayers:
+    git:
+      url: https://github.com/luanpotter/audioplayers.git
+      ref: web
+
   permission_handler: ^4.2.0+hotfix.3
   archive: ^2.0.13
   flutter_ffmpeg: ^0.2.10
@@ -36,20 +40,24 @@ dependencies:
   flutter_speed_dial: ^1.2.5
 
   provider: ^3.0.0+1
-  moor_flutter: ^2.1.1
+  
+  # Dart
   moor: ^2.4.2
+  # Database for mobile and Desktop
   moor_ffi: ^0.4.0
+  
 
-
-dependency_overrides: #sonst wären folder_picker und shared_preferences_settings inkompatibel
+dependency_overrides: #sonst wären folder_picker und shared_preferences_settings inkompatibel und flutter_test
   rxdart: ^0.22.2
   shared_preferences: ^0.5.6+3
+  archive: ^2.0.13
 
 dev_dependencies:
-  moor_generator: ^2.4.0
   build_runner: ^1.7.3
-#  flutter_test:
-#    sdk: flutter
+  build_web_compilers: ^2.3.0
+  moor_generator: ^2.4.0
+  flutter_test:
+    sdk: flutter
 
 
 # For information on the generic Dart part of this file, see the

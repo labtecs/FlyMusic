@@ -8,7 +8,6 @@ import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/main.dart';
 import 'package:moor/moor.dart';
-import 'package:moor_flutter/moor_flutter.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,10 +21,6 @@ doIsolated(Directory list) async {
 //  _flutterFFmpegConfig.disableRedirection();
   await MusicFinder().readFolderIntoDatabase([list, docs, thumbs]);
   //compute(main, [list, docs, thumbs]);
-}
-
-main(List<Directory> list) async {
-  await MusicFinder().readFolderIntoDatabase(list);
 }
 
 readTags(File file) async {

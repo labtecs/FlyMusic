@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
+import 'package:flymusic/plugins/desktop/desktop.dart';
 import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 import 'package:provider/provider.dart';
 
+import 'database/generator/shared.dart';
+
 void main() async {
+  setTargetPlatformForDesktop();
   WidgetsFlutterBinding.ensureInitialized();
 
-  final db = AppDatabase();
-  MyApp.db = db;
+  MyApp.db = constructDb();
 
   if (await SharedPreferencesUtil.instance.getBool(PrefKey.FIRST_APP_START) !=
       false) {
     //first start: "Warteschlange" und "Alle lieder" playlist in Playlists
-    await db.playlistDao
+    await MyApp.db.playlistDao
         .insert(PlaylistsCompanion.insert(name: "Alle Lieder", type: -1));
-    await db.playlistDao
+    await MyApp.db.playlistDao
         .insert(PlaylistsCompanion.insert(name: "Warteschlange", type: -1));
 
     //init settings

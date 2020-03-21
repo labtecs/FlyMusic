@@ -46,10 +46,26 @@ packages:
   audioplayers:
     dependency: "direct main"
     description:
-      name: audioplayers
+      path: "."
+      ref: web
+      resolved-ref: f4a064d73fb7d4e0123d1f6a52a3109245104480
+      url: "https://github.com/luanpotter/audioplayers.git"
+    source: git
+    version: "0.13.7"
+  bazel_worker:
+    dependency: transitive
+    description:
+      name: bazel_worker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.1"
+    version: "0.1.23+1"
+  boolean_selector:
+    dependency: transitive
+    description:
+      name: boolean_selector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   build:
     dependency: transitive
     description:
@@ -71,6 +87,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
+  build_modules:
+    dependency: transitive
+    description:
+      name: build_modules
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.8.1"
   build_resolvers:
     dependency: transitive
     description:
@@ -92,6 +115,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.4.0"
+  build_web_compilers:
+    dependency: "direct dev"
+    description:
+      name: build_web_compilers
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.9.0"
   built_collection:
     dependency: transitive
     description:
@@ -253,6 +283,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.5"
+  flutter_test:
+    dependency: "direct dev"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -314,6 +349,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.3"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.4"
   io:
     dependency: transitive
     description:
@@ -377,13 +419,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
-  moor_flutter:
-    dependency: "direct main"
-    description:
-      name: moor_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.1"
   moor_generator:
     dependency: "direct dev"
     description:
@@ -468,6 +503,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.0"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.0"
   platform:
     dependency: transitive
     description:
@@ -489,6 +531,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   provider:
     dependency: "direct main"
     description:
@@ -531,6 +580,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.6"
+  scratch_space:
+    dependency: transitive
+    description:
+      name: scratch_space
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4+2"
   shared_preferences:
     dependency: "direct overridden"
     description:
@@ -592,6 +648,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.5"
+  source_maps:
+    dependency: transitive
+    description:
+      name: source_maps
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.9"
   source_span:
     dependency: transitive
     description:
@@ -599,20 +662,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.5"
-  sqflite:
-    dependency: transitive
-    description:
-      name: sqflite
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
-  sqflite_common:
-    dependency: transitive
-    description:
-      name: sqflite_common
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0+1"
   sqlparser:
     dependency: transitive
     description:
@@ -662,6 +711,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  test_api:
+    dependency: transitive
+    description:
+      name: test_api
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.11"
   timing:
     dependency: transitive
     description:
@@ -711,6 +767,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.5.0"
   yaml:
     dependency: transitive
     description:

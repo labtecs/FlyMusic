@@ -1,5 +1,4 @@
 import 'package:moor/moor.dart';
-import 'package:moor_flutter/moor_flutter.dart';
 
 part 'moor_database.g.dart';
 
@@ -25,13 +24,13 @@ part 'moor_database.g.dart';
 ])
 // _$AppDatabase is the name of the generated class
 class AppDatabase extends _$AppDatabase {
-  AppDatabase()
+  AppDatabase(QueryExecutor e): super(e);
       // Specify the location of the database file
-      : super((FlutterQueryExecutor.inDatabaseFolder(
+     /* : super((FlutterQueryExecutor.inDatabaseFolder(
           path: 'db.sqlite',
           // Good for debugging - prints SQL in the console
           logStatements: true,
-        )));
+        )));*/
 
   AppDatabase.connect(DatabaseConnection connection)
       : super.connect(connection);

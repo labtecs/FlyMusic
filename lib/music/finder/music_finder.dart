@@ -21,7 +21,7 @@ readTags(File file) async {
 }
 
 class MusicFinder {
-  final FlutterFFprobe _flutterFFprobe = new FlutterFFprobe();
+  FlutterFFprobe _flutterFFprobe;
 
   TagProcessor tp = new TagProcessor();
   List<Song> songs = new List();
@@ -33,13 +33,19 @@ class MusicFinder {
   readFolderIntoDatabase(String folder) async {
     database = MyApp.db;
 
-    Directory thumbs;
-    Directory docs = await getApplicationDocumentsDirectory();
+    Directory docs;
+    if(Platform.isWindows){
+      docs = Directory(folder);
+    }else {
+      _flutterFFprobe = new FlutterFFprobe();
+      docs = await getApplicationDocumentsDirectory();
+      final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
+      _flutterFFmpegConfig.disableLogs();
+    }
+
     thumbs = Directory(docs.path + "/thumbs");
     await thumbs.create();
 
-    final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
-    _flutterFFmpegConfig.disableLogs();
     // _flutterFFmpegConfig.disableStatistics();
 //  _flutterFFmpegConfig.disableRedirection();
 
@@ -118,8 +124,12 @@ class MusicFinder {
     String songAlbum;
     Art art;
     int songDuration = 0;
-    var info = await _flutterFFprobe.getMediaInformation(file.path);
-    songDuration = info['duration'] ?? 0;
+
+
+    if(!Platform.isWindows) {
+      var info = await _flutterFFprobe.getMediaInformation(file.path);
+      songDuration = info['duration'] ?? 0;
+    }
 
     //fallback and image
     //TODO too slow always opening new thread work with callbacks

@@ -83,7 +83,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
   }
 
   Future<void> chooseFolder() async {
-    if (kIsWeb) {
+    if (Platform.isWindows) {
       var folder = Directory("C:/Users/kilia/Music");
       readMusicFolder(folder.path);
       await SharedPreferencesUtil.getList(PrefKey.PATH_LIST).then((list) async {

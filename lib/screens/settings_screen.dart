@@ -1,3 +1,4 @@
+import 'dart:html' as h;
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -82,8 +83,28 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
     ]);
   }
 
+  _startFilePicker() async {
+    h.window.requestFileSystem(1);
+
+    h.InputElement uploadInput = h.FileUploadInputElement();
+    uploadInput.directory = true;
+    uploadInput.click();
+
+    uploadInput.onChange.listen((e) {
+      // read file content as dataURL
+      final files = uploadInput.files;
+
+      files.forEach((element) {
+        print(element.relativePath);
+      });
+
+    });
+  }
+
   Future<void> chooseFolder() async {
-    if (Platform.isWindows) {
+    if (kIsWeb) {
+      _startFilePicker();
+    } else if (Platform.isWindows) {
       var folder = Directory("C:/Users/kilia/Music");
       readMusicFolder(folder.path);
       await SharedPreferencesUtil.getList(PrefKey.PATH_LIST).then((list) async {

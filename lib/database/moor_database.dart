@@ -24,9 +24,10 @@ part 'moor_database.g.dart';
 ])
 // _$AppDatabase is the name of the generated class
 class AppDatabase extends _$AppDatabase {
-  AppDatabase(QueryExecutor e): super(e);
-      // Specify the location of the database file
-     /* : super((FlutterQueryExecutor.inDatabaseFolder(
+  AppDatabase(QueryExecutor e) : super(e);
+
+  // Specify the location of the database file
+  /* : super((FlutterQueryExecutor.inDatabaseFolder(
           path: 'db.sqlite',
           // Good for debugging - prints SQL in the console
           logStatements: true,
@@ -39,6 +40,14 @@ class AppDatabase extends _$AppDatabase {
   // Migrations will be covered in the next part.
   @override
   int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        // Runs after all the migrations but BEFORE any queries have a chance to execute
+        beforeOpen: (details) {
+          return this.customStatement('PRAGMA foreign_keys = ON');
+        },
+      );
 }
 
 @UseDao(tables: [Songs])
@@ -232,7 +241,7 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
   findPlaylistName(int songId) {}
 
   getGroupedItemsAfterCurrent(int currentPosition) => customSelectQuery(
-      'SELECT *, 1 as header FROM queue_items where position IN (Select min(position) FROM queue_items WHERE is_manually_added = 0  UNION Select min(position) FROM queue_items WHERE is_manually_added = 1 LIMIT 2) group by is_manually_added UNION Select *, 0 as header FROM queue_items WHERE position > $currentPosition order by position asc, header desc')
+          'SELECT *, 1 as header FROM queue_items where position IN (Select min(position) FROM queue_items WHERE is_manually_added = 0  UNION Select min(position) FROM queue_items WHERE is_manually_added = 1 LIMIT 2) group by is_manually_added UNION Select *, 0 as header FROM queue_items WHERE position > $currentPosition order by position asc, header desc')
       .watch();
 }
 

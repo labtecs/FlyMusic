@@ -17,7 +17,7 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.artist.name),
-        backgroundColor: Colors.black54,
+      //  backgroundColor: Colors.black54,
       ),
       body: StreamBuilder<List<SongWithArt>>(
         stream: Provider.of<SongDao>(context).findSongsByArtistWithArt(widget.artist),

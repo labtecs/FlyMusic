@@ -13,10 +13,10 @@ Widget buildSongItem(SongWithArt song, int playlistId, BuildContext context) {
     ),
     title: Text(
       song.song.title,
-      style: TextStyle(color: Colors.black),
+      //style: TextStyle(color: Colors.black),
     ),
-    subtitle: Text(timestamp(Duration(milliseconds: song.song.duration)),
-        style: TextStyle(color: Colors.black)),
+    subtitle: Text(timestamp(Duration(milliseconds: song.song.duration)),),
+     //   style: TextStyle(color: Colors.black)),
     trailing: getTrailingIcon(song.song, playlistId),
     onTap: () {
       onSongShortClick(song.song, playlistId, context);

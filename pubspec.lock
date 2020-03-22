@@ -215,6 +215,13 @@ packages:
       url: "git://github.com/Nailik/dart-tags.git"
     source: git
     version: "0.2.2"
+  expandable:
+    dependency: "direct main"
+    description:
+      name: expandable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.2"
   ffi:
     dependency: transitive
     description:

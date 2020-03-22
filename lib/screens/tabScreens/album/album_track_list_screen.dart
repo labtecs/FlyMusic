@@ -117,11 +117,11 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             color: Colors.blue,
             child: Text(
               "play",
-              style: TextStyle(
+              /*style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
                 fontSize: 23,
-              ),
+              ),*/
             ),
           ),
         ),

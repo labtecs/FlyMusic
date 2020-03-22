@@ -3,6 +3,7 @@ import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/plugins/desktop/desktop.dart';
 import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
+import 'package:flymusic/util/themes.dart';
 import 'package:provider/provider.dart';
 
 import 'database/generator/shared.dart';
@@ -63,9 +64,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'Fly Music',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
+          theme: basicTheme(),
           home: StartScreen(),
         ));
   }

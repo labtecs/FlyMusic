@@ -26,15 +26,12 @@ part 'moor_database.g.dart';
 class AppDatabase extends _$AppDatabase {
   AppDatabase(QueryExecutor e) : super(e);
 
-  AppDatabase.connect(DatabaseConnection connection)
-      : super.connect(connection);
-
   // Bump this when changing tables and columns.
   // Migrations will be covered in the next part.
   @override
   int get schemaVersion => 1;
 
-  /* //TODO foreign key bug
+/* //TODO foreign key bug https://github.com/simolus3/moor/issues/454
   @override
   MigrationStrategy get migration => MigrationStrategy(
         // Runs after all the migrations but BEFORE any queries have a chance to execute
@@ -45,7 +42,7 @@ class AppDatabase extends _$AppDatabase {
       */
 }
 
-@UseDao(tables: [Songs])
+@UseDao(tables: [Songs, Arts])
 class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
   final AppDatabase db;
 
@@ -67,14 +64,106 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
         ))
       .watch();
 
+  Stream<List<SongWithArt>> findAllSongsWithArt() => (select(songs)
+        ..orderBy(
+          ([
+            // Primary sorting by due date
+            (s) => OrderingTerm(expression: s.title, mode: OrderingMode.asc)
+          ]),
+        )) // As opposed to orderBy or where, join returns a value. This is what we want to watch/get.
+      .join(
+        [
+          // Join all the tasks with their tags.
+          // It's important that we use equalsExp and not just equals.
+          // This way, we can join using all tag names in the tasks table, not just a specific one.
+          leftOuterJoin(arts, arts.crc.equalsExp(songs.artCrc)),
+        ],
+      )
+      .watch() // Watching a join gets us a Stream of List<TypedResult>
+      // Mapping each List<TypedResult> emitted by the Stream to a List<TaskWithTag>
+      .map(
+        (rows) => rows.map(
+          (row) {
+            return SongWithArt(
+              song: row.readTable(songs),
+              art: row.readTable(arts),
+            );
+          },
+        ).toList(),
+      );
+
   Future<Song> findSongById(int id) =>
       (select(songs)..where((s) => s.id.equals(id))).getSingle();
+
+  Future<SongWithArt> findSongByIdWithArt(int id) =>
+      (select(songs)..where((s) => s.id.equals(id)))
+          .join(
+            [
+              // Join all the tasks with their tags.
+              // It's important that we use equalsExp and not just equals.
+              // This way, we can join using all tag names in the tasks table, not just a specific one.
+              leftOuterJoin(arts, arts.crc.equalsExp(songs.artCrc)),
+            ],
+          )
+          .map((item) => SongWithArt(
+                song: item.readTable(songs),
+                art: item.readTable(arts),
+              ))
+          .getSingle();
 
   Future<List<Song>> findSongsByArtist(Artist artist) =>
       (select(songs)..where((s) => s.artistName.equals(artist.name))).get();
 
+  Stream<List<SongWithArt>> findSongsByArtistWithArt(Artist artist) => (select(
+          songs)
+        ..where((s) => s.artistName.equals(artist.name)))
+      .join(
+        [
+          // Join all the tasks with their tags.
+          // It's important that we use equalsExp and not just equals.
+          // This way, we can join using all tag names in the tasks table, not just a specific one.
+          leftOuterJoin(arts, arts.crc.equalsExp(songs.artCrc)),
+        ],
+      )
+      .watch() // Watching a join gets us a Stream of List<TypedResult>
+      // Mapping each List<TypedResult> emitted by the Stream to a List<TaskWithTag>
+      .map(
+        (rows) => rows.map(
+          (row) {
+            return SongWithArt(
+              song: row.readTable(songs),
+              art: row.readTable(arts),
+            );
+          },
+        ).toList(),
+      );
+
   Future<List<Song>> findSongsByAlbum(Album album) =>
       (select(songs)..where((s) => s.albumName.equals(album.name))).get();
+
+  Stream<List<SongWithArt>> findSongsByAlbumWithArt(Album album) => (select(
+          songs)
+        ..where((s) => s.albumName.equals(album.name)))
+      .join(
+        [
+          // Join all the tasks with their tags.
+          // It's important that we use equalsExp and not just equals.
+          // This way, we can join using all tag names in the tasks table, not just a specific one.
+          leftOuterJoin(arts, arts.crc.equalsExp(songs.artCrc)),
+        ],
+      )
+      .watch() // Watching a join gets us a Stream of List<TypedResult>
+      // Mapping each List<TypedResult> emitted by the Stream to a List<TaskWithTag>
+      .map(
+        (rows) => rows.map(
+          (row) {
+            return SongWithArt(
+              song: row.readTable(songs),
+              art: row.readTable(arts),
+            );
+          },
+        ).toList(),
+      );
 
   Future<List<Song>> findSongIdsByAlbumId(int id) => select(songs).get();
 }
@@ -369,4 +458,27 @@ class PlaylistItems extends Table {
 
   IntColumn get songId =>
       integer().customConstraint('NOT NULL REFERENCES songs(id)')();
+}
+
+//combined queries
+class SongWithArt {
+  final Song song;
+  final Art art;
+
+  SongWithArt({
+    @required this.song,
+    @required this.art,
+  });
+}
+
+class QueueItemWithSongWithArt {
+  final QueueItem queueItem;
+  final Song song;
+  final Art art;
+
+  QueueItemWithSongWithArt({
+    @required this.queueItem,
+    @required this.song,
+    @required this.art,
+  });
 }

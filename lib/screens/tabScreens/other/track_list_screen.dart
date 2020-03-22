@@ -14,9 +14,9 @@ class _TrackListState extends State<TrackList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<List<Song>>(
-        stream: Provider.of<SongDao>(context).findAllSongs(),
-        builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+      body: StreamBuilder<List<SongWithArt>>(
+        stream: Provider.of<SongDao>(context).findAllSongsWithArt(),
+        builder: (BuildContext context, AsyncSnapshot<List<SongWithArt>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data.length,

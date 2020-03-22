@@ -4,25 +4,25 @@ import 'package:flymusic/util/art_util.dart';
 import 'package:flymusic/util/click_helper.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 
-Widget buildSongItem(Song song, int playlistId, BuildContext context) {
+Widget buildSongItem(SongWithArt song, int playlistId, BuildContext context) {
   return Container(
       child: ListTile(
     leading: CircleAvatar(
-      child: ArtUtil.getArtFromSong(song, context),
+      child: ArtUtil.getArtFromSongWithArt(song, context),
       backgroundColor: Colors.transparent,
     ),
     title: Text(
-      song.title,
+      song.song.title,
       style: TextStyle(color: Colors.black),
     ),
-    subtitle: Text(timestamp(Duration(milliseconds: song.duration)),
+    subtitle: Text(timestamp(Duration(milliseconds: song.song.duration)),
         style: TextStyle(color: Colors.black)),
-    trailing: getTrailingIcon(song, playlistId),
+    trailing: getTrailingIcon(song.song, playlistId),
     onTap: () {
-      onSongShortClick(song, playlistId, context);
+      onSongShortClick(song.song, playlistId, context);
     },
     onLongPress: () {
-      onSongLongPress(song, playlistId, context);
+      onSongLongPress(song.song, playlistId, context);
     },
   ));
 }

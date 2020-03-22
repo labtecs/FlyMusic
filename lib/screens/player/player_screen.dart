@@ -8,9 +8,8 @@ import 'package:flymusic/screens/tabScreens/other/queue_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
 class PlayerScreen extends StatefulWidget {
-  Art art;
 
-  PlayerScreen({this.art});
+  PlayerScreen();
 
   @override
   _PlayerScreenState createState() => _PlayerScreenState();
@@ -73,21 +72,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
           Container(
             child: Hero(
                 tag: 'imageHero',
-                child: ArtUtil.getArtFromSong(
-                    MusicQueue.instance.currentSong, context,
-                    art: widget.art)),
+                child: ArtUtil.getArtFromSongWithArt(
+                    MusicQueue.instance.currentSong, context)),
             height: halfDisplaySize + 50,
           ),
           ListTile(
             title: Text(
-              MusicQueue.instance.currentSong?.title ?? "no title",
+              MusicQueue.instance.currentSong?.song?.title ?? "no title",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
               ),
             ),
             subtitle: Text(
-              MusicQueue.instance.currentSong?.artist ?? "no artist",
+              MusicQueue.instance.currentSong?.song?.artist ?? "no artist",
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.white,

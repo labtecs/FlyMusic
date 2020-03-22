@@ -19,9 +19,9 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
         title: Text(widget.artist.name),
         backgroundColor: Colors.black54,
       ),
-      body: FutureBuilder<List<Song>>(
-        future: Provider.of<SongDao>(context).findSongsByArtist(widget.artist),
-        builder: (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+      body: StreamBuilder<List<SongWithArt>>(
+        stream: Provider.of<SongDao>(context).findSongsByArtistWithArt(widget.artist),
+        builder: (BuildContext context, AsyncSnapshot<List<SongWithArt>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data.length,

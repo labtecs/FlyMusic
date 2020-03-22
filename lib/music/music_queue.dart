@@ -14,7 +14,7 @@ class MusicQueue {
   final AudioPlayer audioPlayer = AudioPlayer();
 
   QueueItem currentItem;
-  Song currentSong;
+  SongWithArt currentSong;
 
   MusicQueue._internal() {
     if (!kIsWeb) {
@@ -133,13 +133,13 @@ class MusicQueue {
         playlistId: playlistId);
 
     //abspielen
-    var song = await MyApp.db.songDao.findSongById(songId);
+    var song = await MyApp.db.songDao.findSongByIdWithArt(songId);
 
     //update current item and song
     currentItem = item;
     currentSong = song;
 
-    await audioPlayer.play(song.path, isLocal: true);
+    await audioPlayer.play(song.song.path, isLocal: true);
   }
 
   Future<void> addSong(int songId, int playlistId) async {
@@ -193,11 +193,12 @@ class MusicQueue {
     if (currentItem == null) {
       return;
     }
-    currentSong = await MyApp.db.songDao.findSongById(currentItem.songId);
+    currentSong =
+        await MyApp.db.songDao.findSongByIdWithArt(currentItem.songId);
     if (currentSong == null) {
       return;
     }
-    int result = await audioPlayer.play(currentSong.path, isLocal: true);
+    int result = await audioPlayer.play(currentSong.song.path, isLocal: true);
     if (result != 1) {
       await playNext();
     }
@@ -209,11 +210,12 @@ class MusicQueue {
     if (currentItem == null) {
       return;
     }
-    currentSong = await MyApp.db.songDao.findSongById(currentItem.songId);
+    currentSong =
+        await MyApp.db.songDao.findSongByIdWithArt(currentItem.songId);
     if (currentSong == null) {
       return;
     }
-    int result = await audioPlayer.play(currentSong.path, isLocal: true);
+    int result = await audioPlayer.play(currentSong.song.path, isLocal: true);
     if (result != 1) {
       await playPrevious();
     }

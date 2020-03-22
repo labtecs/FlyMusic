@@ -54,7 +54,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
                 child: InkWell(
                   child: Hero(
                       tag: 'imageHero',
-                      child: ArtUtil.getArtFromSong(
+                      child: ArtUtil.getArtFromSongWithArt(
                           MusicQueue.instance.currentSong, context)),
                   onTap: () {
                     Navigator.push(
@@ -72,8 +72,8 @@ class _BottomPlayerState extends State<BottomPlayer> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(MusicQueue.instance.currentSong?.title ?? ""),
-                        Text(MusicQueue.instance.currentSong?.artist ?? "")
+                        Text(MusicQueue.instance.currentSong?.song?.title ?? ""),
+                        Text(MusicQueue.instance.currentSong?.song?.artist ?? "")
                       ]),
                 ),
               ),

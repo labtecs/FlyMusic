@@ -270,7 +270,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   GeneratedTextColumn get artCrc => _artCrc ??= _constructArtCrc();
   GeneratedTextColumn _constructArtCrc() {
     return GeneratedTextColumn('art_crc', $tableName, true,
-        $customConstraints: 'NULL REFERENCES Art(crc)');
+        $customConstraints: 'NULL REFERENCES arts(crc)');
   }
 
   final VerificationMeta _albumNameMeta = const VerificationMeta('albumName');
@@ -279,7 +279,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   GeneratedTextColumn get albumName => _albumName ??= _constructAlbumName();
   GeneratedTextColumn _constructAlbumName() {
     return GeneratedTextColumn('album_name', $tableName, true,
-        $customConstraints: 'NOT NULL REFERENCES Album(name)');
+        $customConstraints: 'NOT NULL REFERENCES albums(name)');
   }
 
   final VerificationMeta _artistNameMeta = const VerificationMeta('artistName');
@@ -288,7 +288,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   GeneratedTextColumn get artistName => _artistName ??= _constructArtistName();
   GeneratedTextColumn _constructArtistName() {
     return GeneratedTextColumn('artist_name', $tableName, true,
-        $customConstraints: 'NOT NULL REFERENCES Artist(name)');
+        $customConstraints: 'NOT NULL REFERENCES artists(name)');
   }
 
   @override
@@ -509,7 +509,7 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
   GeneratedIntColumn get playlistId => _playlistId ??= _constructPlaylistId();
   GeneratedIntColumn _constructPlaylistId() {
     return GeneratedIntColumn('playlist_id', $tableName, false,
-        $customConstraints: 'NOT NULL REFERENCES Playlist(id)');
+        $customConstraints: 'NOT NULL REFERENCES playlists(id)');
   }
 
   final VerificationMeta _artCrcMeta = const VerificationMeta('artCrc');
@@ -518,7 +518,7 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
   GeneratedTextColumn get artCrc => _artCrc ??= _constructArtCrc();
   GeneratedTextColumn _constructArtCrc() {
     return GeneratedTextColumn('art_crc', $tableName, true,
-        $customConstraints: 'NULL REFERENCES Art(crc)');
+        $customConstraints: 'NULL REFERENCES arts(crc)');
   }
 
   @override
@@ -684,7 +684,7 @@ class $ArtistsTable extends Artists with TableInfo<$ArtistsTable, Artist> {
   GeneratedIntColumn get playlistId => _playlistId ??= _constructPlaylistId();
   GeneratedIntColumn _constructPlaylistId() {
     return GeneratedIntColumn('playlist_id', $tableName, false,
-        $customConstraints: 'NOT NULL REFERENCES Playlist(id)');
+        $customConstraints: 'NOT NULL REFERENCES playlists(id)');
   }
 
   @override
@@ -1089,7 +1089,7 @@ class $QueueItemsTable extends QueueItems
   GeneratedIntColumn get songId => _songId ??= _constructSongId();
   GeneratedIntColumn _constructSongId() {
     return GeneratedIntColumn('song_id', $tableName, false,
-        $customConstraints: 'NOT NULL REFERENCES Song(id)');
+        $customConstraints: 'NOT NULL REFERENCES songs(id)');
   }
 
   final VerificationMeta _playlistIdMeta = const VerificationMeta('playlistId');
@@ -1098,7 +1098,7 @@ class $QueueItemsTable extends QueueItems
   GeneratedIntColumn get playlistId => _playlistId ??= _constructPlaylistId();
   GeneratedIntColumn _constructPlaylistId() {
     return GeneratedIntColumn('playlist_id', $tableName, false,
-        $customConstraints: 'NOT NULL REFERENCES Playlist(id)');
+        $customConstraints: 'NOT NULL REFERENCES playlists(id)');
   }
 
   @override
@@ -1468,7 +1468,7 @@ class $PlaylistItemsTable extends PlaylistItems
   GeneratedIntColumn get playlistId => _playlistId ??= _constructPlaylistId();
   GeneratedIntColumn _constructPlaylistId() {
     return GeneratedIntColumn('playlist_id', $tableName, false,
-        $customConstraints: 'NOT NULL REFERENCES Playlist(id)');
+        $customConstraints: 'NOT NULL REFERENCES playlists(id)');
   }
 
   final VerificationMeta _songIdMeta = const VerificationMeta('songId');
@@ -1477,7 +1477,7 @@ class $PlaylistItemsTable extends PlaylistItems
   GeneratedIntColumn get songId => _songId ??= _constructSongId();
   GeneratedIntColumn _constructSongId() {
     return GeneratedIntColumn('song_id', $tableName, false,
-        $customConstraints: 'NOT NULL REFERENCES Song(id)');
+        $customConstraints: 'NOT NULL REFERENCES songs(id)');
   }
 
   @override
@@ -1535,7 +1535,6 @@ class $PlaylistItemsTable extends PlaylistItems
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  _$AppDatabase.connect(DatabaseConnection c) : super.connect(c);
   $SongsTable _songs;
   $SongsTable get songs => _songs ??= $SongsTable(this);
   $AlbumsTable _albums;
@@ -1581,6 +1580,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
 mixin _$SongDaoMixin on DatabaseAccessor<AppDatabase> {
   $SongsTable get songs => db.songs;
+  $ArtsTable get arts => db.arts;
 }
 mixin _$AlbumDaoMixin on DatabaseAccessor<AppDatabase> {
   $AlbumsTable get albums => db.albums;

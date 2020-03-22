@@ -35,9 +35,10 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
     );
   }
 
-  FutureBuilder getBuilder() {
-    return FutureBuilder<List<Song>>(
-      future: Provider.of<SongDao>(context).findSongsByAlbum(widget.album),
+  StreamBuilder getBuilder() {
+    return StreamBuilder<List<SongWithArt>>(
+      stream:
+          Provider.of<SongDao>(context).findSongsByAlbumWithArt(widget.album),
       // this is a code smell. Make sure that the future is NOT recreated when build is called. Create the future in initState instead.
       builder: (context, snapshot) {
         Widget newsListSliver;

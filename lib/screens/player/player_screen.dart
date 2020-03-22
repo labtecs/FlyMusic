@@ -66,7 +66,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
       ),
       body: Column(
         //Todo fix Button Overflow by rotating divce
-
         children: <Widget>[
           Container(
             child: Hero(

@@ -40,14 +40,14 @@ class AppDatabase extends _$AppDatabase {
   // Migrations will be covered in the next part.
   @override
   int get schemaVersion => 1;
-
+/*
   @override
   MigrationStrategy get migration => MigrationStrategy(
         // Runs after all the migrations but BEFORE any queries have a chance to execute
         beforeOpen: (details) {
           return this.customStatement('PRAGMA foreign_keys = ON');
         },
-      );
+      );*/
 }
 
 @UseDao(tables: [Songs])
@@ -292,13 +292,13 @@ class Songs extends Table {
   IntColumn get duration => integer()();
 
   TextColumn get artCrc =>
-      text().nullable().customConstraint('NULL REFERENCES Art(crc)')();
+      text().nullable().customConstraint('NULL REFERENCES arts(crc)')();
 
   TextColumn get albumName =>
-      text().nullable().customConstraint('NOT NULL REFERENCES Album(name)')();
+      text().nullable().customConstraint('NOT NULL REFERENCES albums(name)')();
 
   TextColumn get artistName =>
-      text().nullable().customConstraint('NOT NULL REFERENCES Artist(name)')();
+      text().nullable().customConstraint('NOT NULL REFERENCES artists(name)')();
 }
 
 class Albums extends Table {
@@ -309,10 +309,10 @@ class Albums extends Table {
   TextColumn get name => text().withLength(min: 1)();
 
   IntColumn get playlistId =>
-      integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
+      integer().customConstraint('NOT NULL REFERENCES playlists(id)')();
 
   TextColumn get artCrc =>
-      text().nullable().customConstraint('NULL REFERENCES Art(crc)')();
+      text().nullable().customConstraint('NULL REFERENCES arts(crc)')();
 }
 
 class Artists extends Table {
@@ -323,7 +323,7 @@ class Artists extends Table {
   TextColumn get name => text().withLength(min: 1)();
 
   IntColumn get playlistId =>
-      integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
+      integer().customConstraint('NOT NULL REFERENCES playlists(id)')();
 }
 
 class Arts extends Table {
@@ -347,11 +347,11 @@ class QueueItems extends Table {
   BoolColumn get isManuallyAdded => boolean()();
 
   IntColumn get songId =>
-      integer().customConstraint('NOT NULL REFERENCES Song(id)')();
+      integer().customConstraint('NOT NULL REFERENCES songs(id)')();
 
   //where this song comes from
   IntColumn get playlistId =>
-      integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
+      integer().customConstraint('NOT NULL REFERENCES playlists(id)')();
 }
 
 class Playlists extends Table {
@@ -370,8 +370,8 @@ class PlaylistItems extends Table {
   Set<Column> get primaryKey => {playlistId, songId};
 
   IntColumn get playlistId =>
-      integer().customConstraint('NOT NULL REFERENCES Playlist(id)')();
+      integer().customConstraint('NOT NULL REFERENCES playlists(id)')();
 
   IntColumn get songId =>
-      integer().customConstraint('NOT NULL REFERENCES Song(id)')();
+      integer().customConstraint('NOT NULL REFERENCES songs(id)')();
 }

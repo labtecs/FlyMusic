@@ -11,7 +11,7 @@ void main() async {
   setTargetPlatformForDesktop();
   WidgetsFlutterBinding.ensureInitialized();
 
-  MyApp.db = constructDb();
+  MyApp.db = constructDb(logStatements: true);
 
   if (await SharedPreferencesUtil.instance.getBool(PrefKey.FIRST_APP_START) !=
       false) {

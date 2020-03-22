@@ -5,7 +5,6 @@ import 'package:flymusic/util/click_helper.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 
 Widget buildSongItem(Song song, int playlistId, BuildContext context) {
-
   return Container(
       child: ListTile(
     leading: CircleAvatar(
@@ -20,14 +19,13 @@ Widget buildSongItem(Song song, int playlistId, BuildContext context) {
         style: TextStyle(color: Colors.black)),
     trailing: getTrailingIcon(song, playlistId),
     onTap: () {
-      onSongShortClick(song, playlistId);
+      onSongShortClick(song, playlistId, context);
     },
     onLongPress: () {
-      onSongLongPress(song, playlistId);
+      onSongLongPress(song, playlistId, context);
     },
   ));
 }
-
 
 String timestamp(Duration duration) {
   String twoDigits(int n) {
@@ -75,7 +73,7 @@ Widget getTrailingIcon(Song song, int playlistId) {
           return IconButton(
               icon: Icon(icon),
               onPressed: () {
-                onSongActionButton(song, playlistId);
+                onSongActionButton(song, playlistId, context);
               });
         } else {
           return Container(

@@ -40,7 +40,7 @@ class MusicFinder {
       _flutterFFprobe = new FlutterFFprobe();
       docs = await getApplicationDocumentsDirectory();
       final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
-      _flutterFFmpegConfig.disableLogs();
+    //  _flutterFFmpegConfig.disableLogs();
     }
 
     thumbs = Directory(docs.path + "/thumbs");
@@ -52,9 +52,8 @@ class MusicFinder {
     await _readFolder(Directory(folder));
   }
 
-  Future<void> _readFolder(FileSystemEntity folder) async {
-    List<FileSystemEntity> files =
-        (folder as Directory).listSync(recursive: false);
+  Future<void> _readFolder(Directory folder) async {
+    List<FileSystemEntity> files = folder.listSync(recursive: false);
 
     List<Directory> directories = new List();
     List<File> songFiles = new List();

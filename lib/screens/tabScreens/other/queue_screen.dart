@@ -73,7 +73,7 @@ class _QueueScreenState extends State<QueueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder<List<QueryRow>>(
+        body: StreamBuilder<List<QueryRow>>(//TODO join for no double queries
       stream: Provider.of<QueueItemDao>(context).getGroupedItemsAfterCurrent(MusicQueue.instance.currentItem?.position ?? 0),
       builder: (BuildContext context, AsyncSnapshot<List<QueryRow>> snapshot) {
         if (snapshot.hasData) {

@@ -45,7 +45,7 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.artistName),
-        backgroundColor: Colors.black54,
+        //backgroundColor: Colors.black54,
       ),
       body: FutureBuilder<List<Song>>(
         future: database.songDao.findSongsByArtistId(widget.artistID),

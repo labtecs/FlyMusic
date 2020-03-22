@@ -26,7 +26,7 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
     return ListTile(
       leading: CircleAvatar(
         child: Text("$idx"),
-        backgroundColor: Colors.black54,
+        //backgroundColor: Colors.black54,
     ),
       title: Text(song.title),
       subtitle: Text("00:00"),
@@ -54,12 +54,12 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen>{
           expandedHeight: 200.0,
           floating: false,
           pinned: false,
-          backgroundColor: Colors.black54,
+          //backgroundColor: Colors.black54,
           flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(widget.albumTitle,
-                  style: TextStyle(color: Colors.white, fontSize: 16.0,
-                  )
+                  /*style: TextStyle(color: Colors.white, fontSize: 16.0,
+                  )*/
               ),
               background: StartScreen.getArt(widget.artID),
           ),

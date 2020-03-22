@@ -49,7 +49,7 @@ class _QueueScreenState extends State<QueueScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Wiedergabeliste"),
-        backgroundColor: Colors.black54,
+        //backgroundColor: Colors.black54,
       ),
         body: StreamBuilder<List<QueueItem>>(
       stream: database.queueDao.findAllItems(),

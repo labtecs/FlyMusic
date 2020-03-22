@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/screens/main_screen.dart';
+import 'package:flymusic/util/themes.dart';
 import 'database/app_database.dart';
 
 AppDatabase database;
@@ -19,9 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fly Music',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: basicTheme(),
       home: StartScreen(),
 
     );

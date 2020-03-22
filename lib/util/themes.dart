@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
-
-final ThemeData darkTheme = new ThemeData(
-    brightness: Brightness.dark,
-    primarySwatch: Colors.blue,
-    primaryColor: Colors.black54,
-    buttonColor: Colors.white,
-    iconTheme: IconThemeData(
-      color: Colors.white,
-    ),
-    textTheme: TextTheme(
-        headline: TextStyle(color: Colors.white, fontSize: 20),
-      caption: TextStyle(color: Colors.white),
-      body1: TextStyle(color: Colors.white),
-    ),
-);
+ThemeData basicTheme() {
+  TextTheme _basicTextTeme(TextTheme base) {
+    return base.copyWith(
+      headline: base.headline.copyWith(
+        fontFamily: 'MerriWeather',
+        fontSize: 20.0,
+        color: Colors.white,
+      )
+    );
+  }
+  final ThemeData base=ThemeData.light();
+  return base.copyWith(
+    textTheme: _basicTextTeme(base.textTheme),
+    primaryColor: Color.fromARGB(255, 47 , 114, 222),
+  );
+}

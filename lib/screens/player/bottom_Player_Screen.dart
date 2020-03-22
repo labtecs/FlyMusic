@@ -16,8 +16,8 @@ class _BottomPlayerState extends State<BottomPlayer> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: Colors.black)),
-          color: Colors.black54,
+         // border: Border(top: BorderSide(color: Colors.black)),
+          //color: Colors.black54,
       ),
       child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -57,6 +57,8 @@ class _BottomPlayerState extends State<BottomPlayer> {
       ),
     );
   }
+
+
 
   /**
    * returns the play or pouse icon

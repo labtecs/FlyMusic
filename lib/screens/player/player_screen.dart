@@ -38,19 +38,19 @@ class _PlayerScreenState extends State<PlayerScreen> {
           ListTile(
             title: Text(MusicQueue.instance.currentSong?.title ?? "no title",
               style: TextStyle(
-              color: Colors.white,
+              //color: Colors.white,
               fontSize: 16,
             ),),
             subtitle: Text(MusicQueue.instance.currentSong?.artist ?? "no artist",
               style: TextStyle(
               fontSize: 12,
-              color: Colors.white,
+              //color: Colors.white,
             ),),
             trailing: IconButton(
               icon: new Icon(
                 Icons.queue_music,
                 size: 35,
-                color: Colors.white,
+                //color: Colors.white,
             ),
               onPressed: () {
                 Navigator.push(context,
@@ -76,7 +76,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
             children: <Widget>[
               InkWell(
                 child: Container(
-                  child: Icon(Icons.shuffle, size: 40,color: Colors.white),
+                  child: Icon(Icons.shuffle, size: 40,/*color: Colors.white*/),
                 ),
                 onTap: (){
                   shuffle();
@@ -87,7 +87,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 child: Container(
                     child: Icon(Icons.skip_previous,
                         size: 60,
-                        color: Colors.white
+                        //color: Colors.white
                     ),
                 ),
               ),
@@ -95,20 +95,26 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 onTap: () {
                   play();
                 },
-                child: Icon(getPlayIcon(), size: 70,color: Colors.white),
+                child: Icon(getPlayIcon(), size: 70,
+                    //color: Colors.white
+                ),
               ),
               InkWell(
                 onTap: () {
                   next();
                 },
-                child: Icon(Icons.skip_next, size: 60,color: Colors.white),
+                child: Icon(Icons.skip_next, size: 60,
+                    //color: Colors.white
+                ),
               ),
 
               InkWell(
                 onTap: () {
                   repeat();
                 },
-                child: Icon(Icons.repeat, size: 40,color: Colors.white),
+                child: Icon(Icons.repeat, size: 40,
+                    //color: Colors.white
+                ),
               )
             ],
           )

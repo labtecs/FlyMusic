@@ -34,10 +34,10 @@ class StartScreen extends StatefulWidget {
             return DrawerHeader(
               child: Text(
                 song?.title ?? "",
-                style: TextStyle(color: Colors.white),
+                //style: TextStyle(color: Colors.white),
               ),
               decoration: BoxDecoration(
-                  color: Colors.blue,
+                  //color: Colors.blue,
                   image: DecorationImage(
                       fit: BoxFit.fitWidth,
                       image: Image.file(File(snapshot.data.path)).image)),
@@ -47,10 +47,10 @@ class StartScreen extends StatefulWidget {
             return DrawerHeader(
               child: Text(
                 song?.title ?? "",
-                style: TextStyle(color: Colors.white),
+                //style: TextStyle(color: Colors.white),
               ),
               decoration: BoxDecoration(
-                  color: Colors.blue,
+                  //color: Colors.blue,
                   image: DecorationImage(
                       fit: BoxFit.fitWidth,
                       image: ExactAssetImage("asset/images/placeholder.jpg"))),
@@ -107,17 +107,10 @@ class _StartScreenState extends State<StartScreen>
       drawer: DrawerScreen(),
       appBar: AppBar(
         title: ListTile(
-          title: Text(getTitle(), style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.more_vert,
-              color: Colors.white,
-            ),
-            onPressed: () {
-            },
+          title: Text(getTitle(), style: Theme.of(context).textTheme.headline,
           ),
         ),
-        backgroundColor: Colors.black54,
+        //backgroundColor: Colors.black54,
 
       ),
       bottomNavigationBar: new BottomNavigationBar(

@@ -19,15 +19,15 @@ class _TrackListState extends State<TrackList> {
   Widget _buildRow(Song song) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        //color: Colors.white,
       ),
       child: ListTile(
         leading: CircleAvatar(
           child: StartScreen.getArt(song.artId),
           backgroundColor: Colors.transparent,
         ),
-        title: Text(song.title,style: TextStyle(color: Colors.black),),
-        subtitle: Text("00:00",style: TextStyle(color: Colors.black)),
+        title: Text(song.title,/*style: TextStyle(color: Colors.black),*/),
+        subtitle: Text("00:00",/*style: TextStyle(color: Colors.black)*/),
         trailing: SongPopup(song),
         onTap: () {
           MusicQueue.instance.playSong(song);

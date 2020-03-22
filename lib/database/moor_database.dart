@@ -271,7 +271,7 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
         ..orderBy(
           ([
             // Primary sorting by due date
-            (a) => OrderingTerm(expression: a.position, mode: OrderingMode.asc)
+            (a) => OrderingTerm(expression: a.position, mode: OrderingMode.desc)
           ]),
         )
         ..where((q) => q.position.isSmallerThanValue(currentPosition))

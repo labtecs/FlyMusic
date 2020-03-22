@@ -26,13 +26,6 @@ part 'moor_database.g.dart';
 class AppDatabase extends _$AppDatabase {
   AppDatabase(QueryExecutor e) : super(e);
 
-  // Specify the location of the database file
-  /* : super((FlutterQueryExecutor.inDatabaseFolder(
-          path: 'db.sqlite',
-          // Good for debugging - prints SQL in the console
-          logStatements: true,
-        )));*/
-
   AppDatabase.connect(DatabaseConnection connection)
       : super.connect(connection);
 
@@ -41,6 +34,7 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
+  /* //TODO foreign key bug
   @override
   MigrationStrategy get migration => MigrationStrategy(
         // Runs after all the migrations but BEFORE any queries have a chance to execute
@@ -48,6 +42,7 @@ class AppDatabase extends _$AppDatabase {
           return this.customStatement('PRAGMA foreign_keys = ON');
         },
       );
+      */
 }
 
 @UseDao(tables: [Songs])

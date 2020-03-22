@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/tabScreens/other/queue_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
 class PlayerScreen extends StatefulWidget {
-  PlayerScreen();
+  Art art;
+
+  PlayerScreen({this.art});
 
   @override
   _PlayerScreenState createState() => _PlayerScreenState();
@@ -70,7 +73,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
           Container(
             child: Hero(
                 tag: 'imageHero',
-                child: ArtUtil.getArtFromSong(MusicQueue.instance.currentSong, context)),
+                child: ArtUtil.getArtFromSong(
+                    MusicQueue.instance.currentSong, context,
+                    art: widget.art)),
             height: halfDisplaySize + 50,
           ),
           ListTile(

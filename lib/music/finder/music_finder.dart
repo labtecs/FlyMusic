@@ -5,6 +5,7 @@ import 'package:archive/archive.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:flutter_ffmpeg/log_level.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/main.dart';
 import 'package:moor/moor.dart';
@@ -40,14 +41,12 @@ class MusicFinder {
       _flutterFFprobe = new FlutterFFprobe();
       docs = await getApplicationDocumentsDirectory();
       final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
-      _flutterFFmpegConfig.disableStatistics();
-      _flutterFFmpegConfig.disableLogs();
+      _flutterFFmpegConfig.setLogLevel(LogLevel.AV_LOG_WARNING);
+      //_flutterFFmpegConfig.disableLogs(); funktioniert aktuell nicht https://github.com/tanersener/flutter-ffmpeg/issues/115
     }
 
     thumbs = Directory(docs.path + "/thumbs");
     await thumbs.create();
-
-//  _flutterFFmpegConfig.disableRedirection();
 
     await _readFolder(Directory(folder));
   }

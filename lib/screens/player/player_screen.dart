@@ -85,7 +85,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
               ),
             ),
             subtitle: Text(
-              MusicQueue.instance.currentSong?.song?.artist ?? "no artist",
+              MusicQueue.instance.currentSong?.song?.artistName ?? "no artist",
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.white,

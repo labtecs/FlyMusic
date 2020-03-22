@@ -17,9 +17,12 @@ class StartScreen extends StatefulWidget {
 }
 
 class StartScreenState extends State<StartScreen>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin<StartScreen> {
   Directory externalDirectory;
   StreamSubscription onPlayerStateChanged;
+
+  @override
+  bool get wantKeepAlive => true;
 
   int _page = 0;
   PageController _c;
@@ -78,9 +81,9 @@ class StartScreenState extends State<StartScreen>
         //Add this line will fix the issue.
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
-          this._c.jumpToPage(index);
-              //duration: const Duration(milliseconds: 100),
-          //    curve: Curves.easeInOut);
+          this._c.animateToPage(index,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeInOut);
         },
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
@@ -133,7 +136,4 @@ class StartScreenState extends State<StartScreen>
         return '';
     }
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

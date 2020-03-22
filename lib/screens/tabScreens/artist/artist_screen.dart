@@ -8,7 +8,11 @@ class ArtistScreen extends StatefulWidget {
   _ArtistScreenState createState() => _ArtistScreenState();
 }
 
-class _ArtistScreenState extends State<ArtistScreen> {
+class _ArtistScreenState extends State<ArtistScreen>
+    with AutomaticKeepAliveClientMixin<ArtistScreen> {
+  @override
+  bool get wantKeepAlive => true;
+
   Widget _buildArtistRow(Artist artist) {
     return ListTile(
       leading: CircleAvatar(
@@ -32,6 +36,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: StreamBuilder<List<Artist>>(
         stream: Provider.of<ArtistDao>(context).findAllArtists(),

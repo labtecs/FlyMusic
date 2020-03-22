@@ -10,13 +10,19 @@ class TrackList extends StatefulWidget {
   _TrackListState createState() => _TrackListState();
 }
 
-class _TrackListState extends State<TrackList> {
+class _TrackListState extends State<TrackList>
+    with AutomaticKeepAliveClientMixin<TrackList> {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: StreamBuilder<List<SongWithArt>>(
         stream: Provider.of<SongDao>(context).findAllSongsWithArt(),
-        builder: (BuildContext context, AsyncSnapshot<List<SongWithArt>> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<List<SongWithArt>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data.length,

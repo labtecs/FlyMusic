@@ -180,7 +180,6 @@ class MusicFinder {
     return SongsCompanion.insert(
         path: file.path,
         title: songTitle,
-        artist: songArtist,
         duration: songDuration,
         artCrc: Value(art?.crc ?? null),
         albumName: Value(currentAlbum.name),

@@ -230,7 +230,7 @@ class ArtDao extends DatabaseAccessor<AppDatabase> with _$ArtDaoMixin {
       (select(arts)..where((a) => a.crc.equals(crc))).getSingle();
 }
 
-@UseDao(tables: [QueueItems])
+@UseDao(tables: [QueueItems, Songs, Arts])
 class QueueItemDao extends DatabaseAccessor<AppDatabase>
     with _$QueueItemDaoMixin {
   final AppDatabase db;
@@ -324,9 +324,59 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
 
   findPlaylistName(int songId) {}
 
-  getGroupedItemsAfterCurrent(int currentPosition) => customSelectQuery(
-          'SELECT *, 1 as header FROM queue_items where position IN (Select min(position) FROM queue_items WHERE is_manually_added = 0  UNION Select min(position) FROM queue_items WHERE is_manually_added = 1 LIMIT 2) group by is_manually_added UNION Select *, 0 as header FROM queue_items WHERE position > $currentPosition order by position asc, header desc')
-      .watch();
+  Stream<List<QueryRow>> getGroupedItemsAfterCurrent(int currentPosition) =>
+      customSelectQuery(
+              'SELECT *, 1 as header FROM queue_items where position IN (Select min(position) FROM queue_items WHERE is_manually_added = 0 '
+              'UNION Select min(position) FROM queue_items WHERE is_manually_added = 1 LIMIT 2) group by is_manually_added UNION Select *, 0 as header '
+              'FROM queue_items WHERE position > $currentPosition order by position asc, header desc')
+          .watch();
+
+  Stream<List<QueueItemWithPlaylistAndSongAndArt>>
+      getGroupedItemsAfterCurrentWithSongAndArt(int currentPosition) => customSelectQuery(
+              'SELECT q.*, s.path, s.title, s.duration, s.art_crc, s.album_name, s.artist_name, a.path as art_path, p.name as playlist_name, p.id as playlist_id, p.type, 1 as header FROM queue_items q '
+              'LEFT JOIN songs s ON s.id = q.song_id '
+              'LEFT JOIN arts a ON a.crc = s.art_crc '
+              'LEFT JOIN playlists p ON p.id = q.playlist_id '
+              'where position IN (Select min(position) FROM queue_items WHERE is_manually_added = 0 '
+              'UNION Select min(position) FROM queue_items WHERE is_manually_added = 1 LIMIT 2) group by is_manually_added '
+              'UNION Select q.*, s.path, s.title, s.duration, s.art_crc, s.album_name, s.artist_name, a.path as art_path, p.name as playlist_name, p.id as playlist_id, p.type, 0 as header FROM queue_items q '
+              'LEFT JOIN songs s ON s.id = q.song_id '
+              'LEFT JOIN arts a ON a.crc = s.art_crc '
+              'LEFT JOIN playlists p ON p.id = q.playlist_id '
+              'WHERE position > $currentPosition order by position asc, header desc')
+          .watch()
+          .map(
+            (rows) => rows.map(
+              (row) {
+                return QueueItemWithPlaylistAndSongAndArt(
+                    header: row.readBool('header'),
+                    queueItem: QueueItem(
+                      id: row.readInt('id'),
+                      position: row.readInt('position'),
+                      isManuallyAdded: row.readBool('is_manually_added'),
+                      songId: row.readInt('song_id'),
+                      playlistId: row.readInt('playlist_id'),
+                    ),
+                    playlist: Playlist(
+                        id: row.readInt('playlist_id'),
+                        name: row.readString('playlist_name'),
+                        type: row.readInt('type')),
+                    song: Song(
+                      id: row.readInt('song_id'),
+                      path: row.readString('path'),
+                      title: row.readString('title'),
+                      duration: row.readInt('duration'),
+                      artCrc: row.readString('art_crc'),
+                      albumName: row.readString('album_name'),
+                      artistName: row.readString('artist_name'),
+                    ),
+                    art: Art(
+                      path: row.readString('art_path'),
+                      crc: row.readString('art_crc'),
+                    ));
+              },
+            ).toList(),
+          );
 }
 
 @UseDao(tables: [Playlists])
@@ -370,8 +420,6 @@ class Songs extends Table {
   TextColumn get path => text().withLength(min: 0).customConstraint('UNIQUE')();
 
   TextColumn get title => text().withLength(min: 0)();
-
-  TextColumn get artist => text().withLength(min: 0)();
 
   IntColumn get duration => integer()();
 
@@ -471,13 +519,17 @@ class SongWithArt {
   });
 }
 
-class QueueItemWithSongWithArt {
+class QueueItemWithPlaylistAndSongAndArt {
+  final bool header;
   final QueueItem queueItem;
+  final Playlist playlist;
   final Song song;
   final Art art;
 
-  QueueItemWithSongWithArt({
+  QueueItemWithPlaylistAndSongAndArt({
+    @required this.header,
     @required this.queueItem,
+    @required this.playlist,
     @required this.song,
     @required this.art,
   });

@@ -9,7 +9,10 @@ class AlbumList extends StatefulWidget {
   _AlbumListState createState() => _AlbumListState();
 }
 
-class _AlbumListState extends State<AlbumList> {
+class _AlbumListState extends State<AlbumList>
+    with AutomaticKeepAliveClientMixin<AlbumList> {
+  @override
+  bool get wantKeepAlive => true;
 
   Widget _buildAlbumRow(Album album) {
     return ListTile(
@@ -31,6 +34,7 @@ class _AlbumListState extends State<AlbumList> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: StreamBuilder<List<Album>>(
         stream: Provider.of<AlbumDao>(context).findAllAlbums(),

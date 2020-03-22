@@ -11,7 +11,6 @@ class Song extends DataClass implements Insertable<Song> {
   final int id;
   final String path;
   final String title;
-  final String artist;
   final int duration;
   final String artCrc;
   final String albumName;
@@ -20,7 +19,6 @@ class Song extends DataClass implements Insertable<Song> {
       {@required this.id,
       @required this.path,
       @required this.title,
-      @required this.artist,
       @required this.duration,
       this.artCrc,
       this.albumName,
@@ -35,8 +33,6 @@ class Song extends DataClass implements Insertable<Song> {
       path: stringType.mapFromDatabaseResponse(data['${effectivePrefix}path']),
       title:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
-      artist:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}artist']),
       duration:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}duration']),
       artCrc:
@@ -54,7 +50,6 @@ class Song extends DataClass implements Insertable<Song> {
       id: serializer.fromJson<int>(json['id']),
       path: serializer.fromJson<String>(json['path']),
       title: serializer.fromJson<String>(json['title']),
-      artist: serializer.fromJson<String>(json['artist']),
       duration: serializer.fromJson<int>(json['duration']),
       artCrc: serializer.fromJson<String>(json['artCrc']),
       albumName: serializer.fromJson<String>(json['albumName']),
@@ -68,7 +63,6 @@ class Song extends DataClass implements Insertable<Song> {
       'id': serializer.toJson<int>(id),
       'path': serializer.toJson<String>(path),
       'title': serializer.toJson<String>(title),
-      'artist': serializer.toJson<String>(artist),
       'duration': serializer.toJson<int>(duration),
       'artCrc': serializer.toJson<String>(artCrc),
       'albumName': serializer.toJson<String>(albumName),
@@ -83,8 +77,6 @@ class Song extends DataClass implements Insertable<Song> {
       path: path == null && nullToAbsent ? const Value.absent() : Value(path),
       title:
           title == null && nullToAbsent ? const Value.absent() : Value(title),
-      artist:
-          artist == null && nullToAbsent ? const Value.absent() : Value(artist),
       duration: duration == null && nullToAbsent
           ? const Value.absent()
           : Value(duration),
@@ -103,7 +95,6 @@ class Song extends DataClass implements Insertable<Song> {
           {int id,
           String path,
           String title,
-          String artist,
           int duration,
           String artCrc,
           String albumName,
@@ -112,7 +103,6 @@ class Song extends DataClass implements Insertable<Song> {
         id: id ?? this.id,
         path: path ?? this.path,
         title: title ?? this.title,
-        artist: artist ?? this.artist,
         duration: duration ?? this.duration,
         artCrc: artCrc ?? this.artCrc,
         albumName: albumName ?? this.albumName,
@@ -124,7 +114,6 @@ class Song extends DataClass implements Insertable<Song> {
           ..write('id: $id, ')
           ..write('path: $path, ')
           ..write('title: $title, ')
-          ..write('artist: $artist, ')
           ..write('duration: $duration, ')
           ..write('artCrc: $artCrc, ')
           ..write('albumName: $albumName, ')
@@ -141,11 +130,9 @@ class Song extends DataClass implements Insertable<Song> {
           $mrjc(
               title.hashCode,
               $mrjc(
-                  artist.hashCode,
-                  $mrjc(
-                      duration.hashCode,
-                      $mrjc(artCrc.hashCode,
-                          $mrjc(albumName.hashCode, artistName.hashCode))))))));
+                  duration.hashCode,
+                  $mrjc(artCrc.hashCode,
+                      $mrjc(albumName.hashCode, artistName.hashCode)))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -153,7 +140,6 @@ class Song extends DataClass implements Insertable<Song> {
           other.id == this.id &&
           other.path == this.path &&
           other.title == this.title &&
-          other.artist == this.artist &&
           other.duration == this.duration &&
           other.artCrc == this.artCrc &&
           other.albumName == this.albumName &&
@@ -164,7 +150,6 @@ class SongsCompanion extends UpdateCompanion<Song> {
   final Value<int> id;
   final Value<String> path;
   final Value<String> title;
-  final Value<String> artist;
   final Value<int> duration;
   final Value<String> artCrc;
   final Value<String> albumName;
@@ -173,7 +158,6 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.id = const Value.absent(),
     this.path = const Value.absent(),
     this.title = const Value.absent(),
-    this.artist = const Value.absent(),
     this.duration = const Value.absent(),
     this.artCrc = const Value.absent(),
     this.albumName = const Value.absent(),
@@ -183,20 +167,17 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.id = const Value.absent(),
     @required String path,
     @required String title,
-    @required String artist,
     @required int duration,
     this.artCrc = const Value.absent(),
     this.albumName = const Value.absent(),
     this.artistName = const Value.absent(),
   })  : path = Value(path),
         title = Value(title),
-        artist = Value(artist),
         duration = Value(duration);
   SongsCompanion copyWith(
       {Value<int> id,
       Value<String> path,
       Value<String> title,
-      Value<String> artist,
       Value<int> duration,
       Value<String> artCrc,
       Value<String> albumName,
@@ -205,7 +186,6 @@ class SongsCompanion extends UpdateCompanion<Song> {
       id: id ?? this.id,
       path: path ?? this.path,
       title: title ?? this.title,
-      artist: artist ?? this.artist,
       duration: duration ?? this.duration,
       artCrc: artCrc ?? this.artCrc,
       albumName: albumName ?? this.albumName,
@@ -242,14 +222,6 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
   GeneratedTextColumn get title => _title ??= _constructTitle();
   GeneratedTextColumn _constructTitle() {
     return GeneratedTextColumn('title', $tableName, false, minTextLength: 0);
-  }
-
-  final VerificationMeta _artistMeta = const VerificationMeta('artist');
-  GeneratedTextColumn _artist;
-  @override
-  GeneratedTextColumn get artist => _artist ??= _constructArtist();
-  GeneratedTextColumn _constructArtist() {
-    return GeneratedTextColumn('artist', $tableName, false, minTextLength: 0);
   }
 
   final VerificationMeta _durationMeta = const VerificationMeta('duration');
@@ -293,7 +265,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
 
   @override
   List<GeneratedColumn> get $columns =>
-      [id, path, title, artist, duration, artCrc, albumName, artistName];
+      [id, path, title, duration, artCrc, albumName, artistName];
   @override
   $SongsTable get asDslTable => this;
   @override
@@ -318,12 +290,6 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
           _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
     } else if (isInserting) {
       context.missing(_titleMeta);
-    }
-    if (d.artist.present) {
-      context.handle(
-          _artistMeta, artist.isAcceptableValue(d.artist.value, _artistMeta));
-    } else if (isInserting) {
-      context.missing(_artistMeta);
     }
     if (d.duration.present) {
       context.handle(_durationMeta,
@@ -365,9 +331,6 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     }
     if (d.title.present) {
       map['title'] = Variable<String, StringType>(d.title.value);
-    }
-    if (d.artist.present) {
-      map['artist'] = Variable<String, StringType>(d.artist.value);
     }
     if (d.duration.present) {
       map['duration'] = Variable<int, IntType>(d.duration.value);
@@ -1593,6 +1556,8 @@ mixin _$ArtDaoMixin on DatabaseAccessor<AppDatabase> {
 }
 mixin _$QueueItemDaoMixin on DatabaseAccessor<AppDatabase> {
   $QueueItemsTable get queueItems => db.queueItems;
+  $SongsTable get songs => db.songs;
+  $ArtsTable get arts => db.arts;
 }
 mixin _$PlaylistDaoMixin on DatabaseAccessor<AppDatabase> {
   $PlaylistsTable get playlists => db.playlists;

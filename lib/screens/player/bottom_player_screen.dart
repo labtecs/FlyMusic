@@ -73,7 +73,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(MusicQueue.instance.currentSong?.song?.title ?? ""),
-                        Text(MusicQueue.instance.currentSong?.song?.artist ?? "")
+                        Text(MusicQueue.instance.currentSong?.song?.artistName ?? "")
                       ]),
                 ),
               ),

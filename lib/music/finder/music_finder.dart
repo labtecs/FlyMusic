@@ -40,13 +40,13 @@ class MusicFinder {
       _flutterFFprobe = new FlutterFFprobe();
       docs = await getApplicationDocumentsDirectory();
       final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
-    //  _flutterFFmpegConfig.disableLogs();
+      _flutterFFmpegConfig.disableStatistics();
+      _flutterFFmpegConfig.disableLogs();
     }
 
     thumbs = Directory(docs.path + "/thumbs");
     await thumbs.create();
 
-    // _flutterFFmpegConfig.disableStatistics();
 //  _flutterFFmpegConfig.disableRedirection();
 
     await _readFolder(Directory(folder));

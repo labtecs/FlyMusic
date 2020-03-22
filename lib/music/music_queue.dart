@@ -66,6 +66,7 @@ class MusicQueue {
               FlatButton(
                 child: Text('Ja'),
                 onPressed: () async {
+                  Navigator.of(context).pop();
                   await MyApp.db.queueItemDao.clearQueue();
                   await play();
                 },

@@ -17,12 +17,10 @@ class StartScreen extends StatefulWidget {
 }
 
 class StartScreenState extends State<StartScreen>
-    with AutomaticKeepAliveClientMixin<StartScreen> {
+    with SingleTickerProviderStateMixin {
   Directory externalDirectory;
   StreamSubscription onPlayerStateChanged;
 
-  @override
-  bool get wantKeepAlive => true;
 
   int _page = 0;
   PageController _c;
@@ -52,7 +50,6 @@ class StartScreenState extends State<StartScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return new Scaffold(
       appBar: AppBar(
         bottom: getAppBarBottom(),

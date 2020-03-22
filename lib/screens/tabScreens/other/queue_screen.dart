@@ -10,10 +10,8 @@ class QueueScreen extends StatefulWidget {
   _QueueScreenState createState() => _QueueScreenState();
 }
 
-class _QueueScreenState extends State<QueueScreen>
-    with AutomaticKeepAliveClientMixin<QueueScreen> {
-  @override
-  bool get wantKeepAlive => true;
+class _QueueScreenState extends State<QueueScreen> {
+
   List<Song> songs = List();
 
   Widget _buildRow(QueueItemWithPlaylistAndSongAndArt queueItem) {
@@ -49,7 +47,6 @@ class _QueueScreenState extends State<QueueScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
         body: StreamBuilder<List<QueueItemWithPlaylistAndSongAndArt>>(
       //TODO join for no double queries

@@ -230,7 +230,7 @@ class ArtDao extends DatabaseAccessor<AppDatabase> with _$ArtDaoMixin {
       (select(arts)..where((a) => a.crc.equals(crc))).getSingle();
 }
 
-@UseDao(tables: [QueueItems, Songs, Arts])
+@UseDao(tables: [QueueItems, Songs, Arts, Playlists])
 class QueueItemDao extends DatabaseAccessor<AppDatabase>
     with _$QueueItemDaoMixin {
   final AppDatabase db;
@@ -314,23 +314,6 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
         ..where((q) => q.id.isNotIn([currentItemId])))
       .go();
 
-  Stream<List<QueryRow>> getGroupedItems() => customSelectQuery(
-          'SELECT *, 1 as header FROM queue_items where position IN (Select min(position) FROM queue_items WHERE is_manually_added = 0  UNION Select min(position) FROM queue_items WHERE is_manually_added = 1 LIMIT 2) group by is_manually_added UNION Select *, 0 as header FROM queue_items order by position asc, header desc')
-      .watch();
-
-  Stream<List<QueryRow>> getGroupedItems2() => customSelectQuery(
-          'Select min(position) as position FROM queue_items WHERE is_manually_added = 0  UNION Select min(position) as position FROM queue_items WHERE is_manually_added = 1 LIMIT 2')
-      .watch();
-
-  findPlaylistName(int songId) {}
-
-  Stream<List<QueryRow>> getGroupedItemsAfterCurrent(int currentPosition) =>
-      customSelectQuery(
-              'SELECT *, 1 as header FROM queue_items where position IN (Select min(position) FROM queue_items WHERE is_manually_added = 0 '
-              'UNION Select min(position) FROM queue_items WHERE is_manually_added = 1 LIMIT 2) group by is_manually_added UNION Select *, 0 as header '
-              'FROM queue_items WHERE position > $currentPosition order by position asc, header desc')
-          .watch();
-
   Stream<List<QueueItemWithPlaylistAndSongAndArt>>
       getGroupedItemsAfterCurrentWithSongAndArt(int currentPosition) => customSelectQuery(
               'SELECT q.*, s.path, s.title, s.duration, s.art_crc, s.album_name, s.artist_name, a.path as art_path, p.name as playlist_name, p.id as playlist_id, p.type, 1 as header FROM queue_items q '
@@ -343,7 +326,7 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
               'LEFT JOIN songs s ON s.id = q.song_id '
               'LEFT JOIN arts a ON a.crc = s.art_crc '
               'LEFT JOIN playlists p ON p.id = q.playlist_id '
-              'WHERE position > $currentPosition order by position asc, header desc')
+              'WHERE position > $currentPosition order by position asc, header desc', readsFrom : {queueItems, songs, arts, playlists})
           .watch()
           .map(
             (rows) => rows.map(

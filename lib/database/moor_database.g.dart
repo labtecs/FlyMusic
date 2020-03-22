@@ -1558,6 +1558,7 @@ mixin _$QueueItemDaoMixin on DatabaseAccessor<AppDatabase> {
   $QueueItemsTable get queueItems => db.queueItems;
   $SongsTable get songs => db.songs;
   $ArtsTable get arts => db.arts;
+  $PlaylistsTable get playlists => db.playlists;
 }
 mixin _$PlaylistDaoMixin on DatabaseAccessor<AppDatabase> {
   $PlaylistsTable get playlists => db.playlists;

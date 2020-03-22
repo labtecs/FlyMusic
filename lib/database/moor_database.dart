@@ -40,14 +40,14 @@ class AppDatabase extends _$AppDatabase {
   // Migrations will be covered in the next part.
   @override
   int get schemaVersion => 1;
-/*
+
   @override
   MigrationStrategy get migration => MigrationStrategy(
         // Runs after all the migrations but BEFORE any queries have a chance to execute
         beforeOpen: (details) {
           return this.customStatement('PRAGMA foreign_keys = ON');
         },
-      );*/
+      );
 }
 
 @UseDao(tables: [Songs])

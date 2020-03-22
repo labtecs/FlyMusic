@@ -9,7 +9,7 @@ class ArtUtil {
 
 
   static Widget getArtFromSongWithArt(SongWithArt song, BuildContext context) {
-    if (song == null || song.art == null) {
+    if (song == null || song.art == null || song.art.path == null) {
       return Image(image: AssetImage("asset/images/placeholder.jpg"));
     }
     return Image.file(File(song.art.path), fit: BoxFit.cover);

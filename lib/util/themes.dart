@@ -14,7 +14,7 @@ ThemeData basicTheme() {
       ),
     );
   }
-  final ThemeData base=ThemeData.light();
+  final ThemeData base=ThemeData.dark();
   return base.copyWith(
     textTheme: _basicTextTheme(base.textTheme),
     primaryColor: Color.fromARGB(255, 47 , 114, 222),

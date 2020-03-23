@@ -31,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
- //TODO foreign key bug https://github.com/simolus3/moor/issues/454
+ //see https://github.com/simolus3/moor/issues/454
   @override
   MigrationStrategy get migration => MigrationStrategy(
         // Runs after all the migrations but BEFORE any queries have a chance to execute

@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
@@ -16,6 +18,20 @@ readMusicFolder(String folder) async {
   await MusicFinder().readFolderIntoDatabase(folder);
 }
 
+void myIsolate(SendPort isolateToMainStream) {
+  ReceivePort mainToIsolateStream = ReceivePort();
+  isolateToMainStream.send(mainToIsolateStream.sendPort);
+
+  doAsync(File file) async {
+    var tags = await TagProcessor().getTagsFromByteArray(file.readAsBytes());
+    isolateToMainStream.send(tags);
+  }
+
+  mainToIsolateStream.listen((data) {
+    doAsync(data);
+  });
+}
+
 readTags(File file) async {
   var tags = await TagProcessor().getTagsFromByteArray(file.readAsBytes());
   return tags;
@@ -23,6 +39,7 @@ readTags(File file) async {
 
 class MusicFinder {
   FlutterFFprobe _flutterFFprobe;
+  SendPort mainToIsolateStream;
 
   TagProcessor tp = new TagProcessor();
   List<Song> songs = new List();
@@ -30,17 +47,21 @@ class MusicFinder {
   Artist currentArtist;
   Directory thumbs;
   AppDatabase database;
+  List<Tag> currentTags;
+  Completer waitForTags;
 
   readFolderIntoDatabase(String folder) async {
     database = MyApp.db;
+    mainToIsolateStream = await initIsolate();
 
     Directory docs;
-    if(Platform.isWindows){
+    if (Platform.isWindows) {
       docs = Directory(folder);
-    }else {
+    } else {
       _flutterFFprobe = new FlutterFFprobe();
       docs = await getApplicationDocumentsDirectory();
-      final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
+      final FlutterFFmpegConfig _flutterFFmpegConfig =
+          new FlutterFFmpegConfig();
       _flutterFFmpegConfig.setLogLevel(LogLevel.AV_LOG_WARNING);
       //_flutterFFmpegConfig.disableLogs(); funktioniert aktuell nicht https://github.com/tanersener/flutter-ffmpeg/issues/115
     }
@@ -49,6 +70,24 @@ class MusicFinder {
     await thumbs.create();
 
     await _readFolder(Directory(folder));
+  }
+
+  Future<SendPort> initIsolate() async {
+    Completer completer = new Completer<SendPort>();
+    ReceivePort isolateToMainStream = ReceivePort();
+
+    isolateToMainStream.listen((data) {
+      if (data is SendPort) {
+        SendPort mainToIsolateStream = data;
+        completer.complete(mainToIsolateStream);
+      } else {
+        currentTags = data;
+        waitForTags.complete();
+      }
+    });
+
+    Isolate myIsolateInstance = await Isolate.spawn(myIsolate, isolateToMainStream.sendPort);
+    return completer.future;
   }
 
   Future<void> _readFolder(Directory folder) async {
@@ -123,17 +162,21 @@ class MusicFinder {
     Art art;
     int songDuration = 0;
 
-
-    if(!Platform.isWindows) {
+    if (!Platform.isWindows) {
       var info = await _flutterFFprobe.getMediaInformation(file.path);
       songDuration = info['duration'] ?? 0;
     }
 
     //fallback and image
     //TODO too slow always opening new thread work with callbacks
-    var tags = await compute(readTags, file);
+   // var tags = await compute(readTags, file);
+    //completer to wait for tags
+    waitForTags = new Completer();
+    mainToIsolateStream.send(file);
 
-    await Future.forEach(tags, (f) async {
+    await Future.wait([waitForTags.future]);
+
+    await Future.forEach(currentTags, (f) async {
       if (f.version == '1.1') {
         if ((songTitle == null || songTitle.isEmpty) &&
             f.tags.containsKey('title')) {

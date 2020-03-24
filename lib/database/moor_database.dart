@@ -6,12 +6,12 @@ part 'moor_database.g.dart';
 //TODO pagination
 // This annotation tells the code generator which tables this DB works with
 @UseMoor(tables: [
-  Songs,
+  Arts,
+  Playlists,
   Albums,
   Artists,
-  Arts,
+  Songs,
   QueueItems,
-  Playlists,
   PlaylistItems
 ], daos: [
   SongDao,
@@ -31,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
-/* //TODO foreign key bug https://github.com/simolus3/moor/issues/454
+ //see https://github.com/simolus3/moor/issues/454
   @override
   MigrationStrategy get migration => MigrationStrategy(
         // Runs after all the migrations but BEFORE any queries have a chance to execute
@@ -39,7 +39,7 @@ class AppDatabase extends _$AppDatabase {
           return this.customStatement('PRAGMA foreign_keys = ON');
         },
       );
-      */
+
 }
 
 @UseDao(tables: [Songs, Arts])

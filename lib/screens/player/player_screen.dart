@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/tabScreens/other/queue_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 
-class PlayerScreen extends StatefulWidget {
+//TODO shuffle and repeat
 
+class PlayerScreen extends StatefulWidget {
   PlayerScreen();
 
   @override
@@ -58,52 +57,49 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double halfDisplaySize = MediaQuery.of(context).size.height / 2;
     return Scaffold(
-      backgroundColor: Colors.black,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-      ),
-      body: Column(
-        //Todo fix Button Overflow by rotating divce
-        children: <Widget>[
-          Container(
-            child: Hero(
-                tag: 'imageHero',
-                child: ArtUtil.getArtFromSongWithArt(
-                    MusicQueue.instance.currentSong, context)),
-            height: halfDisplaySize + 50,
-          ),
+        backgroundColor: Colors.black,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+        ),
+        body: OrientationBuilder(builder: (context, orientation) {
+          if (orientation == Orientation.portrait) {
+            return getPortraitWidget(context);
+          } else {
+            return getLandscapeWidget(context);
+          }
+        }));
+  }
+
+  Widget getLandscapeWidget(BuildContext context) {
+    double halfDisplaySize = MediaQuery.of(context).size.height - 50;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          child: Hero(
+              tag: 'imageHero',
+              child: ArtUtil.getArtFromSongWithArt(
+                  MusicQueue.instance.currentSong, context)),
+          height: halfDisplaySize,
+        ),
+        Expanded(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           ListTile(
-            title: Text(
-              MusicQueue.instance.currentSong?.song?.title ?? "no title",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-            subtitle: Text(
-              MusicQueue.instance.currentSong?.song?.artistName ?? "no artist",
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.white,
-              ),
-            ),
-            trailing: IconButton(
-              icon: new Icon(
-                Icons.queue_music,
-                size: 35,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => QueueScreen()),
-                );
-              },
-            ),
+            title: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                    MusicQueue.instance.currentSong?.song?.title ?? "Unbekannt",
+                    style: Theme.of(context).textTheme.headline4)),
+            subtitle: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                    MusicQueue.instance.currentSong?.song?.artistName ??
+                        "Unbekannt",
+                    style: Theme.of(context).textTheme.headline6)),
           ),
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
@@ -122,14 +118,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              InkWell(
-                child: Container(
-                  child: Icon(Icons.shuffle, size: 40, color: Colors.white),
-                ),
-                onTap: () {
-                  MusicQueue.instance.shuffle();
-                },
-              ),
               InkWell(
                 onTap: () {
                   MusicQueue.instance.playPrevious();
@@ -151,16 +139,77 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 },
                 child: Icon(Icons.skip_next, size: 60, color: Colors.white),
               ),
-              InkWell(
-                onTap: () {
-                  MusicQueue.instance.repeat();
-                },
-                child: Icon(Icons.repeat, size: 40, color: Colors.white),
-              )
             ],
           )
-        ],
-      ),
+        ]))
+      ],
+    );
+  }
+
+  Widget getPortraitWidget(BuildContext context) {
+    double halfDisplaySize = MediaQuery.of(context).size.height / 2;
+    return Column(
+      children: <Widget>[
+        Container(
+          child: Hero(
+              tag: 'imageHero',
+              child: ArtUtil.getArtFromSongWithArt(
+                  MusicQueue.instance.currentSong, context)),
+          height: halfDisplaySize + 50,
+        ),
+        ListTile(
+          title: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                  MusicQueue.instance.currentSong?.song?.title ?? "Unbekannt",
+                  style: Theme.of(context).textTheme.headline4)),
+          subtitle: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                  MusicQueue.instance.currentSong?.song?.artistName ??
+                      "no artist",
+                  style: Theme.of(context).textTheme.headline5)),
+        ),
+        Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+          child: Slider(
+            value: audioPosition.inSeconds?.toDouble() ?? 0,
+            onChanged: (value) {
+              MusicQueue.instance.audioPlayer
+                  .seek(new Duration(seconds: value.toInt()));
+            },
+            min: 0,
+            max: duration.inSeconds?.toDouble() ?? 0,
+            label:
+                "${audioPosition.inSeconds?.toDouble() ?? 0} \ ${duration.inSeconds?.toDouble() ?? 0}",
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            InkWell(
+              onTap: () {
+                MusicQueue.instance.playPrevious();
+              },
+              child: Container(
+                child: Icon(Icons.skip_previous, size: 60, color: Colors.white),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                MusicQueue.instance.playPause();
+              },
+              child: Icon(getPlayIcon(), size: 70, color: Colors.white),
+            ),
+            InkWell(
+              onTap: () {
+                MusicQueue.instance.playNext();
+              },
+              child: Icon(Icons.skip_next, size: 60, color: Colors.white),
+            ),
+          ],
+        )
+      ],
     );
   }
 

@@ -46,12 +46,10 @@ packages:
   audioplayers:
     dependency: "direct main"
     description:
-      path: "."
-      ref: go-flutter-desktop
-      resolved-ref: fca5c3205eeb482aea44bdccad14947871155c9e
-      url: "https://github.com/luanpotter/audioplayers.git"
-    source: git
-    version: "0.12.1"
+      name: audioplayers
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.14.2"
   bazel_worker:
     dependency: transitive
     description:

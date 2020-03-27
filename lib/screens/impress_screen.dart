@@ -18,7 +18,7 @@ class ImpressScreen extends StatelessWidget {
                 contentPadding:
                     EdgeInsetsDirectional.only(start: 16, end: 16, bottom: 20),
                 title: Text(
-                    'Diese App wurde für das Fach "AndroidEntwicklung" der FH Fulda programmiert von:',
+                    'Diese App wurde für das Fach "Android Entwicklung" der FH Fulda programmiert von:',
                     style: Theme.of(context).textTheme.subtitle1)),
             ListTile(
               title: Text('Kilian Eller',

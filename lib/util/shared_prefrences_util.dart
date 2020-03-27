@@ -9,11 +9,12 @@ class SharedPreferencesUtil {
 
   SharedPreferencesUtil._internal();
 
-  getString(PrefKey prefKey) async {
+  Future<String> getString(PrefKey prefKey) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
     return prefs.getString(prefKey.index.toString());
   }
+
 
   setString(PrefKey prefKey, String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -79,5 +80,6 @@ enum PrefKey {
   SONG_ACTION_BUTTON,
   QUEUE_CLEAR_OPTION,
   QUEUE_WARNING_ON_CLEAR,
-  QUEUE_INSERT_OPTION
+  QUEUE_INSERT_OPTION,
+  LANGUAGE
 }

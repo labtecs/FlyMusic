@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/finder/shared.dart';
 import 'package:flymusic/screens/impress_screen.dart';
@@ -18,13 +19,23 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SettingsScreen(title: "Application Settings", children: [
+    return SettingsScreen(title: tr("app_settings"), children: [
       getFolders(),
       SettingsTileGroup(title: 'Allgemein', children: [
         SimpleSettingsTile(
             icon: Icon(Icons.info_outline),
             title: 'Impressum',
             screen: ImpressScreen()),
+        RadioPickerSettingsTile(
+            settingKey: PrefKey.LANGUAGE.index.toString(),
+            title: 'Language',
+            values: {'1': 'Englisch', '2': 'Deutsch'},
+            defaultKey: '1',
+            onValChange: (val) => {
+                  EasyLocalization.of(context).locale =
+                      EasyLocalization.of(context)
+                          .supportedLocales[int.parse(val) - 1]
+                }),
       ]),
       SettingsTileGroup(title: 'Warteliste', children: [
         RadioPickerSettingsTile(

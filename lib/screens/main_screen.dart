@@ -6,6 +6,7 @@ import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/settings_screen.dart';
 import 'package:flymusic/screens/tabScreens/other/track_list_screen.dart';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'player/bottom_player_screen.dart';
 import 'tabScreens/album/album_screen.dart';
 import 'tabScreens/artist/artist_screen.dart';
@@ -83,7 +84,7 @@ class StartScreenState extends State<StartScreen>
         },
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.audiotrack), title: new Text("Tracks")),
+              icon: new Icon(Icons.audiotrack), title: Text('tracks').tr()),
           new BottomNavigationBarItem(
               icon: new Icon(Icons.album), title: new Text("Albums")),
           new BottomNavigationBarItem(

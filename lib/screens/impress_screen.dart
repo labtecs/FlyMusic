@@ -122,6 +122,13 @@ class ImpressScreen extends StatelessWidget {
                   launch(
                       'https://pub.dev/packages/shared_preferences_settings');
                 }),
+            ListTile(
+                title: Text('easy_localization',
+                    style: Theme.of(context).textTheme.bodyText2),
+                subtitle: Text('Mehrsprachiger Text'),
+                onTap: () {
+                  launch('https://pub.dev/packages/easy_localization');
+                }),
           ],
         ).toList(),
       ),

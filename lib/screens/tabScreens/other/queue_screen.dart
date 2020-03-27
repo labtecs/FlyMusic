@@ -23,11 +23,11 @@ class _QueueScreenState extends State<QueueScreen>
       if (queueItem.queueItem.isManuallyAdded) {
         return ListTile(
             title: Text('Als nächstes in der Warteschlange',
-                style: Theme.of(context).textTheme.subhead));
+                style: Theme.of(context).textTheme.subtitle1));
       }
       return ListTile(
         title: Text('Aus ${queueItem.playlist.name}',
-            style: Theme.of(context).textTheme.subhead),
+            style: Theme.of(context).textTheme.subtitle1),
       );
     } else {
       return ListTile(

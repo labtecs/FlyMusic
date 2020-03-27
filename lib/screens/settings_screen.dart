@@ -16,6 +16,8 @@ class CustomSettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<CustomSettingsScreen> {
   Directory externalDirectory;
 
+
+
   @override
   Widget build(BuildContext context) {
     return SettingsScreen(title: "Application Settings", children: [
@@ -24,7 +26,14 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
         SimpleSettingsTile(
             icon: Icon(Icons.info_outline),
             title: 'Impressum',
-            screen: ImpressScreen()),
+            screen: ImpressScreen()
+        ),
+        RadioSettingsTile(
+          settingKey: PrefKey.THEME_OPTION.toString(),
+          title: "Theme",
+          values: {'1': 'Light Theme', '2': 'Dark Theme'},
+          defaultKey: '1',
+        ),
       ]),
       SettingsTileGroup(title: 'Warteliste', children: [
         RadioPickerSettingsTile(
@@ -182,4 +191,6 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
       ];
     }
   }
+
+
 }

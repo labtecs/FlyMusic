@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/settings_screen.dart';
 import 'package:flymusic/screens/tabScreens/other/track_list_screen.dart';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'player/bottom_player_screen.dart';
 import 'tabScreens/album/album_screen.dart';
 import 'tabScreens/artist/artist_screen.dart';
@@ -84,9 +84,11 @@ class StartScreenState extends State<StartScreen>
         },
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.audiotrack), title: Text('tracks').tr()),
+              icon: new Icon(Icons.audiotrack),
+              title: Text('tracks').tr(context: context)),
           new BottomNavigationBarItem(
-              icon: new Icon(Icons.album), title: new Text("Albums")),
+              icon: new Icon(Icons.album),
+              title: new Text('albums').tr(context: context)),
           new BottomNavigationBarItem(
               icon: new Icon(Icons.person), title: new Text("Artists")),
           new BottomNavigationBarItem(
@@ -122,7 +124,7 @@ class StartScreenState extends State<StartScreen>
   String getTitle() {
     switch (_page) {
       case 0:
-        return 'Lied Liste';
+        return tr("tracks", context: context);
       case 1:
         return 'Alben';
       case 2:
@@ -162,13 +164,13 @@ Widget emptyScreen(BuildContext context) {
           },
           color: Colors.blue,
           child: Text(
-            "Einstellungen",
+            "settings",
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: Colors.white,
               fontSize: 23,
             ),
-          ),
+          ).tr(context: context),
         ),
       ),
     ],

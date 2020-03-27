@@ -37,15 +37,14 @@ void main() async {
         .setBool(PrefKey.QUEUE_WARNING_ON_CLEAR, true);
     await SharedPreferencesUtil.instance
         .setString(PrefKey.QUEUE_INSERT_OPTION, '2');
-    await SharedPreferencesUtil.instance.setString(PrefKey.LANGUAGE, '1');
-
-    //TODO show start screen
+    await SharedPreferencesUtil.instance.setString(PrefKey.LANGUAGE, '1'); //TODO init correctly
     await SharedPreferencesUtil.instance
         .setBool(PrefKey.FIRST_APP_START, false);
   }
 
   runApp(EasyLocalization(
       child: MyApp(),
+      saveLocale: true,
       supportedLocales: [Locale('en', 'US'), Locale('de', 'DE')],
       path: 'asset/langs'));
 }
@@ -58,9 +57,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SharedPreferencesUtil.instance.getString(PrefKey.LANGUAGE).then((val) =>
-        EasyLocalization.of(context).locale =
-            EasyLocalization.of(context).supportedLocales[int.parse(val) - 1]);
     return MultiProvider(
         providers: [
           Provider(create: (_) => db.songDao),

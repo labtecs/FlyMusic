@@ -19,7 +19,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SettingsScreen(title: tr("app_settings"), children: [
+    return SettingsScreen(title: tr("app_settings", context: context), children: [
       getFolders(),
       SettingsTileGroup(title: 'Allgemein', children: [
         SimpleSettingsTile(

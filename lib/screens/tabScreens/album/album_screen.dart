@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
+import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/tabScreens/album/album_track_list_screen.dart';
 import 'package:flymusic/util/art_util.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +40,7 @@ class _AlbumListState extends State<AlbumList>
       body: StreamBuilder<List<Album>>(
         stream: Provider.of<AlbumDao>(context).findAllAlbums(),
         builder: (BuildContext context, AsyncSnapshot<List<Album>> snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data.length > 0) {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
@@ -47,7 +48,7 @@ class _AlbumListState extends State<AlbumList>
               },
             );
           } else {
-            return Text("no data");
+            return emptyScreen(context);
           }
         },
       ),

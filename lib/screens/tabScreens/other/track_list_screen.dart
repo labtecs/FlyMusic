@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
+import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/tabScreens/other/song_item.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ class _TrackListState extends State<TrackList>
         stream: Provider.of<SongDao>(context).findAllSongsWithArt(),
         builder:
             (BuildContext context, AsyncSnapshot<List<SongWithArt>> snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data.length > 0) {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
@@ -31,7 +32,7 @@ class _TrackListState extends State<TrackList>
               },
             );
           } else {
-            return Text("no data");
+            return emptyScreen(context);
           }
         },
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/music/music_queue.dart';
+import 'package:flymusic/screens/settings_screen.dart';
 import 'package:flymusic/screens/tabScreens/other/song_item.dart';
 import 'package:flymusic/util/art_util.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +60,7 @@ class _QueueScreenState extends State<QueueScreen>
               MusicQueue.instance.currentItem?.position ?? 0),
       builder: (BuildContext context,
           AsyncSnapshot<List<QueueItemWithPlaylistAndSongAndArt>> snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data.length > 0) {
           return ListView.builder(
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
@@ -67,9 +68,50 @@ class _QueueScreenState extends State<QueueScreen>
             },
           );
         } else {
-          return Text("no data");
+          return emptyScreen(context);
         }
       },
     ));
+  }
+
+  Widget emptyScreen(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Noch keine Lieder in der Wartelist \n'
+          'Mehr Informationen in den Einstellungen',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            fontSize: 23,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 18),
+          child: MaterialButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(18.0)),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CustomSettingsScreen()));
+            },
+            color: Colors.blue,
+            child: Text(
+              "Einstellungen",
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                fontSize: 23,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

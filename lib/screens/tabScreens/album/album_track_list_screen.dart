@@ -41,9 +41,8 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
           Provider.of<SongDao>(context).findSongsByAlbumWithArt(widget.album),
       // this is a code smell. Make sure that the future is NOT recreated when build is called. Create the future in initState instead.
       builder: (context, snapshot) {
-        Widget newsListSliver;
-        if (snapshot.hasData) {
-          newsListSliver = SliverList(
+        if (snapshot.hasData && snapshot.data.length > 0) {
+          return SliverList(
               delegate: SliverChildBuilderDelegate(
             (context, index) {
               return buildSongItem(
@@ -52,11 +51,8 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
             childCount: snapshot.data.length,
           ));
         } else {
-          newsListSliver = SliverToBoxAdapter(
-            child: CircularProgressIndicator(),
-          );
+          return Text("Keine Lieder in diesem Album");
         }
-        return newsListSliver;
       },
     );
   }

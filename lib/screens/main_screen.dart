@@ -21,7 +21,6 @@ class StartScreenState extends State<StartScreen>
   Directory externalDirectory;
   StreamSubscription onPlayerStateChanged;
 
-
   int _page = 0;
   PageController _c;
   bool _bottomPlayerVisible = false;
@@ -133,4 +132,44 @@ class StartScreenState extends State<StartScreen>
         return '';
     }
   }
+}
+
+Widget emptyScreen(BuildContext context) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      Text(
+        'Ziemlich leer hier \n Gehe zu den Einstellungen und füge deinen Musikordner hinzu',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+          fontSize: 23,
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.only(top: 18),
+        child: MaterialButton(
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(18.0)),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CustomSettingsScreen()));
+          },
+          color: Colors.blue,
+          child: Text(
+            "Einstellungen",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              fontSize: 23,
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
 }

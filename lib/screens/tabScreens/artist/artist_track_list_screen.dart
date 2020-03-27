@@ -30,7 +30,7 @@ class _ArtistTrackListScreenState extends State<ArtistTrackListScreen> {
               },
             );
           } else {
-            return Text("no data");
+            return Text("Keine Lieder unter diesem Künstler");
           }
         },
       ),

@@ -1,4 +1,3 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -17,37 +16,9 @@ void main() async {
 
   MyApp.db = constructDb(logStatements: true);
 
-  if (await SharedPreferencesUtil.instance.getBool(PrefKey.FIRST_APP_START) !=
-      false) {
-    //first start: "Warteschlange" und "Alle lieder" playlist in Playlists
-    await MyApp.db.playlistDao
-        .insert(PlaylistsCompanion.insert(name: "Alle Lieder", type: -1));
-    await MyApp.db.playlistDao
-        .insert(PlaylistsCompanion.insert(name: "Warteschlange", type: -1));
-
-    //init settings
-    await SharedPreferencesUtil.instance
-        .setString(PrefKey.SONG_SHORT_PRESS, '1');
-    await SharedPreferencesUtil.instance
-        .setString(PrefKey.SONG_LONG_PRESS, '2');
-    await SharedPreferencesUtil.instance
-        .setString(PrefKey.SONG_ACTION_BUTTON, '3');
-    await SharedPreferencesUtil.instance
-        .setString(PrefKey.QUEUE_CLEAR_OPTION, '1');
-    await SharedPreferencesUtil.instance
-        .setBool(PrefKey.QUEUE_WARNING_ON_CLEAR, true);
-    await SharedPreferencesUtil.instance
-        .setString(PrefKey.QUEUE_INSERT_OPTION, '2');
-    await SharedPreferencesUtil.instance
-        .setString(PrefKey.LANGUAGE, '1'); //TODO init correctly
-    await SharedPreferencesUtil.instance
-        .setString(PrefKey.THEME, '1');
-    await SharedPreferencesUtil.instance
-        .setBool(PrefKey.FIRST_APP_START, false);
-  }
-
   runApp(EasyLocalization(
-      child: MyApp(),
+      child: ChangeNotifierProvider<ThemeModel>(
+          create: (BuildContext context) => ThemeModel(), child: MyApp()),
       saveLocale: true,
       supportedLocales: [Locale('en', 'US'), Locale('de', 'DE')],
       path: 'asset/langs'));
@@ -61,6 +32,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    init(context);
+
     return MultiProvider(
         providers: [
           Provider(create: (_) => db.songDao),
@@ -71,28 +44,53 @@ class MyApp extends StatelessWidget {
           Provider(create: (_) => db.playlistDao),
           Provider(create: (_) => db.playlistItemDao),
         ],
-        child: DynamicTheme(
-            defaultBrightness: Brightness.light,
-            data: (brightness) {
-              if (brightness == Brightness.light) {
-                return lightTheme();
-              } else {
-                return darkTheme();
-              }
-            },
-            themedWidgetBuilder: (context, theme) {
-              return MaterialApp(
-                title: 'FlyMusic',
-                localizationsDelegates: [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  EasyLocalization.of(context).delegate,
-                ],
-                supportedLocales: EasyLocalization.of(context).supportedLocales,
-                locale: EasyLocalization.of(context).locale,
-                theme: theme,
-                home: StartScreen(),
-              );
-            }));
+        child: MaterialApp(
+          title: 'FlyMusic',
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            EasyLocalization.of(context).delegate,
+          ],
+          supportedLocales: EasyLocalization.of(context).supportedLocales,
+          locale: EasyLocalization.of(context).locale,
+          theme: Provider.of<ThemeModel>(context).currentThemeLight,
+          darkTheme: Provider.of<ThemeModel>(context).currentThemeDark,
+          home: StartScreen(),
+        ));
+  }
+
+  init(BuildContext context) async {
+    if (await SharedPreferencesUtil.instance.getBool(PrefKey.FIRST_APP_START) !=
+        false) {
+      //first start: "Warteschlange" und "Alle lieder" playlist in Playlists
+      await MyApp.db.playlistDao
+          .insert(PlaylistsCompanion.insert(name: "Alle Lieder", type: -1));
+      await MyApp.db.playlistDao
+          .insert(PlaylistsCompanion.insert(name: "Warteschlange", type: -1));
+
+      //init settings
+      await SharedPreferencesUtil.instance
+          .setString(PrefKey.SONG_SHORT_PRESS, '1');
+      await SharedPreferencesUtil.instance
+          .setString(PrefKey.SONG_LONG_PRESS, '2');
+      await SharedPreferencesUtil.instance
+          .setString(PrefKey.SONG_ACTION_BUTTON, '3');
+      await SharedPreferencesUtil.instance
+          .setString(PrefKey.QUEUE_CLEAR_OPTION, '1');
+      await SharedPreferencesUtil.instance
+          .setBool(PrefKey.QUEUE_WARNING_ON_CLEAR, true);
+      await SharedPreferencesUtil.instance
+          .setString(PrefKey.QUEUE_INSERT_OPTION, '2');
+      await SharedPreferencesUtil.instance.setString(PrefKey.THEME, '1');
+      Locale myLocale = Localizations.localeOf(context);
+      if (myLocale.countryCode == "de") {
+        SharedPreferencesUtil.instance.setString(PrefKey.LANGUAGE, '2');
+      } else {
+        SharedPreferencesUtil.instance.setString(PrefKey.LANGUAGE, '1');
+      }
+      await SharedPreferencesUtil.instance
+          .setBool(PrefKey.FIRST_APP_START, false);
+      //var brightness = MediaQuery.of(context).platformBrightness;
+    }
   }
 }

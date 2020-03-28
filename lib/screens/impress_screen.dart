@@ -124,13 +124,6 @@ class ImpressScreen extends StatelessWidget {
                 subtitle: Text(tr('info_easy_localization', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/easy_localization');
-                }),
-            ListTile(
-                title: Text('dynamic_theme',
-                    style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text(tr('info_dynamic_theme', context: context)),
-                onTap: () {
-                  launch('https://pub.dev/packages/dynamic_theme');
                 })
           ],
         ).toList(),

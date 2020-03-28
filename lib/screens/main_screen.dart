@@ -140,29 +140,32 @@ class StartScreenState extends State<StartScreen>
 }
 
 Widget emptyScreen(BuildContext context) {
-  return Center( child: Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      Text(tr("empty_page", context: context),
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline6),
-      Padding(
-        padding: EdgeInsets.only(top: 18),
-        child: MaterialButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(18.0)),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CustomSettingsScreen()));
-          },
-          color: Colors.blue,
-          child: Text(tr("settings", context: context),
-              style: Theme.of(context).textTheme.headline6),
-        ),
-      ),
-    ],
-  ));
+  return Center(
+      child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(tr("empty_page", context: context),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline6),
+              Padding(
+                padding: EdgeInsets.only(top: 18),
+                child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(18.0)),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomSettingsScreen()));
+                  },
+                  color: Colors.blue,
+                  child: Text(tr("settings", context: context),
+                      style: Theme.of(context).textTheme.headline6),
+                ),
+              ),
+            ],
+          )));
 }

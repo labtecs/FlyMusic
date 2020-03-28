@@ -1,6 +1,32 @@
 import 'package:flutter/material.dart';
 
-getTheme(Brightness brightness) {}
+enum ThemeType { Light, Dark, Auto }
+
+class ThemeModel extends ChangeNotifier {
+  ThemeData currentThemeLight = lightTheme();
+  ThemeData currentThemeDark = darkTheme();
+  ThemeType _themeType = ThemeType.Auto;
+
+  setTheme(ThemeType themeType) {
+    _themeType = themeType;
+
+    switch (_themeType) {
+      case ThemeType.Auto:
+        currentThemeLight = lightTheme();
+        currentThemeDark = darkTheme();
+        break;
+      case ThemeType.Light:
+        currentThemeLight = lightTheme();
+        currentThemeDark = lightTheme();
+        break;
+      case ThemeType.Dark:
+        currentThemeLight = darkTheme();
+        currentThemeDark = darkTheme();
+        break;
+    }
+    return notifyListeners();
+  }
+}
 
 ThemeData lightTheme() {
   TextTheme _basicTextTheme(TextTheme base) {

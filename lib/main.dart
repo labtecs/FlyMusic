@@ -1,3 +1,4 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -40,6 +41,8 @@ void main() async {
     await SharedPreferencesUtil.instance
         .setString(PrefKey.LANGUAGE, '1'); //TODO init correctly
     await SharedPreferencesUtil.instance
+        .setString(PrefKey.THEME, '1');
+    await SharedPreferencesUtil.instance
         .setBool(PrefKey.FIRST_APP_START, false);
   }
 
@@ -68,17 +71,28 @@ class MyApp extends StatelessWidget {
           Provider(create: (_) => db.playlistDao),
           Provider(create: (_) => db.playlistItemDao),
         ],
-        child: MaterialApp(
-          title: 'FlyMusic',
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            EasyLocalization.of(context).delegate,
-          ],
-          supportedLocales: EasyLocalization.of(context).supportedLocales,
-          locale: EasyLocalization.of(context).locale,
-          theme: basicTheme(),
-          home: StartScreen(),
-        ));
+        child: DynamicTheme(
+            defaultBrightness: Brightness.light,
+            data: (brightness) {
+              if (brightness == Brightness.light) {
+                return lightTheme();
+              } else {
+                return darkTheme();
+              }
+            },
+            themedWidgetBuilder: (context, theme) {
+              return MaterialApp(
+                title: 'FlyMusic',
+                localizationsDelegates: [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  EasyLocalization.of(context).delegate,
+                ],
+                supportedLocales: EasyLocalization.of(context).supportedLocales,
+                locale: EasyLocalization.of(context).locale,
+                theme: theme,
+                home: StartScreen(),
+              );
+            }));
   }
 }

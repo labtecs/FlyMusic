@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/finder/shared.dart';
@@ -36,11 +37,13 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                   '2': tr("german", context: context)
                 },
                 defaultKey: '1',
-                onValChange: (val) => {
-                      EasyLocalization.of(context).locale =
-                          EasyLocalization.of(context)
-                              .supportedLocales[int.parse(val) - 1]
-                    },
+                onValChange: (val) =>setLanguage(val) ,
+                onCancel: () async {
+                  //reset
+                  setLanguage(await SharedPreferencesUtil.instance
+                      .getString(PrefKey.LANGUAGE));
+                },
+                onConfirm: (val) => SharedPreferencesUtil.instance.setString(PrefKey.LANGUAGE, val),
                 cancelCaption: tr("cancel", context: context),
                 okCaption: tr("ok", context: context)),
             RadioPickerSettingsTile(
@@ -51,18 +54,15 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                   '2': tr("dark_theme", context: context),
                 },
                 defaultKey: '1',
-                onValChange: (val) => {
-                     /* if (val == '1')
-                        {
-                          DynamicTheme.of(context)
-                              .setBrightness(Brightness.light)
-                        }
-                      else if (val == '2')
-                        {
-                          DynamicTheme.of(context)
-                              .setBrightness(Brightness.dark)
-                        }*/
-                    },
+                onValChange: (val) => setTheme(val),
+                onCancel: () async {
+                  //reset
+                  setTheme(await SharedPreferencesUtil.instance
+                      .getString(PrefKey.THEME));
+                },
+                onConfirm: (val) => {
+                  SharedPreferencesUtil.instance.setString(PrefKey.THEME, val)
+               },
                 cancelCaption: tr("cancel", context: context),
                 okCaption: tr("ok", context: context)),
           ]),
@@ -135,6 +135,22 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
             ],
           )
         ]);
+  }
+
+  setTheme(String index){
+    if (index == '1') {
+      DynamicTheme.of(context)
+          .setBrightness(Brightness.light);
+    } else if (index == '2') {
+      DynamicTheme.of(context)
+          .setBrightness(Brightness.dark);
+    }
+  }
+
+  setLanguage(String index){
+    EasyLocalization.of(context).locale =
+    EasyLocalization.of(context)
+        .supportedLocales[int.parse(index) - 1];
   }
 
   Future<void> chooseFolder() async {

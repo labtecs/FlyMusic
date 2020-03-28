@@ -140,19 +140,13 @@ class StartScreenState extends State<StartScreen>
 }
 
 Widget emptyScreen(BuildContext context) {
-  return Column(
+  return Center( child: Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
-      Text(
-        tr("empty_page", context: context),
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-          fontSize: 23,
-        ),
-      ),
+      Text(tr("empty_page", context: context),
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headline6),
       Padding(
         padding: EdgeInsets.only(top: 18),
         child: MaterialButton(
@@ -165,16 +159,10 @@ Widget emptyScreen(BuildContext context) {
                     builder: (context) => CustomSettingsScreen()));
           },
           color: Colors.blue,
-          child: Text(
-            tr("settings", context: context),
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-              fontSize: 23,
-            ),
-          ),
+          child: Text(tr("settings", context: context),
+              style: Theme.of(context).textTheme.headline6),
         ),
       ),
     ],
-  );
+  ));
 }

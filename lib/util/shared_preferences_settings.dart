@@ -584,7 +584,7 @@ class SimpleSettingsTile extends StatelessWidget {
     this.screen,
     this.visibleIfKey,
     this.enabledIfKey,
-    this.visibleByDefault = true,
+    this.visibleByDefault = true, Map<String, String> values, String defaultKey, String settingsKey,
   });
 
   @override

@@ -43,6 +43,28 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                     },
                 cancelCaption: tr("cancel", context: context),
                 okCaption: tr("ok", context: context)),
+            RadioPickerSettingsTile(
+                settingKey: PrefKey.THEME.toString(),
+                title: tr("theme", context: context),
+                values: {
+                  '1': tr("light_theme", context: context),
+                  '2': tr("dark_theme", context: context),
+                },
+                defaultKey: '1',
+                onValChange: (val) => {
+                     /* if (val == '1')
+                        {
+                          DynamicTheme.of(context)
+                              .setBrightness(Brightness.light)
+                        }
+                      else if (val == '2')
+                        {
+                          DynamicTheme.of(context)
+                              .setBrightness(Brightness.dark)
+                        }*/
+                    },
+                cancelCaption: tr("cancel", context: context),
+                okCaption: tr("ok", context: context)),
           ]),
           SettingsTileGroup(title: tr("queue", context: context), children: [
             RadioPickerSettingsTile(

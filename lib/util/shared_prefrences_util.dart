@@ -15,7 +15,6 @@ class SharedPreferencesUtil {
     return prefs.getString(prefKey.index.toString());
   }
 
-
   setString(PrefKey prefKey, String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
@@ -81,5 +80,6 @@ enum PrefKey {
   QUEUE_CLEAR_OPTION,
   QUEUE_WARNING_ON_CLEAR,
   QUEUE_INSERT_OPTION,
-  LANGUAGE
+  LANGUAGE,
+  THEME
 }

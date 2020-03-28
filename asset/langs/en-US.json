@@ -49,8 +49,11 @@
   "action_button": "action button",
   "add_music_folder": "Add music folder",
   "music_folder": "Music folder",
-  "music_import_info" : "Importing the music takes a moment \n but you can start listening to your music",
+  "music_import_info": "Importing the music takes a moment \n but you can start listening to your music",
   "music_import": "Import of music",
   "ok": "Ok",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "theme": "Theme",
+  "light_theme": "light Theme",
+  "dark_theme": "dark Theme"
 }

@@ -52,5 +52,8 @@
   "music_import_info" : "Das Importieren der Musik dauert einen Moment \n du kannst aber schon anfangen deine Musik zu hören",
   "music_import": "Import von Musik",
   "ok": "Ok",
-  "cancel": "Abbrechen"
+  "cancel": "Abbrechen",
+  "theme": "Design",
+  "light_theme": "helles Desing",
+  "dark_theme": "dunkles Design"
 }

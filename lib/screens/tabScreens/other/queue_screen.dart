@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/music/music_queue.dart';
-import 'package:flymusic/screens/settings_screen.dart';
+import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/tabScreens/other/song_item.dart';
 import 'package:flymusic/util/art_util.dart';
 import 'package:provider/provider.dart';
@@ -69,49 +69,10 @@ class _QueueScreenState extends State<QueueScreen>
             },
           );
         } else {
-          return emptyScreen(context);
+          return emptyScreen(
+              context, tr('no_songs_in_queue', context: context));
         }
       },
     ));
-  }
-
-  Widget emptyScreen(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(
-          tr('no_songs_in_queue', context: context),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-            fontSize: 23,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 18),
-          child: MaterialButton(
-            shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(18.0)),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CustomSettingsScreen()));
-            },
-            color: Colors.blue,
-            child: Text(
-              tr('settings', context: context),
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-                fontSize: 23,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

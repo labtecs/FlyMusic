@@ -139,7 +139,7 @@ class StartScreenState extends State<StartScreen>
   }
 }
 
-Widget emptyScreen(BuildContext context) {
+Widget emptyScreen(BuildContext context, String text) {
   return Center(
       child: Padding(
           padding: EdgeInsets.symmetric(vertical: 18),
@@ -147,7 +147,7 @@ Widget emptyScreen(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(tr("empty_page", context: context),
+              Text(text,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headline6),
               Padding(

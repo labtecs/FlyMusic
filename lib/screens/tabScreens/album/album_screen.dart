@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/screens/main_screen.dart';
@@ -48,7 +49,7 @@ class _AlbumListState extends State<AlbumList>
               },
             );
           } else {
-            return emptyScreen(context);
+            return emptyScreen(context, tr("empty_page", context: context));
           }
         },
       ),

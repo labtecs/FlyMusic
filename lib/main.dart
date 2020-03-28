@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
       await SharedPreferencesUtil.instance
           .setString(PrefKey.QUEUE_INSERT_OPTION, '2');
       await SharedPreferencesUtil.instance.setString(PrefKey.THEME, '1');
-      Locale myLocale = Localizations.localeOf(context);
+      Locale myLocale = EasyLocalization.of(context).locale;
       if (myLocale.countryCode == "de") {
         SharedPreferencesUtil.instance.setString(PrefKey.LANGUAGE, '2');
       } else {

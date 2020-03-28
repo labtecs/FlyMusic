@@ -52,7 +52,10 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
             childCount: snapshot.data.length,
           ));
         } else {
-          return Text(tr("no_songs_in_album", context: context));
+          return SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+            return Text(tr("no_songs_in_album", context: context));
+          }, childCount: 1));
         }
       },
     );

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/settings_screen.dart';
@@ -20,7 +21,6 @@ class StartScreenState extends State<StartScreen>
     with SingleTickerProviderStateMixin {
   Directory externalDirectory;
   StreamSubscription onPlayerStateChanged;
-
 
   int _page = 0;
   PageController _c;
@@ -83,17 +83,21 @@ class StartScreenState extends State<StartScreen>
               curve: Curves.easeInOut);
         },
         items: <BottomNavigationBarItem>[
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.audiotrack), title: new Text("Tracks")),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.album), title: new Text("Albums")),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.person), title: new Text("Artists")),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.list), title: new Text("Warteschlange")),
+          BottomNavigationBarItem(
+              icon: new Icon(Icons.audiotrack),
+              title: Text(tr("songs", context: context))),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.album),
+              title: Text(tr("albums", context: context))),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              title: Text(tr("artists", context: context))),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.list),
+              title: Text(tr("queue", context: context))),
         ],
       ),
-      body: new PageView(
+      body: PageView(
         controller: _c,
         onPageChanged: (newPage) {
           setState(() {
@@ -122,15 +126,46 @@ class StartScreenState extends State<StartScreen>
   String getTitle() {
     switch (_page) {
       case 0:
-        return 'Lied Liste';
+        return tr("songs", context: context);
       case 1:
-        return 'Alben';
+        return tr("albums", context: context);
       case 2:
-        return 'Künstler';
+        return tr("artists", context: context);
       case 3:
-        return 'Warteschlange';
+        return tr("queue", context: context);
       default:
         return '';
     }
   }
+}
+
+Widget emptyScreen(BuildContext context) {
+  return Center(
+      child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(tr("empty_page", context: context),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline6),
+              Padding(
+                padding: EdgeInsets.only(top: 18),
+                child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(18.0)),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomSettingsScreen()));
+                  },
+                  color: Colors.blue,
+                  child: Text(tr("settings", context: context),
+                      style: Theme.of(context).textTheme.headline6),
+                ),
+              ),
+            ],
+          )));
 }

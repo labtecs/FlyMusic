@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/music/music_queue.dart';
+import 'package:flymusic/screens/settings_screen.dart';
 import 'package:flymusic/screens/tabScreens/other/song_item.dart';
 import 'package:flymusic/util/art_util.dart';
 import 'package:provider/provider.dart';
@@ -21,12 +23,13 @@ class _QueueScreenState extends State<QueueScreen>
     if (queueItem.header) {
       if (queueItem.queueItem.isManuallyAdded) {
         return ListTile(
-            title: Text('Als nächstes in der Warteschlange',
-                style: Theme.of(context).textTheme.subhead));
+            title: Text(tr('next_in_queue', context: context),
+                style: Theme.of(context).textTheme.subtitle1));
       }
       return ListTile(
-        title: Text('Aus ${queueItem.playlist.name}',
-            style: Theme.of(context).textTheme.subhead),
+        title: Text(
+            tr('from_playlist', context: context) + queueItem.playlist.name,
+            style: Theme.of(context).textTheme.subtitle1),
       );
     } else {
       return ListTile(
@@ -53,13 +56,12 @@ class _QueueScreenState extends State<QueueScreen>
     super.build(context);
     return Scaffold(
         body: StreamBuilder<List<QueueItemWithPlaylistAndSongAndArt>>(
-      //TODO join for no double queries
       stream: Provider.of<QueueItemDao>(context)
           .getGroupedItemsAfterCurrentWithSongAndArt(
               MusicQueue.instance.currentItem?.position ?? 0),
       builder: (BuildContext context,
           AsyncSnapshot<List<QueueItemWithPlaylistAndSongAndArt>> snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && snapshot.data.length > 0) {
           return ListView.builder(
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
@@ -67,9 +69,49 @@ class _QueueScreenState extends State<QueueScreen>
             },
           );
         } else {
-          return Text("no data");
+          return emptyScreen(context);
         }
       },
     ));
+  }
+
+  Widget emptyScreen(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          tr('no_songs_in_queue', context: context),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            fontSize: 23,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 18),
+          child: MaterialButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(18.0)),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CustomSettingsScreen()));
+            },
+            color: Colors.blue,
+            child: Text(
+              tr('settings', context: context),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                fontSize: 23,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -204,7 +204,7 @@ class SettingsToggleScreen extends StatelessWidget {
       SwitchSettingsTile(
         settingKey: settingKey,
         title:
-        value == false && subtitleIfOff != null ? subtitleIfOff : subtitle,
+            value == false && subtitleIfOff != null ? subtitleIfOff : subtitle,
         defaultValue: defaultValue,
         confirmText: confirmText,
         confirmTextToEnable: confirmTextToEnable,
@@ -284,7 +284,8 @@ class SettingsTileGroup extends StatelessWidget {
   Widget _buildChild(BuildContext context) {
     List<Widget> elements = <Widget>[
       Container(
-        padding: const EdgeInsets.only(top: 25.0, left: 16.0, right: 22.0, bottom: 10.0),
+        padding: const EdgeInsets.only(
+            top: 25.0, left: 16.0, right: 22.0, bottom: 10.0),
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(
@@ -398,8 +399,8 @@ class __SettingsTileState extends State<_SettingsTile>
           onTap: _shouldDisableTap(enabled)
               ? null
               : () {
-            _handleTap(context);
-          },
+                  _handleTap(context);
+                },
           trailing: widget.widget,
           enabled: enabled,
         ),
@@ -412,11 +413,11 @@ class __SettingsTileState extends State<_SettingsTile>
       (widget.screen == null &&
           widget.widget == null &&
           widget.onTap == null) ||
-          enabled == false;
+      enabled == false;
 
   Widget _buildSubtitle() {
     Widget subtitleWidget =
-    widget.subtitle != null ? Text(widget.subtitle) : null;
+        widget.subtitle != null ? Text(widget.subtitle) : null;
     if (widget.child == null) {
       return subtitleWidget;
     }
@@ -584,6 +585,9 @@ class SimpleSettingsTile extends StatelessWidget {
     this.visibleIfKey,
     this.enabledIfKey,
     this.visibleByDefault = true,
+    Map<String, String> values,
+    String defaultKey,
+    String settingsKey,
   });
 
   @override
@@ -1164,21 +1168,21 @@ class _RadioSettingsTileState extends State<RadioSettingsTile>
         : widget.subtitleIfOff;
     return widget.expandable
         ? ExpansionSettingsTile(
-      title: widget.title,
-      icon: widget.icon,
-      visibleIfKey: widget.visibleIfKey,
-      visibleByDefault: widget.visibleByDefault,
-      initiallyExpanded: widget.initiallyExpanded,
-      children: _buildChildren(groupValue, enabled),
-    )
+            title: widget.title,
+            icon: widget.icon,
+            visibleIfKey: widget.visibleIfKey,
+            visibleByDefault: widget.visibleByDefault,
+            initiallyExpanded: widget.initiallyExpanded,
+            children: _buildChildren(groupValue, enabled),
+          )
         : _SettingsTile(
-      title: widget.title,
-      subtitle: subtitle,
-      icon: widget.icon,
-      screen: widget.screen,
-      visibleIfKey: widget.visibleIfKey,
-      visibleByDefault: widget.visibleByDefault,
-    );
+            title: widget.title,
+            subtitle: subtitle,
+            icon: widget.icon,
+            screen: widget.screen,
+            visibleIfKey: widget.visibleIfKey,
+            visibleByDefault: widget.visibleByDefault,
+          );
   }
 
   List<Widget> _buildChildren(String groupValue, bool enabled) {
@@ -1455,31 +1459,34 @@ class _ModalSettingsTile extends StatefulWidget {
   final String confirmModalCancelCaption;
   final String confirmModalConfirmCaption;
   final Function valueMap;
+  final Function onCancel;
+  final Function onConfirm;
 
-  _ModalSettingsTile({
-    @required this.settingKey,
-    this.defaultValue,
-    @required this.title,
-    this.subtitle,
-    this.icon,
-    this.leading,
-    this.visibleIfKey,
-    this.enabledIfKey,
-    this.visibleByDefault = true,
-    @required this.valueToTitle,
-    @required this.buildChild,
-    this.refreshStateOnChange = true,
-    this.onChanged,
-    this.cancelCaption = "Cancel",
-    this.okCaption = "Ok",
-    this.confirmText,
-    this.confirmTextToEnable,
-    this.confirmTextToDisable,
-    this.confirmModalTitle,
-    this.confirmModalCancelCaption,
-    this.confirmModalConfirmCaption,
-    this.valueMap,
-  });
+  _ModalSettingsTile(
+      {@required this.settingKey,
+      this.defaultValue,
+      @required this.title,
+      this.subtitle,
+      this.icon,
+      this.leading,
+      this.visibleIfKey,
+      this.enabledIfKey,
+      this.visibleByDefault = true,
+      @required this.valueToTitle,
+      @required this.buildChild,
+      this.refreshStateOnChange = true,
+      this.onChanged,
+      this.cancelCaption = "Cancel",
+      this.okCaption = "Ok",
+      this.confirmText,
+      this.confirmTextToEnable,
+      this.confirmTextToDisable,
+      this.confirmModalTitle,
+      this.confirmModalCancelCaption,
+      this.confirmModalConfirmCaption,
+      this.valueMap,
+      this.onCancel,
+      this.onConfirm});
 
   @override
   __ModalSettingsTileState createState() => __ModalSettingsTileState();
@@ -1519,8 +1526,8 @@ class __ModalSettingsTileState extends State<_ModalSettingsTile>
               visibleByDefault: widget.visibleByDefault,
               onTap: enabled
                   ? () {
-                _openModal(context, value);
-              }
+                      _openModal(context, value);
+                    }
                   : null,
             );
           },
@@ -1543,9 +1550,10 @@ class __ModalSettingsTileState extends State<_ModalSettingsTile>
       onConfirm: () {
         setState(() {
           value =
-          widget.valueMap != null ? widget.valueMap(newValue) : newValue;
+              widget.valueMap != null ? widget.valueMap(newValue) : newValue;
           Settings().save(widget.settingKey, value);
           widget.onChanged?.call(value);
+          widget.onConfirm?.call(value);
         });
       },
       confirmText: widget.confirmText,
@@ -1562,14 +1570,14 @@ class __ModalSettingsTileState extends State<_ModalSettingsTile>
       context: context,
       builder: (BuildContext context) {
         return _SettingsModal(
-          title: widget.title,
-          onSelected: _onChanged,
-          initialValue: value,
-          buildChild: widget.buildChild,
-          refreshStateOnChange: widget.refreshStateOnChange,
-          cancelCaption: widget.cancelCaption,
-          okCaption: widget.okCaption,
-        );
+            title: widget.title,
+            onSelected: _onChanged,
+            initialValue: value,
+            buildChild: widget.buildChild,
+            refreshStateOnChange: widget.refreshStateOnChange,
+            cancelCaption: widget.cancelCaption,
+            okCaption: widget.okCaption,
+            onCancel: widget.onCancel);
       },
     );
   }
@@ -1583,6 +1591,7 @@ class _SettingsModal extends StatefulWidget {
   final bool refreshStateOnChange;
   final String cancelCaption;
   final String okCaption;
+  final Function onCancel;
 
   _SettingsModal({
     @required this.title,
@@ -1592,6 +1601,7 @@ class _SettingsModal extends StatefulWidget {
     this.refreshStateOnChange,
     this.cancelCaption = "Cancel",
     this.okCaption = "Ok",
+    this.onCancel,
   });
 
   @override
@@ -1619,6 +1629,7 @@ class __SettingsModalState extends State<_SettingsModal> {
             style: TextStyle(color: Theme.of(context).disabledColor),
           ),
           onPressed: () {
+            widget.onCancel?.call();
             Navigator.of(context).pop();
           },
         ),
@@ -1703,57 +1714,66 @@ class RadioPickerSettingsTile extends StatelessWidget {
   final String visibleIfKey;
   final String enabledIfKey;
   final bool visibleByDefault;
+  final ValueChanged<String> onValChange;
+  final Function onCancel;
+  final Function onConfirm;
 
-  RadioPickerSettingsTile({
-    @required this.settingKey,
-    @required this.title,
-    @required this.values,
-    this.defaultKey,
-    this.subtitle,
-    this.icon,
-    this.cancelCaption = "Cancel",
-    this.okCaption = "Ok",
-    this.visibleIfKey,
-    this.enabledIfKey,
-    this.visibleByDefault = true,
-  });
+  RadioPickerSettingsTile(
+      {@required this.settingKey,
+      @required this.title,
+      @required this.values,
+      this.defaultKey,
+      this.subtitle,
+      this.icon,
+      this.cancelCaption = "Cancel",
+      this.okCaption = "Ok",
+      this.visibleIfKey,
+      this.enabledIfKey,
+      this.visibleByDefault = true,
+      this.onValChange,
+      this.onCancel,
+      this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
     return _ModalSettingsTile(
-      settingKey: settingKey,
-      title: title,
-      subtitle: subtitle,
-      icon: icon,
-      defaultValue: defaultKey,
-      valueToTitle: (String key) => values[key],
-      visibleIfKey: visibleIfKey,
-      enabledIfKey: enabledIfKey,
-      visibleByDefault: visibleByDefault,
-      buildChild: (String value, Function onChanged) {
-        // TODO: Scroll to the selected value.
-        return Container(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            //controller: scrollController,
-            itemCount: values.length,
-            itemBuilder: (BuildContext context, int index) {
-              String key = values.keys.toList()[index];
-              return _SimpleRadioSettingsTile(
-                title: values[key],
-                value: key,
-                groupValue: value,
-                onChanged: onChanged,
-                enabled: true,
-              );
-            },
-          ),
-        );
-      },
-      cancelCaption: cancelCaption,
-      okCaption: okCaption,
-    );
+        settingKey: settingKey,
+        title: title,
+        subtitle: subtitle,
+        icon: icon,
+        defaultValue: defaultKey,
+        valueToTitle: (String key) => values[key],
+        visibleIfKey: visibleIfKey,
+        enabledIfKey: enabledIfKey,
+        visibleByDefault: visibleByDefault,
+        buildChild: (String value, Function onChanged) {
+          // TODO: Scroll to the selected value.
+          return Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              //controller: scrollController,
+              itemCount: values.length,
+              itemBuilder: (BuildContext context, int index) {
+                String key = values.keys.toList()[index];
+                return _SimpleRadioSettingsTile(
+                  title: values[key],
+                  value: key,
+                  groupValue: value,
+                  onChanged: (val) {
+                    onChanged(val);
+                    onValChange?.call(val);
+                  },
+                  enabled: true,
+                );
+              },
+            ),
+          );
+        },
+        cancelCaption: cancelCaption,
+        okCaption: okCaption,
+        onCancel: onCancel,
+        onConfirm: onConfirm);
   }
 }
 
@@ -2505,24 +2525,24 @@ class _Confirmable {
             confirmModalCancelCaption == ""
                 ? Container()
                 : FlatButton(
-              child: Text(
-                confirmModalCancelCaption ?? "Cancel",
-                style: TextStyle(color: Theme.of(context).disabledColor),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                return onCancel?.call();
-              },
-            ),
+                    child: Text(
+                      confirmModalCancelCaption ?? "Cancel",
+                      style: TextStyle(color: Theme.of(context).disabledColor),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      return onCancel?.call();
+                    },
+                  ),
             confirmModalConfirmCaption == ""
                 ? Container()
                 : FlatButton(
-              child: Text(confirmModalConfirmCaption ?? "Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                return onConfirm?.call();
-              },
-            ),
+                    child: Text(confirmModalConfirmCaption ?? "Ok"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      return onConfirm?.call();
+                    },
+                  ),
           ],
         );
       },

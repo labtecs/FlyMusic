@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
+import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/screens/tabScreens/artist/artist_track_list_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +42,7 @@ class _ArtistScreenState extends State<ArtistScreen>
       body: StreamBuilder<List<Artist>>(
         stream: Provider.of<ArtistDao>(context).findAllArtists(),
         builder: (BuildContext context, AsyncSnapshot<List<Artist>> snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data.length > 0) {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
@@ -49,7 +50,7 @@ class _ArtistScreenState extends State<ArtistScreen>
               },
             );
           } else {
-            return Text("no data");
+            return emptyScreen(context);
           }
         },
       ),

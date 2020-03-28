@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/screens/player/player_screen.dart';
@@ -41,9 +42,8 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
           Provider.of<SongDao>(context).findSongsByAlbumWithArt(widget.album),
       // this is a code smell. Make sure that the future is NOT recreated when build is called. Create the future in initState instead.
       builder: (context, snapshot) {
-        Widget newsListSliver;
-        if (snapshot.hasData) {
-          newsListSliver = SliverList(
+        if (snapshot.hasData && snapshot.data.length > 0) {
+          return SliverList(
               delegate: SliverChildBuilderDelegate(
             (context, index) {
               return buildSongItem(
@@ -52,11 +52,11 @@ class _AlbumTrackListScreenState extends State<AlbumTrackListScreen> {
             childCount: snapshot.data.length,
           ));
         } else {
-          newsListSliver = SliverToBoxAdapter(
-            child: CircularProgressIndicator(),
-          );
+          return SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+            return Text(tr("no_songs_in_album", context: context));
+          }, childCount: 1));
         }
-        return newsListSliver;
       },
     );
   }
@@ -115,14 +115,8 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                   MaterialPageRoute(builder: (context) => PlayerScreen()));
             },
             color: Colors.blue,
-            child: Text(
-              "play",
-              /*style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-                fontSize: 23,
-              ),*/
-            ),
+            child: Text(tr("play", context: context),
+                style: Theme.of(context).textTheme.bodyText2),
           ),
         ),
       ],

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -6,7 +7,7 @@ class ImpressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Impressum"),
+        title: Text(tr('impress', context: context)),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -17,8 +18,7 @@ class ImpressScreen extends StatelessWidget {
             ListTile(
                 contentPadding:
                     EdgeInsetsDirectional.only(start: 16, end: 16, bottom: 20),
-                title: Text(
-                    'Diese App wurde für das Fach "Android Entwicklung" der FH Fulda programmiert von:',
+                title: Text(tr('app_info', context: context),
                     style: Theme.of(context).textTheme.subtitle1)),
             ListTile(
               title: Text('Kilian Eller',
@@ -37,72 +37,68 @@ class ImpressScreen extends StatelessWidget {
             ListTile(
                 contentPadding:
                     EdgeInsetsDirectional.only(start: 16, end: 16, top: 25),
-                title: Text('Third Party Flutter Packages:',
+                title: Text(tr('third_party_packages', context: context),
                     style: Theme.of(context).textTheme.subtitle1)),
             ListTile(
                 title: Text('permission_handler',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text('Berechtigung zum Zugriff auf Datein'),
+                subtitle: Text(tr('info_permission_handler', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/permission_handler');
                 }),
             ListTile(
                 title: Text('folder_picker',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text('Auswahl des Musikordners'),
+                subtitle: Text(tr('info_folder_picker', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/folder_picker');
                 }),
             ListTile(
                 title: Text('flutter_ffmpeg',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text('Einlesen der Song Informationen'),
+                subtitle: Text(tr('info_flutter_ffmpeg', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/flutter_ffmpeg');
                 }),
             ListTile(
                 title: Text('archive',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text('Hashwert für die Albumcover'),
+                subtitle: Text(tr('info_archive', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/archive');
                 }),
             ListTile(
                 title: Text('flutter_isolate',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text(
-                    'Hintergrundthread für eine flüssige Ui beim Einlesen'),
+                subtitle: Text(tr('info_flutter_isolate', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/flutter_isolate');
                 }),
             ListTile(
                 title: Text('audioplayers',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text('Abspielen der Musik'),
+                subtitle: Text(tr('info_audioplayers', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/audioplayers');
                 }),
             ListTile(
                 title: Text('fluttertoast',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text(
-                    'Popup wenn ein Lied zur Warteschlange hinzugefügt wurde'),
+                subtitle: Text(tr('info_fluttertoast', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/fluttertoast');
                 }),
             ListTile(
                 title: Text('moor, moor_ffi',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle:
-                    Text('Speichern der Daten in einer sqflite Datenbank'),
+                subtitle: Text(tr('info_moor', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/moor');
                 }),
             ListTile(
               title: Text('provider',
                   style: Theme.of(context).textTheme.bodyText2),
-              subtitle:
-                  Text('Zugriff auf Datenbankabfragen aus den Widgets heraus'),
+              subtitle: Text(tr('info_provider', context: context)),
               onTap: () {
                 launch('https://pub.dev/packages/provider');
               },
@@ -110,14 +106,14 @@ class ImpressScreen extends StatelessWidget {
             ListTile(
                 title: Text('url_launcher',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text('Öffnen der Links auf dieser Seite'),
+                subtitle: Text(tr('info_url_launcher', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/url_launcher');
                 }),
             ListTile(
                 title: Text('shared_preferences_settings',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text('Anzeige der Einstellungen'),
+                subtitle: Text(tr('info_shared_preferences_settings', context: context)),
                 onTap: () {
                   launch(
                       'https://pub.dev/packages/shared_preferences_settings');
@@ -125,7 +121,7 @@ class ImpressScreen extends StatelessWidget {
             ListTile(
                 title: Text('easy_localization',
                     style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text('Mehrsprachiger Text'),
+                subtitle: Text(tr('info_easy_localization', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/easy_localization');
                 }),

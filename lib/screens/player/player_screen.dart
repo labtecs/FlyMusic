@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/util/art_util.dart';
@@ -92,13 +93,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
             title: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                    MusicQueue.instance.currentSong?.song?.title ?? "Unbekannt",
+                    MusicQueue.instance.currentSong?.song?.title ?? tr("unknown", context: context),
                     style: Theme.of(context).textTheme.headline4)),
             subtitle: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                    MusicQueue.instance.currentSong?.song?.artistName ??
-                        "Unbekannt",
+                    MusicQueue.instance.currentSong?.song?.artistName ?? tr("unknown", context: context),
                     style: Theme.of(context).textTheme.headline6)),
           ),
           Padding(
@@ -161,13 +161,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
           title: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                  MusicQueue.instance.currentSong?.song?.title ?? "Unbekannt",
+                  MusicQueue.instance.currentSong?.song?.title ?? tr("unknown", context: context),
                   style: Theme.of(context).textTheme.headline4)),
           subtitle: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                  MusicQueue.instance.currentSong?.song?.artistName ??
-                      "no artist",
+                  MusicQueue.instance.currentSong?.song?.artistName ?? tr("unknown", context: context),
                   style: Theme.of(context).textTheme.headline5)),
         ),
         Padding(

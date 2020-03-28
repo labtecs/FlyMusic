@@ -37,7 +37,8 @@ void main() async {
         .setBool(PrefKey.QUEUE_WARNING_ON_CLEAR, true);
     await SharedPreferencesUtil.instance
         .setString(PrefKey.QUEUE_INSERT_OPTION, '2');
-    await SharedPreferencesUtil.instance.setString(PrefKey.LANGUAGE, '1'); //TODO init correctly
+    await SharedPreferencesUtil.instance
+        .setString(PrefKey.LANGUAGE, '1'); //TODO init correctly
     await SharedPreferencesUtil.instance
         .setBool(PrefKey.FIRST_APP_START, false);
   }
@@ -68,7 +69,7 @@ class MyApp extends StatelessWidget {
           Provider(create: (_) => db.playlistItemDao),
         ],
         child: MaterialApp(
-          title: 'Fly Music',
+          title: 'FlyMusic',
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

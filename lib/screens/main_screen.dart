@@ -83,19 +83,21 @@ class StartScreenState extends State<StartScreen>
               curve: Curves.easeInOut);
         },
         items: <BottomNavigationBarItem>[
-          new BottomNavigationBarItem(
+          BottomNavigationBarItem(
               icon: new Icon(Icons.audiotrack),
-              title: Text('tracks').tr(context: context)),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.album),
-              title: new Text('albums').tr(context: context)),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.person), title: new Text("Artists")),
-          new BottomNavigationBarItem(
-              icon: new Icon(Icons.list), title: new Text("Warteschlange")),
+              title: Text(tr("songs", context: context))),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.album),
+              title: Text(tr("albums", context: context))),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              title: Text(tr("artists", context: context))),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.list),
+              title: Text(tr("queue", context: context))),
         ],
       ),
-      body: new PageView(
+      body: PageView(
         controller: _c,
         onPageChanged: (newPage) {
           setState(() {
@@ -124,13 +126,13 @@ class StartScreenState extends State<StartScreen>
   String getTitle() {
     switch (_page) {
       case 0:
-        return tr("tracks", context: context);
+        return tr("songs", context: context);
       case 1:
-        return 'Alben';
+        return tr("albums", context: context);
       case 2:
-        return 'Künstler';
+        return tr("artists", context: context);
       case 3:
-        return 'Warteschlange';
+        return tr("queue", context: context);
       default:
         return '';
     }
@@ -143,7 +145,7 @@ Widget emptyScreen(BuildContext context) {
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
       Text(
-        'Ziemlich leer hier \n Gehe zu den Einstellungen und füge deinen Musikordner hinzu',
+        tr("empty_page", context: context),
         textAlign: TextAlign.center,
         style: TextStyle(
           fontWeight: FontWeight.w600,
@@ -164,13 +166,13 @@ Widget emptyScreen(BuildContext context) {
           },
           color: Colors.blue,
           child: Text(
-            "settings",
+            tr("settings", context: context),
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: Colors.white,
               fontSize: 23,
             ),
-          ).tr(context: context),
+          ),
         ),
       ),
     ],

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/music/music_queue.dart';
@@ -22,11 +23,12 @@ class _QueueScreenState extends State<QueueScreen>
     if (queueItem.header) {
       if (queueItem.queueItem.isManuallyAdded) {
         return ListTile(
-            title: Text('Als nächstes in der Warteschlange',
+            title: Text(tr('next_in_queue', context: context),
                 style: Theme.of(context).textTheme.subtitle1));
       }
       return ListTile(
-        title: Text('Aus ${queueItem.playlist.name}',
+        title: Text(
+            tr('from_playlist', context: context) + queueItem.playlist.name,
             style: Theme.of(context).textTheme.subtitle1),
       );
     } else {
@@ -54,7 +56,6 @@ class _QueueScreenState extends State<QueueScreen>
     super.build(context);
     return Scaffold(
         body: StreamBuilder<List<QueueItemWithPlaylistAndSongAndArt>>(
-      //TODO join for no double queries
       stream: Provider.of<QueueItemDao>(context)
           .getGroupedItemsAfterCurrentWithSongAndArt(
               MusicQueue.instance.currentItem?.position ?? 0),
@@ -80,8 +81,7 @@ class _QueueScreenState extends State<QueueScreen>
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          'Noch keine Lieder in der Wartelist \n'
-          'Mehr Informationen in den Einstellungen',
+          tr('no_songs_in_queue', context: context),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.w600,
@@ -102,7 +102,7 @@ class _QueueScreenState extends State<QueueScreen>
             },
             color: Colors.blue,
             child: Text(
-              "Einstellungen",
+              tr('settings', context: context),
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.white,

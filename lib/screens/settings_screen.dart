@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/finder/shared.dart';
@@ -37,7 +36,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                   '1': tr("english", context: context),
                   '2': tr("german", context: context),
                 },
-                defaultKey: '1',
+                defaultKey: "1",
                 onValChange: (val) => setLanguage(val),
                 onCancel: () async {
                   //reset

@@ -4,6 +4,5 @@ Flymusic is a simple Fulutter based music player, which is developed within a pr
 
 # Screenshots
 
-<img scr="https://raw.githubusercontent.com/labtecs/flymusic/gui/asset/screenshots/001.jpg" height="300em /> 
 
 

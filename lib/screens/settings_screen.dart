@@ -35,7 +35,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                 title: tr("language", context: context),
                 values: {
                   '1': tr("english", context: context),
-                  '2': tr("german", context: context)
+                  '2': tr("german", context: context),
                 },
                 defaultKey: '1',
                 onValChange: (val) => setLanguage(val),

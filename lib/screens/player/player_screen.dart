@@ -101,6 +101,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     MusicQueue.instance.currentSong?.song?.artistName ?? tr("unknown", context: context),
                     style: Theme.of(context).textTheme.headline6)),
           ),
+          ListTile(
+            title: Text("0", style: TextStyle(color: Colors.white),),
+            trailing: Text(duration.inSeconds?.toString() ?? 0),
+          ),
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
             child: Slider(

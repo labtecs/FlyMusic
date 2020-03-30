@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
-import 'package:flymusic/screens/player/player_screen.dart';
+import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/screens/tabScreens/other/song_item.dart';
 import 'package:flymusic/util/art_util.dart';
 import 'package:provider/provider.dart';
@@ -111,8 +111,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(18.0)),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PlayerScreen()));
+              MusicQueue.instance.playAlbum(album, context);
             },
             color: Colors.blue,
             child: Text(tr("play", context: context),

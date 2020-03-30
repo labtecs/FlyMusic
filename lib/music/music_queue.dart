@@ -7,7 +7,7 @@ import 'package:flymusic/main.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 
 class MusicQueue {
-  //TODO saved currently played song in shared prefs to reget it (position in qitems)
+  //TODO saved currently played song in shared prefs to know it after app close
   static final MusicQueue instance = MusicQueue._internal();
 
   factory MusicQueue() => instance;
@@ -26,6 +26,11 @@ class MusicQueue {
         playNext();
       }
     });
+  }
+
+  Future<void> playAlbum(Album album, BuildContext context) async {
+    var song = await MyApp.db.songDao.findFirstSongsByAlbum(album);
+    playSongSwitchPlaylist(song.id, album.playlistId, context);
   }
 
   Future<void> playSongSwitchPlaylist(

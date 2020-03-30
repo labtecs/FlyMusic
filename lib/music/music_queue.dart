@@ -6,7 +6,7 @@ import 'package:flymusic/database/moor_database.dart';
 import 'package:flymusic/main.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
 
-class MusicQueue {
+class MusicQueue extends ChangeNotifier{
   //TODO saved currently played song in shared prefs to know it after app close
   static final MusicQueue instance = MusicQueue._internal();
 
@@ -144,6 +144,7 @@ class MusicQueue {
     //update current item and song
     currentItem = item;
     currentSong = song;
+    notifyListeners();
 
     await audioPlayer.play(song.song.path, isLocal: true);
   }
@@ -201,6 +202,7 @@ class MusicQueue {
     }
     currentSong =
         await MyApp.db.songDao.findSongByIdWithArt(currentItem.songId);
+    notifyListeners();
     if (currentSong == null) {
       return;
     }
@@ -218,6 +220,7 @@ class MusicQueue {
     }
     currentSong =
         await MyApp.db.songDao.findSongByIdWithArt(currentItem.songId);
+    notifyListeners();
     if (currentSong == null) {
       return;
     }

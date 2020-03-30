@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flymusic/database/moor_database.dart';
+import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/plugins/desktop/desktop.dart';
 import 'package:flymusic/screens/main_screen.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
           Provider(create: (_) => db.queueItemDao),
           Provider(create: (_) => db.playlistDao),
           Provider(create: (_) => db.playlistItemDao),
+          ChangeNotifierProvider(create: (context) => MusicQueue()),
         ],
         child: MaterialApp(
           title: 'FlyMusic',

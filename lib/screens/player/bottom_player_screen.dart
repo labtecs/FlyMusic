@@ -64,25 +64,24 @@ class _BottomPlayerState extends State<BottomPlayer> {
                   },
                 ),
               ),
-              GestureDetector(
-                onHorizontalDragEnd: (DragEndDetails details) =>
-                    _onHorizontalDrag(details),
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(MusicQueue.instance.currentSong?.song?.title ?? ""),
-                        Text(MusicQueue.instance.currentSong?.song?.artistName ?? "")
-                      ]),
-                ),
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(MusicQueue.instance.currentSong?.song?.title ?? ""),
+                      Text(MusicQueue.instance.currentSong?.song?.artistName ??
+                          "")
+                    ]),
               ),
               Spacer(),
               IconButton(
+                  iconSize: 100,
                 icon: Icon(getPlayIcon()),
                 onPressed: () {
                   MusicQueue.instance.playPause();
                 },
+                splashColor: Theme.of(context).accentColor,
               ),
             ],
           ),

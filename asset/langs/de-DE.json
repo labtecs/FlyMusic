@@ -32,6 +32,7 @@
   "info_url_launcher": "Öffnen der Links auf dieser Seite",
   "info_shared_preferences_settings": "Anzeige der Einstellungen",
   "info_easy_localization": "Mehrsprachiger Text",
+  "info_flutter_launcher_icons": "Aktualisierung des Startsymbols der Flutter-App",
   "queue_behavior_playlist_change": "Verhalten bei wechsel zu einer anderen Playlist",
   "queue_never_clear": "Warteliste nie verwerfen",
   "queue_clear": "Warteliste leeren",

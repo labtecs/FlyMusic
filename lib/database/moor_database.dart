@@ -140,8 +140,10 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
   Future<List<Song>> findSongsByAlbum(Album album) =>
       (select(songs)..where((s) => s.albumName.equals(album.name))).get();
 
-  Future<Song> findFirstSongsByAlbum(Album album) =>
-      (select(songs)..where((s) => s.albumName.equals(album.name))).getSingle();
+  Future<Song> findFirstSongsByAlbum(Album album) => (select(songs)
+        ..where((s) => s.albumName.equals(album.name))
+        ..limit(1))
+      .getSingle();
 
   Stream<List<SongWithArt>> findSongsByAlbumWithArt(Album album) => (select(
           songs)

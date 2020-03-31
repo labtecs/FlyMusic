@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales: EasyLocalization.of(context).supportedLocales,
           locale: EasyLocalization.of(context).locale,
-          theme: Provider.of<ThemeModel>(context).currenThemeLight,
+          theme: Provider.of<ThemeModel>(context).currentThemeLight,
           darkTheme: Provider.of<ThemeModel>(context).currentThemeDark,
           home: StartScreen(),
         ));

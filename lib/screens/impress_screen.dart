@@ -68,13 +68,6 @@ class ImpressScreen extends StatelessWidget {
                   launch('https://pub.dev/packages/archive');
                 }),
             ListTile(
-                title: Text('flutter_isolate',
-                    style: Theme.of(context).textTheme.bodyText2),
-                subtitle: Text(tr('info_flutter_isolate', context: context)),
-                onTap: () {
-                  launch('https://pub.dev/packages/flutter_isolate');
-                }),
-            ListTile(
                 title: Text('audioplayers',
                     style: Theme.of(context).textTheme.bodyText2),
                 subtitle: Text(tr('info_audioplayers', context: context)),

@@ -41,52 +41,50 @@ class _BottomPlayerState extends State<BottomPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          color: Colors.grey,
-        ),
-        child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                height: 65,
-                child: InkWell(
-                  child: Hero(
-                      tag: 'imageHero',
-                      child: ArtUtil.getArtFromSongWithArt(
-                          MusicQueue.instance.currentSong, context)),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PlayerScreen()));
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(MusicQueue.instance.currentSong?.song?.title ?? ""),
-                      Text(MusicQueue.instance.currentSong?.song?.artistName ??
-                          "")
-                    ]),
-              ),
-              Spacer(),
-              IconButton(
-                  iconSize: 100,
-                icon: Icon(getPlayIcon()),
-                onPressed: () {
-                  MusicQueue.instance.playPause();
+    return Ink(
+      child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              height: 65,
+              child: InkWell(
+                child: Hero(
+                    tag: 'imageHero',
+                    child: ArtUtil.getArtFromSongWithArt(
+                        MusicQueue.instance.currentSong, context)),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => PlayerScreen()));
                 },
-                splashColor: Theme.of(context).accentColor,
               ),
-            ],
-          ),
-          SizedBox(height: 4.0, child: BottomPlayerProgress())
-        ]));
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(MusicQueue.instance.currentSong?.song?.title ?? ""),
+                    Text(
+                        MusicQueue.instance.currentSong?.song?.artistName ?? "")
+                  ]),
+            ),
+            Spacer(),
+            IconButton(
+              icon: Icon(getPlayIcon()),
+              onPressed: () {
+                MusicQueue.instance.playPause();
+              },
+              splashColor: Theme.of(context).accentColor,
+            ),
+          ],
+        ),
+        SizedBox(height: 4.0, child: BottomPlayerProgress())
+      ]),
+      decoration: BoxDecoration(
+        color: Theme.of(context).dialogBackgroundColor,
+      ),
+    );
   }
 
   IconData getPlayIcon() {
@@ -94,19 +92,6 @@ class _BottomPlayerState extends State<BottomPlayer> {
       return Icons.pause_circle_outline;
     } else {
       return Icons.play_circle_outline;
-    }
-  }
-
-  void _onHorizontalDrag(DragEndDetails details) {
-    if (details.primaryVelocity == 0)
-      return; // user have just tapped on screen (no dragging)
-
-    if (details.primaryVelocity.compareTo(0) == -1) {
-      //dragged from left
-      MusicQueue.instance.playPrevious();
-    } else {
-      //dragged from right
-      MusicQueue.instance.playNext();
     }
   }
 }

@@ -1,30 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flymusic/database/moor_database.dart';
+import 'package:flymusic/music/music_queue.dart';
 import 'package:flymusic/util/art_util.dart';
 import 'package:flymusic/util/click_helper.dart';
 import 'package:flymusic/util/shared_prefrences_util.dart';
+import 'package:provider/provider.dart';
 
 Widget buildSongItem(SongWithArt song, int playlistId, BuildContext context) {
-  return Container(
-      child: ListTile(
-    leading: CircleAvatar(
-      child: ArtUtil.getArtFromSongWithArt(song, context),
-      backgroundColor: Colors.transparent,
-    ),
-    title: Text(
-      song.song.title,
-      //style: TextStyle(color: Colors.black),
-    ),
-    subtitle: Text(timestamp(Duration(milliseconds: song.song.duration)),),
-     //   style: TextStyle(color: Colors.black)),
-    trailing: getTrailingIcon(song.song, playlistId),
-    onTap: () {
-      onSongShortClick(song.song, playlistId, context);
-    },
-    onLongPress: () {
-      onSongLongPress(song.song, playlistId, context);
-    },
-  ));
+  return Consumer<MusicQueue>(builder: (context, cart, child) {
+    return Container(
+        child: ListTile(
+      leading: CircleAvatar(
+        child: ArtUtil.getArtFromSongWithArt(song, context),
+        backgroundColor: Colors.transparent,
+      ),
+      title: Text(
+        song.song.title,
+        style: getTitleStyle(song.song.id, context),
+      ),
+      subtitle: Text(
+        timestamp(Duration(milliseconds: song.song.duration)),
+      ),
+      //   style: TextStyle(color: Colors.black)),
+      trailing: getTrailingIcon(song.song, playlistId),
+      onTap: () {
+        onSongShortClick(song.song, playlistId, context);
+      },
+      onLongPress: () {
+        onSongLongPress(song.song, playlistId, context);
+      },
+    ));
+  });
+}
+
+TextStyle getTitleStyle(int songId, BuildContext context) {
+  TextStyle textTheme = Theme.of(context).textTheme.bodyText1;
+
+  if (MusicQueue.instance.currentSong?.song?.id == songId) {
+    textTheme = textTheme.copyWith(color: Theme.of(context).accentColor);
+  }
+
+  return textTheme;
 }
 
 String timestamp(Duration duration) {
@@ -59,7 +75,6 @@ Widget getTrailingIcon(Song song, int playlistId) {
             case '1':
               //Sofort Abspielen und zur Playlist wechseln
               icon = Icons.play_circle_filled;
-
               break;
             case '2':
               //Abspielen ohne Wechsel

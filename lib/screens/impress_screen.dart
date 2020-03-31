@@ -124,6 +124,13 @@ class ImpressScreen extends StatelessWidget {
                 subtitle: Text(tr('info_easy_localization', context: context)),
                 onTap: () {
                   launch('https://pub.dev/packages/easy_localization');
+                }),
+            ListTile(
+                title: Text('flutter_launcher_icons',
+                    style: Theme.of(context).textTheme.bodyText2),
+                subtitle: Text(tr('info_flutter_launcher_icons', context: context)),
+                onTap: () {
+                  launch('https://pub.dev/packages/flutter_launcher_icons');
                 })
           ],
         ).toList(),

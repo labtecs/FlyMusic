@@ -62,7 +62,12 @@ dev_dependencies:
   moor_generator: ^2.4.0
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.3
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "asset/images/flymusic_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

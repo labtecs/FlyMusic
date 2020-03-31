@@ -115,6 +115,7 @@ class StartScreenState extends State<StartScreen>
   }
 
   PreferredSize getAppBarBottom() {
+    //TODO consumer (not rebuild whole page)
     if (MusicQueue.instance.currentSong == null) {
       return PreferredSize(
           preferredSize: Size.fromHeight(0.0), child: Container());

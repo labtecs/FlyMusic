@@ -31,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
- //see https://github.com/simolus3/moor/issues/454
+  //see https://github.com/simolus3/moor/issues/454
   @override
   MigrationStrategy get migration => MigrationStrategy(
         // Runs after all the migrations but BEFORE any queries have a chance to execute
@@ -39,7 +39,6 @@ class AppDatabase extends _$AppDatabase {
           return this.customStatement('PRAGMA foreign_keys = ON');
         },
       );
-
 }
 
 @UseDao(tables: [Songs, Arts])
@@ -140,6 +139,9 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
 
   Future<List<Song>> findSongsByAlbum(Album album) =>
       (select(songs)..where((s) => s.albumName.equals(album.name))).get();
+
+  Future<Song> findFirstSongsByAlbum(Album album) =>
+      (select(songs)..where((s) => s.albumName.equals(album.name))).getSingle();
 
   Stream<List<SongWithArt>> findSongsByAlbumWithArt(Album album) => (select(
           songs)
@@ -326,9 +328,8 @@ class QueueItemDao extends DatabaseAccessor<AppDatabase>
               'LEFT JOIN songs s ON s.id = q.song_id '
               'LEFT JOIN arts a ON a.crc = s.art_crc '
               'LEFT JOIN playlists p ON p.id = q.playlist_id '
-              'WHERE position > $currentPosition order by position asc, header desc', readsFrom : {queueItems, songs, arts, playlists})
-          .watch()
-          .map(
+              'WHERE position > $currentPosition order by position asc, header desc',
+              readsFrom: {queueItems, songs, arts, playlists}).watch().map(
             (rows) => rows.map(
               (row) {
                 return QueueItemWithPlaylistAndSongAndArt(

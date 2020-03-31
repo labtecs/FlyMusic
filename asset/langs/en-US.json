@@ -32,6 +32,7 @@
   "info_url_launcher": "Opening the links on this page",
   "info_shared_preferences_settings": "Display of the settings",
   "info_easy_localization": "Multilingual text",
+  "info_flutter_launcher_icons": "updating Flutter app's launcher icon",
   "queue_behavior_playlist_change": "Behavior when switching to another playlist",
   "queue_never_clear": "Do not empty the queue",
   "queue_clear": "Empty queue",

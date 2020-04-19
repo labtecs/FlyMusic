@@ -44,9 +44,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                       .getString(PrefKey.LANGUAGE));
                 },
                 onConfirm: (val) => SharedPreferencesUtil.instance
-                    .setString(PrefKey.LANGUAGE, val),
-                cancelCaption: tr("cancel", context: context),
-                okCaption: tr("ok", context: context)),
+                    .setString(PrefKey.LANGUAGE, val)),
             RadioPickerSettingsTile(
                 settingKey: PrefKey.THEME.toString(),
                 title: tr("theme", context: context),
@@ -65,9 +63,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                 onConfirm: (val) => {
                       SharedPreferencesUtil.instance
                           .setString(PrefKey.THEME, val)
-                    },
-                cancelCaption: tr("cancel", context: context),
-                okCaption: tr("ok", context: context)),
+                    }),
           ]),
           SettingsTileGroup(title: tr("queue", context: context), children: [
             RadioPickerSettingsTile(
@@ -77,9 +73,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                   '1': tr("queue_never_clear", context: context),
                   '2': tr("queue_clear", context: context)
                 },
-                defaultKey: '1',
-                cancelCaption: tr("cancel", context: context),
-                okCaption: tr("ok", context: context)),
+                defaultKey: '1'),
             SwitchSettingsTile(
                 settingKey: PrefKey.QUEUE_WARNING_ON_CLEAR.index.toString(),
                 title: tr("queue_question_clear", context: context),
@@ -92,9 +86,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                   '1': tr("queue_insert_top", context: context),
                   '2': tr("queue_insert_bottom", context: context)
                 },
-                defaultKey: '2',
-                cancelCaption: tr("cancel", context: context),
-                okCaption: tr("ok", context: context)),
+                defaultKey: '2'),
           ]),
           SettingsTileGroup(
             title: tr("songs", context: context),
@@ -108,9 +100,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                     '3': tr("song_queue_insert", context: context),
                     '-1': tr("no_action", context: context)
                   },
-                  defaultKey: '1',
-                  cancelCaption: tr("cancel", context: context),
-                  okCaption: tr("ok", context: context)),
+                  defaultKey: '1'),
               RadioPickerSettingsTile(
                   settingKey: PrefKey.SONG_LONG_PRESS.index.toString(),
                   title: tr("long_press", context: context),
@@ -120,9 +110,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                     '3': tr("song_queue_insert", context: context),
                     '-1': tr("no_action", context: context)
                   },
-                  defaultKey: '2',
-                  cancelCaption: tr("cancel", context: context),
-                  okCaption: tr("ok", context: context)),
+                  defaultKey: '2'),
               RadioPickerSettingsTile(
                   settingKey: PrefKey.SONG_ACTION_BUTTON.index.toString(),
                   title: tr("action_button", context: context),
@@ -132,9 +120,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
                     '3': tr("song_queue_insert", context: context),
                     '-1': tr("no_action", context: context)
                   },
-                  defaultKey: '3',
-                  cancelCaption: tr("cancel", context: context),
-                  okCaption: tr("ok", context: context)),
+                  defaultKey: '3'),
             ],
           )
         ]);

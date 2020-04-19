@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:shared_preferences_settings/shared_preferences_settings.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// [SettingsScreen] is a simple Screen widget that may contain Tiles or other
 /// widgets.
@@ -1449,8 +1450,6 @@ class _ModalSettingsTile extends StatefulWidget {
   final Function buildChild;
   final bool refreshStateOnChange;
   final ValueChanged<String> onChanged;
-  final String cancelCaption;
-  final String okCaption;
   final String confirmText;
   final String confirmTextToEnable;
   final String confirmTextToDisable;
@@ -1475,8 +1474,6 @@ class _ModalSettingsTile extends StatefulWidget {
       @required this.buildChild,
       this.refreshStateOnChange = true,
       this.onChanged,
-      this.cancelCaption = "Cancel",
-      this.okCaption = "Ok",
       this.confirmText,
       this.confirmTextToEnable,
       this.confirmTextToDisable,
@@ -1574,8 +1571,6 @@ class __ModalSettingsTileState extends State<_ModalSettingsTile>
             initialValue: value,
             buildChild: widget.buildChild,
             refreshStateOnChange: widget.refreshStateOnChange,
-            cancelCaption: widget.cancelCaption,
-            okCaption: widget.okCaption,
             onCancel: widget.onCancel);
       },
     );
@@ -1588,8 +1583,6 @@ class _SettingsModal extends StatefulWidget {
   final String initialValue;
   final ValueChanged<String> onSelected;
   final bool refreshStateOnChange;
-  final String cancelCaption;
-  final String okCaption;
   final Function onCancel;
 
   _SettingsModal({
@@ -1598,8 +1591,6 @@ class _SettingsModal extends StatefulWidget {
     @required this.initialValue,
     @required this.onSelected,
     this.refreshStateOnChange,
-    this.cancelCaption = "Cancel",
-    this.okCaption = "Ok",
     this.onCancel,
   });
 
@@ -1624,7 +1615,7 @@ class __SettingsModalState extends State<_SettingsModal> {
       actions: <Widget>[
         FlatButton(
           child: Text(
-            widget.cancelCaption,
+            tr("cancel", context: context),
             style: TextStyle(color: Theme.of(context).disabledColor),
           ),
           onPressed: () {
@@ -1633,7 +1624,7 @@ class __SettingsModalState extends State<_SettingsModal> {
           },
         ),
         FlatButton(
-          child: Text(widget.okCaption),
+          child: Text(tr("ok", context: context)),
           onPressed: () {
             Navigator.of(context).pop();
             widget.onSelected(value);
@@ -1708,8 +1699,6 @@ class RadioPickerSettingsTile extends StatelessWidget {
   final Map<String, String> values;
   final String defaultKey;
   final Icon icon;
-  final String cancelCaption;
-  final String okCaption;
   final String visibleIfKey;
   final String enabledIfKey;
   final bool visibleByDefault;
@@ -1724,8 +1713,6 @@ class RadioPickerSettingsTile extends StatelessWidget {
       this.defaultKey,
       this.subtitle,
       this.icon,
-      this.cancelCaption = "Cancel",
-      this.okCaption = "Ok",
       this.visibleIfKey,
       this.enabledIfKey,
       this.visibleByDefault = true,
@@ -1769,8 +1756,6 @@ class RadioPickerSettingsTile extends StatelessWidget {
             ),
           );
         },
-        cancelCaption: cancelCaption,
-        okCaption: okCaption,
         onCancel: onCancel,
         onConfirm: onConfirm);
   }
@@ -1831,8 +1816,6 @@ class TextFieldModalSettingsTile extends StatelessWidget {
   final String subtitle;
   final String defaultValue;
   final Icon icon;
-  final String cancelCaption;
-  final String okCaption;
   final TextInputType keyboardType;
   final String visibleIfKey;
   final String enabledIfKey;
@@ -1844,8 +1827,6 @@ class TextFieldModalSettingsTile extends StatelessWidget {
     this.defaultValue,
     this.subtitle,
     this.icon,
-    this.cancelCaption = "Cancel",
-    this.okCaption = "Ok",
     this.keyboardType,
     this.visibleIfKey,
     this.enabledIfKey,
@@ -1877,8 +1858,6 @@ class TextFieldModalSettingsTile extends StatelessWidget {
           keyboardType: keyboardType,
         );
       },
-      cancelCaption: cancelCaption,
-      okCaption: okCaption,
     );
   }
 }
@@ -1910,8 +1889,6 @@ class _ColorPickerSettingsTile extends StatelessWidget with _ColorWidget {
   final String visibleIfKey;
   final String enabledIfKey;
   final bool visibleByDefault;
-  final String cancelCaption;
-  final String okCaption;
   final Function childBuilder;
   final Function valueToTitle;
   final String confirmText;
@@ -1928,8 +1905,6 @@ class _ColorPickerSettingsTile extends StatelessWidget with _ColorWidget {
     this.visibleIfKey,
     this.enabledIfKey,
     this.visibleByDefault = true,
-    this.cancelCaption = "Cancel",
-    this.okCaption = "Ok",
     @required this.childBuilder,
     @required this.valueToTitle,
     this.confirmText,
@@ -1966,8 +1941,6 @@ class _ColorPickerSettingsTile extends StatelessWidget with _ColorWidget {
           valueMap: (String value) => _valueToTitle(value),
           refreshStateOnChange: false,
           buildChild: childBuilder,
-          cancelCaption: cancelCaption,
-          okCaption: okCaption,
           confirmText: confirmText,
           confirmModalTitle: confirmModalTitle,
           confirmModalConfirmCaption: confirmModalConfirmCaption,
@@ -2041,8 +2014,6 @@ class SimpleColorPickerSettingsTile extends StatelessWidget with _ColorWidget {
   final String visibleIfKey;
   final String enabledIfKey;
   final bool visibleByDefault;
-  final String cancelCaption;
-  final String okCaption;
   final String confirmText;
   final String confirmModalTitle;
   final String confirmModalCancelCaption;
@@ -2057,8 +2028,6 @@ class SimpleColorPickerSettingsTile extends StatelessWidget with _ColorWidget {
     this.visibleIfKey,
     this.enabledIfKey,
     this.visibleByDefault = true,
-    this.cancelCaption = "Cancel",
-    this.okCaption = "Ok",
     this.confirmText,
     this.confirmModalTitle,
     this.confirmModalCancelCaption,
@@ -2080,8 +2049,6 @@ class SimpleColorPickerSettingsTile extends StatelessWidget with _ColorWidget {
           visibleIfKey: visibleIfKey,
           enabledIfKey: enabledIfKey,
           visibleByDefault: visibleByDefault,
-          cancelCaption: cancelCaption,
-          okCaption: okCaption,
           valueToTitle: (String key) => _valueToTitle(key),
           childBuilder: (String value, Function onChanged) {
             return ColorPicker(
@@ -2165,8 +2132,6 @@ class MaterialColorPickerSettingsTile extends StatelessWidget
   final String visibleIfKey;
   final String enabledIfKey;
   final bool visibleByDefault;
-  final String cancelCaption;
-  final String okCaption;
   final String confirmText;
   final String confirmModalTitle;
   final String confirmModalCancelCaption;
@@ -2181,8 +2146,6 @@ class MaterialColorPickerSettingsTile extends StatelessWidget
     this.visibleIfKey,
     this.enabledIfKey,
     this.visibleByDefault = true,
-    this.cancelCaption = "Cancel",
-    this.okCaption = "Ok",
     this.confirmText,
     this.confirmModalTitle,
     this.confirmModalCancelCaption,
@@ -2204,8 +2167,6 @@ class MaterialColorPickerSettingsTile extends StatelessWidget
           visibleIfKey: visibleIfKey,
           enabledIfKey: enabledIfKey,
           visibleByDefault: visibleByDefault,
-          cancelCaption: cancelCaption,
-          okCaption: okCaption,
           valueToTitle: (String key) => _valueToTitle(key),
           childBuilder: (String value, Function onChanged) {
             return BlockPicker(

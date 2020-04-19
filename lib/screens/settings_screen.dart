@@ -152,8 +152,7 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
       });
       setState(() {});
     } else {*/
-    await Permission.storage.request();
-    if (await Permission.storage.isGranted) {
+    if (await Permission.storage.request().isGranted) {
       //  await getStorage();
 
       Navigator.of(context).push<FolderPickerPage>(

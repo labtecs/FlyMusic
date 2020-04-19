@@ -3,8 +3,9 @@
 Flymusic is a simple Fulutter based music player, which is developed within a project at the University of Applied Sciences Fulda.
 
 ### Screenshots
-<img scr="001.jpg" height="300em" /> <img scr="002.jpg" height="300em" /> <img scr="003.jpg" height="300em" /> <img scr="004.jpg" height="300em" />
-
+![GitHub Logo](images/002.jpg)  ![GitHub Logo](images/003.jpg)  
+![GitHub Logo](images/005.jpg)  ![GitHub Logo](images/006.jpg)  
+![GitHub Logo](images/007.jpg)  ![GitHub Logo](images/004.jpg)  
 
 ### Funktions
 - Play

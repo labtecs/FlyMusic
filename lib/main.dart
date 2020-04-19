@@ -84,12 +84,20 @@ class MyApp extends StatelessWidget {
       await SharedPreferencesUtil.instance
           .setString(PrefKey.QUEUE_INSERT_OPTION, '2');
       await SharedPreferencesUtil.instance.setString(PrefKey.THEME, '1');
+
       Locale myLocale = EasyLocalization.of(context).locale;
-      if (myLocale.countryCode == "de") {
-        SharedPreferencesUtil.instance.setString(PrefKey.LANGUAGE, '2');
+      var index = 1;
+      if (myLocale.countryCode == "DE") {
+        index = 2;
+        SharedPreferencesUtil.instance
+            .setString(PrefKey.LANGUAGE, index.toString());
       } else {
-        SharedPreferencesUtil.instance.setString(PrefKey.LANGUAGE, '1');
+        SharedPreferencesUtil.instance
+            .setString(PrefKey.LANGUAGE, index.toString());
       }
+      EasyLocalization.of(context).locale =
+          EasyLocalization.of(context).supportedLocales[index - 1];
+
       await SharedPreferencesUtil.instance
           .setBool(PrefKey.FIRST_APP_START, false);
       //var brightness = MediaQuery.of(context).platformBrightness;

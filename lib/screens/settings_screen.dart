@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flymusic/music/finder/shared.dart';
@@ -151,9 +152,8 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
       });
       setState(() {});
     } else {*/
-    var result =
-        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-    if (result[PermissionGroup.storage] == PermissionStatus.granted) {
+    await Permission.storage.request();
+    if (await Permission.storage.isGranted) {
       //  await getStorage();
 
       Navigator.of(context).push<FolderPickerPage>(

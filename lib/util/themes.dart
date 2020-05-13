@@ -24,7 +24,7 @@ class ThemeModel extends ChangeNotifier {
         currentThemeDark = darkTheme();
         break;
     }
-    return notifyListeners();
+    notifyListeners();
   }
 }
 

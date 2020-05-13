@@ -129,11 +129,11 @@ class _SettingsScreenState extends State<CustomSettingsScreen> {
 
   setTheme(String index) {
     if (index == '1') {
-      Provider.of<ThemeModel>(context).setTheme(ThemeType.Auto);
+      Provider.of<ThemeModel>(context, listen: false).setTheme(ThemeType.Auto);
     } else if (index == '2') {
-      Provider.of<ThemeModel>(context).setTheme(ThemeType.Light);
+      Provider.of<ThemeModel>(context, listen: false).setTheme(ThemeType.Light);
     } else if (index == '3') {
-      Provider.of<ThemeModel>(context).setTheme(ThemeType.Dark);
+      Provider.of<ThemeModel>(context, listen: false).setTheme(ThemeType.Dark);
     }
   }
 
